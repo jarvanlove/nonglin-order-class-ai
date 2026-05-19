@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 4 · 三工具整合 + 项目冲刺 I</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<link rel="stylesheet" href="../shared/animations.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100vw; height: 100vh; margin: 0; padding: 0; overflow: hidden; font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
+  .slide { width: 960pt; height: 540pt; position: relative; display: none; overflow: hidden; box-shadow: 0 8pt 32pt rgba(0,0,0,0.3); }
+  .slide.active { display: block; }
+  .deck-container { width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
+  .slide-wrapper { transform-origin: center center; transition: transform 0.2s ease; }
+
+  /* ===== Unified Entrance Animation ===== */
+  .content.content-enter > *, .hero > * {
+    opacity: 0; transform: translateY(12px) scale(0.98);
+    animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  .content.content-enter > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+  .content.content-enter > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+  .content.content-enter > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+  .content.content-enter > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+  .content.content-enter > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+  .content.content-enter > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+  .content.content-enter > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+  .content.content-enter > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+  .content.content-enter > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+  .content.content-enter > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+  .content.content-enter > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+  .content.content-enter > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+  @keyframes slideInUp { to { opacity: 1; transform: translateY(0) scale(1); } }
+
+  /* ===== Common Chrome ===== */
+  .top-bar { position: absolute; top: 0; left: 0; right: 0; height: 4pt; background: #084E8F; z-index: 100; }
+  .slide-header { position: absolute; top: 4pt; left: 0; right: 0; height: 36pt; display: flex; align-items: center; justify-content: space-between; padding: 0 28pt; background: #ffffff; border-bottom: 1pt solid #e2e8f0; z-index: 10; }
+  .slide-header img { height: 22pt; width: auto; }
+  .slide-header .page-meta { font-size: 10pt; color: #666666; }
+  .slide-footer { position: absolute; bottom: 0; left: 0; right: 0; height: 22pt; display: flex; align-items: center; justify-content: space-between; padding: 0 28pt; background: #ffffff; border-top: 1pt solid #e2e8f0; z-index: 10; }
+  .slide-footer p { font-size: 10pt; color: #666666; }
+  .content { position: absolute; top: 40pt; bottom: 22pt; left: 0; right: 0; padding: 10pt 24pt; box-sizing: border-box; overflow: auto; }
+  .kicker { display: inline-flex; align-items: center; gap: 8pt; margin-bottom: 6pt; }
+  .kicker .bar { width: 18pt; height: 3pt; background: #EE822F; border-radius: 2pt; }
+  .kicker p { font-size: 11pt; color: #EE822F; font-weight: 700; letter-spacing: 0.06em; }
+  .page-title { font-size: 20pt; font-weight: 700; color: #084E8F; line-height: 1.15; margin-bottom: 6pt; }
+  .two-col { display: flex; gap: 10pt; height: calc(100% - 56pt); }
+  .col-left { flex: 1; display: flex; flex-direction: column; gap: 6pt; }
+  .col-right { flex: 1; display: flex; flex-direction: column; gap: 6pt; }
+  .card { background: #ffffff; border: 1pt solid #e2e8f0; border-radius: 6pt; padding: 8pt 10pt; }
+  .card h3 { font-size: 11pt; color: #084E8F; font-weight: 700; margin-bottom: 3pt; }
+  .card p, .card li { font-size: 11pt; color: #333333; line-height: 1.5; }
+  .hint-box { background: rgba(8,78,143,0.04); border-left: 3pt solid #084E8F; border-radius: 0 4pt 4pt 0; padding: 8pt 10pt; }
+  .hint-box.warning { background: rgba(238,130,47,0.06); border-left-color: #EE822F; }
+  .hint-box.success { background: rgba(117,189,66,0.06); border-left-color: #75BD42; }
+  .hint-box.danger { background: rgba(255,0,0,0.04); border-left-color: #FF0000; }
+  .hint-box .label { font-size: 10pt; font-weight: 700; margin-bottom: 2pt; }
+  .hint-box p { font-size: 11pt; line-height: 1.5; margin: 0; }
+  .bullet-list { list-style: none; padding: 0; margin: 0; }
+  .bullet-list li { padding-left: 14pt; position: relative; margin-bottom: 6pt; }
+  .bullet-list li::before { content: ""; position: absolute; left: 0; top: 7pt; width: 5pt; height: 5pt; border-radius: 50%; background: #084E8F; }
+  .step-num { width: 22pt; height: 22pt; border-radius: 50%; background: #084E8F; color: #ffffff; font-size: 10pt; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .tag { display: inline-block; padding: 2pt 8pt; border-radius: 999pt; font-size: 10pt; font-weight: 700; margin-top: 4pt; }
+  .tag-primary { background: rgba(8,78,143,0.10); color: #084E8F; }
+  .tag-accent { background: rgba(238,130,47,0.12); color: #EE822F; }
+  .tag-success { background: rgba(117,189,66,0.12); color: #75BD42; }
+  .screenshot-area { background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%); border: 2pt dashed #e2e8f0; border-radius: 6pt; display: flex; align-items: center; justify-content: center; min-height: 80pt; color: #666666; font-size: 11pt; }
+  .screenshot-area img { max-width: 100%; max-height: 140pt; border-radius: 4pt; }
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 11pt; }
+  .compare-table th { background: #084E8F; color: #ffffff; padding: 6pt 8pt; text-align: left; font-weight: 700; }
+  .compare-table td { padding: 6pt 8pt; border-bottom: 1pt solid #e2e8f0; color: #333333; }
+  .compare-table tr:nth-child(even) { background: rgba(8,78,143,0.02); }
+
+  /* ===== Cover ===== */
+  .cover-body { background: #F8FBFF; }
+  .cover-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 6pt; background: #084E8F; z-index: 100; }
+  .deco-shape { position: absolute; right: 0; top: 0; width: 220pt; height: 540pt; background: #084E8F; clip-path: polygon(40% 0, 100% 0, 100% 100%, 0% 100%); z-index: 0; }
+  .deco-accent { position: absolute; right: 180pt; top: 120pt; width: 80pt; height: 80pt; background: #EE822F; border-radius: 50%; opacity: 0.15; z-index: 0; }
+  .deco-green { position: absolute; right: 60pt; bottom: 80pt; width: 120pt; height: 120pt; background: #75BD42; border-radius: 50%; opacity: 0.12; z-index: 0; }
+  .logo-wrap { position: absolute; top: 20pt; left: 32pt; display: flex; align-items: center; gap: 10pt; z-index: 1; }
+  .logo-wrap img { height: 28pt; width: auto; }
+  .logo-text { font-size: 12pt; color: #084E8F; font-weight: 700; letter-spacing: 0.05em; }
+  .course-tag { position: absolute; top: 22pt; right: 32pt; background: rgba(8,78,143,0.08); padding: 4pt 12pt; border-radius: 999pt; font-size: 11pt; color: #084E8F; font-weight: 500; z-index: 1; }
+  .hero { position: absolute; top: 90pt; left: 48pt; right: 48pt; z-index: 1; }
+  .day-label { display: inline-flex; align-items: center; gap: 8pt; margin-bottom: 16pt; }
+  .day-label .bar { width: 24pt; height: 3pt; background: #EE822F; border-radius: 2pt; }
+  .day-label p { font-size: 14pt; color: #EE822F; font-weight: 700; letter-spacing: 0.08em; }
+  .main-title { font-size: 44pt; font-weight: 700; color: #084E8F; line-height: 1.2; margin-bottom: 16pt; }
+  .main-title span { color: #EE822F; }
+  .sub-title { font-size: 18pt; color: #333333; line-height: 1.6; margin-bottom: 40pt; }
+  .bottom-info { position: absolute; bottom: 40pt; left: 48pt; right: 48pt; display: flex; justify-content: space-between; align-items: flex-end; z-index: 1; }
+  .bottom-info p { font-size: 12pt; color: #666666; line-height: 1.8; }
+
+  /* ===== Objectives ===== */
+  .obj-card { flex: 1; background: #ffffff; border: 1pt solid #e2e8f0; border-radius: 6pt; padding: 14pt; display: flex; flex-direction: column; }
+  .obj-card .card-icon { width: 36pt; height: 36pt; border-radius: 8pt; display: flex; align-items: center; justify-content: center; margin-bottom: 10pt; font-size: 18pt; font-weight: 700; color: #ffffff; }
+  .obj-card:nth-child(1) .card-icon { background: #084E8F; }
+  .obj-card:nth-child(2) .card-icon { background: #EE822F; }
+  .obj-card:nth-child(3) .card-icon { background: #75BD42; }
+  .obj-card h3 { font-size: 15pt; color: #084E8F; font-weight: 700; margin-bottom: 10pt; }
+  .obj-card li { font-size: 11pt; color: #333333; line-height: 1.7; padding-left: 14pt; position: relative; margin-bottom: 6pt; }
+  .obj-card li::before { content: ""; position: absolute; left: 0; top: 8pt; width: 5pt; height: 5pt; border-radius: 50%; background: #084E8F; }
+  .obj-card:nth-child(2) li::before { background: #EE822F; }
+  .obj-card:nth-child(3) li::before { background: #75BD42; }
+  .obj-card .highlight-box { background: rgba(8,78,143,0.04); border-left: 2pt solid #084E8F; padding: 8pt 10pt; border-radius: 0 4pt 4pt 0; margin-top: auto; }
+  .obj-card:nth-child(2) .highlight-box { border-left-color: #EE822F; background: rgba(238,130,47,0.04); }
+  .obj-card:nth-child(3) .highlight-box { border-left-color: #75BD42; background: rgba(117,189,66,0.04); }
+  .obj-card .highlight-box p { font-size: 11pt; color: #666666; line-height: 1.5; }
+
+  /* ===== Intro ===== */
+  .question-box { background: #ffffff; border: 1pt solid #e2e8f0; border-radius: 8pt; padding: 16pt 20pt; margin-bottom: 12pt; position: relative; }
+  .question-box::before { content: ""; position: absolute; left: 0; top: 16pt; bottom: 16pt; width: 4pt; background: #EE822F; border-radius: 0 2pt 2pt 0; }
+  .question-label { display: inline-flex; align-items: center; gap: 6pt; margin-bottom: 8pt; }
+  .question-label .dot { width: 6pt; height: 6pt; background: #EE822F; border-radius: 50%; }
+  .question-label p { font-size: 11pt; color: #EE822F; font-weight: 700; }
+  .question-box h2 { font-size: 20pt; color: #084E8F; font-weight: 700; line-height: 1.2; margin-bottom: 10pt; }
+  .question-box .sub-q { font-size: 12pt; color: #666666; line-height: 1.6; }
+  .answer-row { display: flex; gap: 12pt; }
+  .answer-card { flex: 1; background: #ffffff; border: 1pt solid #e2e8f0; border-radius: 6pt; padding: 12pt 14pt; }
+  .answer-card h4 { font-size: 12pt; color: #084E8F; font-weight: 700; margin-bottom: 6pt; }
+  .answer-card p { font-size: 11pt; color: #333333; line-height: 1.6; }
+
+  /* ===== End ===== */
+  .end-hero { position: absolute; top: 50%; left: 48pt; right: 300pt; transform: translateY(-50%); z-index: 1; }
+  .end-title { font-size: 44pt; font-weight: 700; color: #084E8F; line-height: 1.2; margin-bottom: 16pt; }
+  .end-subtitle { font-size: 16pt; color: #333333; line-height: 1.6; margin-bottom: 20pt; }
+  .end-summary { background: #ffffff; border: 1pt solid #e2e8f0; border-radius: 6pt; padding: 12pt 14pt; margin-bottom: 16pt; }
+  .end-summary h3 { font-size: 13pt; color: #084E8F; font-weight: 700; margin-bottom: 8pt; }
+  .end-summary li { font-size: 11pt; color: #333333; line-height: 1.7; padding-left: 16pt; position: relative; margin-bottom: 6pt; }
+  .end-summary li::before { content: "✓"; position: absolute; left: 0; color: #75BD42; font-weight: 700; }
+  .end-next { background: rgba(238,130,47,0.06); border-left: 3pt solid #EE822F; border-radius: 0 4pt 4pt 0; padding: 8pt 12pt; }
+  .end-next .label { font-size: 10pt; color: #EE822F; font-weight: 700; margin-bottom: 2pt; }
+  .end-next p { font-size: 11pt; color: #333333; line-height: 1.5; }
+
+  /* ===== Task cards ===== */
+  .task-card { background: #ffffff; border: 1pt solid #e2e8f0; border-radius: 6pt; padding: 8pt 10pt; display: flex; gap: 10pt; align-items: flex-start; }
+  .task-card .task-num { width: 28pt; height: 28pt; border-radius: 50%; background: #084E8F; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12pt; font-weight: 700; flex-shrink: 0; }
+  .task-card:nth-child(2) .task-num { background: #EE822F; }
+  .task-card:nth-child(3) .task-num { background: #75BD42; }
+  .task-card h4 { font-size: 12pt; color: #084E8F; font-weight: 700; margin-bottom: 2pt; }
+  .task-card p { font-size: 11pt; color: #333333; line-height: 1.5; }
+
+  /* ===== Timeline ===== */
+  .timeline-wrap { position: relative; padding-left: 12pt; }
+  .timeline-line { position: absolute; left: 4pt; top: 8pt; bottom: 8pt; width: 2pt; background: #084E8F; }
+  .timeline-item { display: flex; align-items: flex-start; gap: 10pt; margin-bottom: 8pt; position: relative; }
+  .timeline-dot { width: 10pt; height: 10pt; border-radius: 50%; background: #084E8F; border: 2pt solid #ffffff; box-shadow: 0 0 0 1pt #084E8F; flex-shrink: 0; margin-top: 3pt; position: relative; z-index: 1; }
+  .timeline-content { flex: 1; background: #ffffff; border: 1pt solid #e2e8f0; border-radius: 4pt; padding: 6pt 8pt; }
+  .timeline-content .year { font-size: 11pt; font-weight: 700; color: #084E8F; margin-bottom: 2pt; }
+  .timeline-content .desc { font-size: 11pt; color: #333333; line-height: 1.5; }
+
+  /* ===== Step bar ===== */
+  .step-bar { display: flex; gap: 6pt; align-items: center; margin-bottom: 8pt; }
+  .step-item { display: flex; align-items: center; gap: 6pt; }
+  .step-dot { width: 20pt; height: 20pt; border-radius: 50%; background: #084E8F; color: #ffffff; font-size: 10pt; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .step-dot.active { background: #EE822F; }
+  .step-dot.done { background: #75BD42; }
+  .step-line { width: 16pt; height: 2pt; background: #e2e8f0; }
+  .step-line.active { background: #084E8F; }
+
+  /* ===== Code block ===== */
+  .code-block { background: #1e293b; color: #e2e8f0; padding: 8pt 10pt; border-radius: 4pt; font-family: "Consolas", monospace; font-size: 10pt; line-height: 1.5; overflow-x: auto; }
+
+  /* ===== Prompt box ===== */
+  .prompt-box { background: rgba(8,78,143,0.04); border-left: 3pt solid #084E8F; border-radius: 0 4pt 4pt 0; padding: 8pt 10pt; margin-bottom: 6pt; }
+  .prompt-box .label { font-size: 10pt; color: #084E8F; font-weight: 700; margin-bottom: 2pt; }
+  .prompt-box p { font-size: 11pt; color: #333333; line-height: 1.5; }
+
+  /* ===== Factor cards ===== */
+  .factor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; }
+  .factor-card { background: #ffffff; border-left: 3pt solid #084E8F; border-top: 1pt solid #e2e8f0; border-right: 1pt solid #e2e8f0; border-bottom: 1pt solid #e2e8f0; border-radius: 0 4pt 4pt 0; padding: 8pt 10pt; }
+  .factor-card h4 { font-size: 11pt; color: #084E8F; font-weight: 700; margin-bottom: 2pt; }
+  .factor-card p { font-size: 11pt; color: #333333; line-height: 1.5; }
+  .factor-card:nth-child(2) { border-left-color: #92181A; } .factor-card:nth-child(2) h4 { color: #92181A; }
+  .factor-card:nth-child(3) { border-left-color: #EE822F; } .factor-card:nth-child(3) h4 { color: #EE822F; }
+  .factor-card:nth-child(4) { border-left-color: #75BD42; } .factor-card:nth-child(4) h4 { color: #75BD42; }
+
+  /* ===== Navigation overlay ===== */
+  .nav-overlay { position: fixed; bottom: 20pt; right: 20pt; display: flex; gap: 6pt; z-index: 9999; }
+  .nav-btn { background: #084E8F; color: #ffffff; border: none; border-radius: 4pt; padding: 6pt 12pt; font-size: 10pt; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+  .nav-btn:hover { background: #073A76; transform: translateY(-1pt); box-shadow: 0 2pt 8pt rgba(8,78,143,0.25); }
+  .btn-hover { transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease; }
+  .btn-hover:hover { transform: translateY(-1pt); box-shadow: 0 2pt 8pt rgba(0,0,0,0.12); filter: brightness(1.05); }
+  .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+  .hover-lift:hover { transform: translateY(-2pt); box-shadow: 0 4pt 12pt rgba(0,0,0,0.1); }
+  .page-indicator { background: #ffffff; border: 1pt solid #e2e8f0; border-radius: 4pt; padding: 6pt 10pt; font-size: 10pt; color: #666666; }
+
+  /* ===== Print ===== */
+  @media print { .slide { position: relative; top: auto; left: auto; transform: none; page-break-after: always; display: block !important; } .nav-overlay { display: none; } }
+</style>
+</head>
+<body>
+
+<!-- ==================== SLIDE 1: COVER ==================== -->
+<section class="slide active cover-body" id="slide-1">
+  <div class="cover-top-bar"></div>
+  <div class="deco-shape"></div>
+  <div class="deco-accent"></div>
+  <div class="deco-green"></div>
+  <div class="content-layer">
+    <div class="logo-wrap">
+      <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+      <p class="logo-text">AI 智能体工具实训</p>
+    </div>
+    <div class="course-tag"><p>6 天集训 · 第 4 天</p></div>
+    <div class="hero">
+      <div class="day-label"><div class="bar"></div><p>DAY 04</p></div>
+      <h1 class="main-title">三工具整合 <span>+</span> 项目冲刺 I</h1>
+      <p class="sub-title">QClaw 进阶 + WorkBuddy 进阶 + 三工具联调 + 项目冲刺</p>
+    </div>
+    <div class="bottom-info">
+      <div><p>授课对象：农林高校应届毕业生（计算机 + 非计算机混编，30 人）</p><p>授课时长：上午 3 小时 + 下午 3 小时</p></div>
+      <div style="text-align:right"><p>2026 年 5 月</p><p>主讲讲师</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 2: OBJECTIVES ==================== -->
+<div class="deck-container"><div class="slide-wrapper" id="slideWrapper">
+<section class="slide" id="slide-2">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 学习目标</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><div class="bar"></div><p>课程导览</p></div>
+    <h1 class="page-title">今天你要带走什么？</h1>
+    <div class="cards-row" style="display:flex;gap:14pt;height:calc(100% - 80pt)">
+      <div class="obj-card hover-lift">
+        <div class="card-icon"><p>知</p></div>
+        <h3>知识目标</h3>
+        <ul>
+          <li>掌握 QClaw 进阶 Prompt 技巧（多轮对话、角色设定、条件筛选）</li>
+          <li>掌握 WorkBuddy 进阶数据处理（批量处理、自动化流程、格式转换）</li>
+          <li>理解三工具联调概念和数据流设计</li>
+          <li>理解 MVP（最小可行产品）的定义和范围控制方法</li>
+        </ul>
+        <div class="highlight-box"><p>核心认知：联调不是技术炫技，而是确保"你输出的东西，他能正确接收和使用"</p></div>
+      </div>
+      <div class="obj-card hover-lift">
+        <div class="card-icon"><p>技</p></div>
+        <h3>技能目标</h3>
+        <ul>
+          <li>能用进阶 Prompt 模板优化信息搜集质量</li>
+          <li>能用 WorkBuddy 完成批量文件处理和条件判断</li>
+          <li>能独立完成 QClaw → WorkBuddy → Trae 的端到端联调</li>
+          <li>能定义并控制项目 MVP 边界</li>
+        </ul>
+        <div class="highlight-box"><p>实战产出：可运行的项目核心功能 MVP（数据能顺畅地从 QClaw 流入 WorkBuddy，再流入 Trae）</p></div>
+      </div>
+      <div class="obj-card hover-lift">
+        <div class="card-icon"><p>养</p></div>
+        <h3>素养目标</h3>
+        <ul>
+          <li>培养"站会"协作习惯（同步进度、暴露问题、快速求助）</li>
+          <li>建立"先跑通再优化"的工程思维</li>
+          <li>理解跨角色分工（非计算机同学也能在项目中发挥核心作用）</li>
+        </ul>
+        <div class="highlight-box"><p>思维转变：从"每个工具单独用"到"三个工具串联成工作流"</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">2 / 18</p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 3: INTRO ==================== -->
+<section class="slide" id="slide-3">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 课程导入</p>
+  </div>
+  <div class="content content-enter">
+    <div class="question-box">
+      <div class="question-label"><div class="dot"></div><p>课前思考</p></div>
+      <h2>你和一个朋友合作做一顿饭：你负责洗菜切菜，他负责炒菜。你切好了菜放在盘子里，他炒的时候发现你切的形状不对，炒不熟——问题出在哪？</h2>
+      <p class="sub-q">过去 3 天，你们分别学会了 QClaw（搜集）、WorkBuddy（处理）、Trae（展示）。但如果三个模块之间"数据对不上"，就像切菜的和炒菜的没商量好——项目就跑不起来。</p>
+    </div>
+    <div class="answer-row">
+      <div class="answer-card hover-lift">
+        <h4>Day 1-3：单点突破</h4>
+        <p>分别掌握每个工具的基础用法，但各模块独立运行，数据没有打通。</p>
+        <span class="tag tag-primary">QClaw / WorkBuddy / Trae</span>
+      </div>
+      <div class="answer-card hover-lift">
+        <h4>Day 4-5：联调冲刺</h4>
+        <p>把三个模块串联成完整工作流，确保数据能顺畅流动，项目能跑通。</p>
+        <span class="tag tag-success">整合 + 联调 + MVP</span>
+      </div>
+      <div class="answer-card hover-lift">
+        <h4>Day 6：路演 + 结业</h4>
+        <p>展示项目成果，学习就业锦囊，完成 6 天学习闭环。</p>
+        <span class="tag tag-accent">路演 / 简历 / 知识管理</span>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">3 / 18</p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 4: QClaw ADVANCED ==================== -->
+<section class="slide" id="slide-4">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 知识储备</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><div class="bar"></div><p>进阶技巧</p></div>
+    <h1 class="page-title">QClaw 进阶：让信息搜集更精准</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card hover-lift">
+          <h3>6 大进阶技巧</h3>
+          <div class="factor-grid">
+            <div class="factor-card hover-lift"><h4>1. 多轮对话优化</h4><p>先给大方向看输出，再逐步细化，不要一次写太长的 Prompt</p></div>
+            <div class="factor-card hover-lift"><h4>2. 输出格式控制</h4><p>明确告诉 QClaw 你要的格式：表格、bullet points、字数限制</p></div>
+            <div class="factor-card hover-lift"><h4>3. 来源验证</h4><p>让 QClaw 提供来源链接，你抽查 2-3 个验证真实性</p></div>
+            <div class="factor-card hover-lift"><h4>4. 批量处理</h4><p>写模板化 Prompt："按照以下格式整理 [主题] 的资料"</p></div>
+            <div class="factor-card hover-lift"><h4>5. 角色设定</h4><p>在 Prompt 开头给 QClaw 设定角色："你是一位农业技术专家..."</p></div>
+            <div class="factor-card hover-lift"><h4>6. 条件筛选</h4><p>添加筛选条件："优先选择有具体数据支撑的案例"</p></div>
+          </div>
+        </div>
+        <div class="card hover-lift">
+          <h3>互动：Prompt 优化比赛（3 分钟）</h3>
+          <p>基础 Prompt："搜集农业 AI 案例"</p>
+          <p>请各组在 3 分钟内优化这个 Prompt，全班投票选出"最佳 Prompt"。</p>
+          <div class="hint-box warning"><p class="label">讲师点评要点</p><p>哪些优化是有效的（具体、有格式、有筛选）？哪些是多余的（过于冗长、限制过死）？</p></div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card hover-lift">
+          <h3>进阶 Prompt 模板</h3>
+          <div class="prompt-box"><p class="label">【角色】</p><p>你是一位 [领域] 专家</p></div>
+          <div class="prompt-box"><p class="label">【任务】</p><p>请搜集 [时间范围] 内 [主题] 的信息</p></div>
+          <div class="prompt-box"><p class="label">【筛选条件】</p><p>1. 优先选择 [条件]<br>2. 排除 [条件]<br>3. 只选择 [条件]</p></div>
+          <div class="prompt-box"><p class="label">【要求】</p><p>至少 [数量] 条记录，按 [维度] 分类，每个案例包含 [字段列表]，输出格式 [格式]，提供来源链接</p></div>
+          <div class="prompt-box"><p class="label">【示例】</p><p>给出一个期望的输出样例</p></div>
+        </div>
+        <div class="card hover-lift" style="padding:6pt 8pt;">
+          <h3>常见误区</h3>
+          <ul class="bullet-list">
+            <li>"Prompt 很长但输出差" → 先给大方向，再逐步细化</li>
+            <li>"来源链接打不开" → AI 会"幻觉"，抽查 2-3 个即可</li>
+            <li>"资料和其他组重复" → 按不同角度分类，产出完全不同</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">4 / 18</p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 5: WorkBuddy ADVANCED ==================== -->
+<section class="slide" id="slide-5">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 知识储备</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><div class="bar"></div><p>进阶技巧</p></div>
+    <h1 class="page-title">WorkBuddy 进阶：让数据处理更高效</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card hover-lift">
+          <h3>5 大进阶技巧</h3>
+          <div class="factor-grid">
+            <div class="factor-card hover-lift"><h4>1. 批量文件处理</h4><p>把多个同类型文件放在一个文件夹，WorkBuddy 可以批量处理</p></div>
+            <div class="factor-card hover-lift"><h4>2. 自动化流程</h4><p>把常用操作保存为"流程"，下次一键执行</p></div>
+            <div class="factor-card hover-lift"><h4>3. 数据格式转换</h4><p>Excel ↔ CSV ↔ JSON ↔ Markdown，确保 QClaw 输出能被 Trae 读取</p></div>
+            <div class="factor-card hover-lift"><h4>4. 条件判断</h4><p>"如果金额大于 10000，标记为'大额'"</p></div>
+            <div class="factor-card hover-lift"><h4>5. 数据合并</h4><p>将多个来源的数据合并成一个统一格式，保留来源标记</p></div>
+          </div>
+        </div>
+        <div class="card hover-lift">
+          <h3>数据处理挑战（10 分钟）</h3>
+          <p>任务：有 3 个 Excel 文件，分别包含不同地区的农产品价格</p>
+          <p>要求：合并成一个文件，按地区分类，计算平均价格，标记最高价和最低价</p>
+          <div class="hint-box success"><p class="label">关键提示</p><p>先拿 1 个文件跑通，再扩展到 3 个。批量处理的本质是"重复执行同一个正确操作"。</p></div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card hover-lift">
+          <h3>联调关键：数据格式</h3>
+          <div class="screenshot-area" style="min-height:100pt">
+            <p>[ 数据流示意图 ]</p>
+            <p style="font-size:11pt">QClaw 输出 → JSON/CSV → WorkBuddy 读取 → 清洗 → 标准化 JSON → Trae 读取 → 展示</p>
+          </div>
+          <p style="font-size:10pt;color:#333;margin-top:6pt">联调的关键是数据格式。QClaw 输出的文件，WorkBuddy 要能正确读取；WorkBuddy 处理后的数据，Trae 要能正确展示。</p>
+        </div>
+        <div class="card hover-lift">
+          <h3>常见报错与解决</h3>
+          <ul class="bullet-list">
+            <li>"批量处理 10 个文件总是报错" → 先拿 1 个文件跑通</li>
+            <li>"格式转换后数据乱了" → 转换前先备份，尝试 UTF-8 重新保存</li>
+            <li>"自动化流程保存后找不到了" → 命名时加日期和用途，如"0401_价格数据清洗"</li>
+          </ul>
+        </div>
+        <div class="card hover-lift">
+          <h3>产出模板</h3>
+          <div class="hint-box"><p class="label">预期产出样例</p><p>processed-data.json：包含统一字段（id, title, category, date, source, confidence），UTF-8 编码，字段名和接口约定一致</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">5 / 18</p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 6: THREE-TOOL INTEGRATION ==================== -->
+<section class="slide" id="slide-6">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 知识储备</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><div class="bar"></div><p>联调策略</p></div>
+    <h1 class="page-title">三工具联调：让数据顺畅流动</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card hover-lift">
+          <h3>联调五步法</h3>
+          <div class="step-bar">
+            <div class="step-item"><div class="step-dot">1</div></div><div class="step-line active"></div>
+            <div class="step-item"><div class="step-dot">2</div></div><div class="step-line active"></div>
+            <div class="step-item"><div class="step-dot">3</div></div><div class="step-line active"></div>
+            <div class="step-item"><div class="step-dot">4</div></div><div class="step-line"></div>
+            <div class="step-item"><div class="step-dot">5</div></div>
+          </div>
+          <ul class="bullet-list">
+            <li><strong>确认数据出口（QClaw 侧）</strong>：文件存在、格式正确、字段齐全</li>
+            <li><strong>确认数据入口（WorkBuddy 侧）</strong>：能读取、能解析、无乱码</li>
+            <li><strong>设计数据转换规则</strong>：去重条件、格式转换、字段映射</li>
+            <li><strong>端到端联调测试</strong>：清空 → 采集 → 处理 → 展示</li>
+            <li><strong>错误处理与边界测试</strong>：空数据、字段缺失、特殊字符</li>
+          </ul>
+        </div>
+        <div class="card hover-lift">
+          <h3>联调痛点讨论（5 分钟）</h3>
+          <p>请学生说出昨天联调时遇到的问题，讲师分类整理：</p>
+          <div class="factor-grid">
+            <div class="factor-card hover-lift"><h4>数据格式问题</h4><p>JSON 格式不规范、编码错误</p></div>
+            <div class="factor-card hover-lift"><h4>字段名问题</h4><p>QClaw 输出 title，Trae 读取 name</p></div>
+            <div class="factor-card hover-lift"><h4>文件路径问题</h4><p>相对路径 vs 绝对路径</p></div>
+            <div class="factor-card hover-lift"><h4>编码问题</h4><p>中文乱码、特殊字符</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card hover-lift">
+          <h3>数据流设计建议</h3>
+          <div class="screenshot-area" style="min-height:120pt">
+            <p style="text-align:center">
+              <strong style="color:#084E8F">QClaw</strong> 输出 JSON/CSV<br>↓<br>
+              <strong style="color:#EE822F">WorkBuddy</strong> 读取 → 清洗 → 输出标准化 JSON<br>↓<br>
+              <strong style="color:#75BD42">Trae</strong> 读取 JSON → 生成网页展示
+            </p>
+          </div>
+        </div>
+        <div class="card hover-lift">
+          <h3>边界情况测试表</h3>
+          <table class="compare-table">
+            <tr><th>边界情况</th><th>测试方法</th><th>预期处理</th></tr>
+            <tr><td>QClaw 输出空数组</td><td>用 {"data": []} 测试</td><td>生成"暂无数据"提示</td></tr>
+            <tr><td>字段缺失</td><td>删除某条记录的 category</td><td>填入"未分类"</td></tr>
+            <tr><td>文件不存在</td><td>删除输入文件后运行</td><td>提示"找不到输入文件"</td></tr>
+            <tr><td>特殊字符</td><td>内容中包含 " \</td><td>JSON 解析正常</td></tr>
+          </table>
+        </div>
+        <div class="card hover-lift" style="padding:6pt 8pt;">
+          <h3>互动提示</h3>
+          <div class="hint-box warning" style="padding:6pt 8pt;"><p class="label">此处提问学生</p><p>"你们组昨天联调时遇到的最大问题是什么？"</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">6 / 18</p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 7: DATA INTERFACE CONTRACT ==================== -->
+<section class="slide" id="slide-7">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 数据规范</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><div class="bar"></div><p>接口契约</p></div>
+    <h1 class="page-title">数据接口契约模板</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card hover-lift">
+          <h3>16 字段 JSON Schema</h3>
+          <div class="code-block" style="font-size:9pt;line-height:1.45;">
+{
+  "id": "string",
+  "title": "string",
+  "category": "string",
+  "region": "string",
+  "publishDate": "string",
+  "source": "string",
+  "summary": "string",
+  "content": "string",
+  "tags": ["string"],
+  "imageUrl": "string",
+  "readCount": "number",
+  "isTop": "boolean",
+  "status": "string",
+  "createTime": "string",
+  "updateTime": "string",
+  "author": "string"
+}</div>
+          <p style="font-size:10pt;color:#666;margin-top:4pt;">QClaw 输出 → WorkBuddy 清洗 → Trae 读取，三方约定统一字段名</p>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card hover-lift">
+          <h3>字段用途说明</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6pt;">
+            <div class="factor-card"><h4>id</h4><p style="font-size:10pt;">唯一标识</p></div>
+            <div class="factor-card" style="border-left-color:#92181A;"><h4 style="color:#92181A;">title</h4><p style="font-size:10pt;">政策标题</p></div>
+            <div class="factor-card" style="border-left-color:#EE822F;"><h4 style="color:#EE822F;">category</h4><p style="font-size:10pt;">政策分类</p></div>
+            <div class="factor-card" style="border-left-color:#75BD42;"><h4 style="color:#75BD42;">region</h4><p style="font-size:10pt;">适用地区</p></div>
+            <div class="factor-card"><h4>publishDate</h4><p style="font-size:10pt;">发布日期</p></div>
+            <div class="factor-card" style="border-left-color:#92181A;"><h4 style="color:#92181A;">source</h4><p style="font-size:10pt;">来源机构</p></div>
+            <div class="factor-card" style="border-left-color:#EE822F;"><h4 style="color:#EE822F;">summary</h4><p style="font-size:10pt;">内容摘要</p></div>
+            <div class="factor-card" style="border-left-color:#75BD42;"><h4 style="color:#75BD42;">content</h4><p style="font-size:10pt;">完整内容</p></div>
+            <div class="factor-card"><h4>tags</h4><p style="font-size:10pt;">标签数组</p></div>
+            <div class="factor-card" style="border-left-color:#92181A;"><h4 style="color:#92181A;">imageUrl</h4><p style="font-size:10pt;">配图链接</p></div>
+            <div class="factor-card" style="border-left-color:#EE822F;"><h4 style="color:#EE822F;">readCount</h4><p style="font-size:10pt;">阅读次数</p></div>
+            <div class="factor-card" style="border-left-color:#75BD42;"><h4 style="color:#75BD42;">isTop</h4><p style="font-size:10pt;">是否置顶</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">7 / 18</p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 8: DEMO ==================== -->
+<section class="slide" id="slide-8">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 讲师演示</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><div class="bar"></div><p>完整演示</p></div>
+    <h1 class="page-title">讲师演示：三工具联调完整流程</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card hover-lift">
+          <h3>演示流程（30 分钟）</h3>
+          <div class="timeline-wrap">
+            <div class="timeline-line"></div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content"><p class="year">Step 1：QClaw 采集（5 分钟）</p><p class="desc">输入采集 Prompt → 等待执行 → 检查输出文件字段和格式 → <strong style="color:#92181A">故意设置错误：字段名不一致</strong></p></div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content"><p class="year">Step 2：WorkBuddy 处理（5 分钟）</p><p class="desc">上传 QClaw 输出 → 输入清洗指令 → 展示处理过程 → <strong style="color:#92181A">故意设置错误：编码问题导致乱码</strong></p></div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content"><p class="year">Step 3：Trae 展示（5 分钟）</p><p class="desc">Builder 模式输入需求 → 展示生成网页 → <strong style="color:#92181A">故意设置错误：字段名不匹配导致 undefined</strong></p></div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content"><p class="year">Step 4：端到端测试（5 分钟）</p><p class="desc">清空所有数据 → 重新执行完整流程 → 验证数据正确展示 → 测试空数据、字段缺失</p></div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content"><p class="year">Step 5：错误处理演示（5 分钟）</p><p class="desc">展示常见错误排查方法 → 用 Trae 修复代码错误 → 验证修复结果</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card hover-lift">
+          <h3>演示要点</h3>
+          <ul class="bullet-list">
+            <li>演示速度要慢，确保学生能跟上</li>
+            <li>每个步骤都要解释"为什么这样做"</li>
+            <li>错误排查过程要详细展示，这是学生最需要的</li>
+            <li>鼓励学生提问</li>
+          </ul>
+        </div>
+        <div class="card hover-lift">
+          <h3>学生跟随练习（20 分钟）</h3>
+          <p>任务：跟随讲师的演示，在自己的电脑上完成一次完整的三工具联调</p>
+          <div class="task-card hover-lift" style="margin-top:6pt">
+            <div class="task-num">1</div>
+            <div><h4>用 QClaw 采集 5 条数据</h4></div>
+          </div>
+          <div class="task-card hover-lift" style="margin-top:6pt">
+            <div class="task-num" style="background:#EE822F">2</div>
+            <div><h4>用 WorkBuddy 清洗处理</h4></div>
+          </div>
+          <div class="task-card hover-lift" style="margin-top:6pt">
+            <div class="task-num" style="background:#75BD42">3</div>
+            <div><h4>用 Trae 展示数据</h4></div>
+          </div>
+          <div class="task-card hover-lift" style="margin-top:6pt">
+            <div class="task-num" style="background:#92181A">4</div>
+            <div><h4>验证数据流是否通畅</h4></div>
+          </div>
+        </div>
+        <div class="card hover-lift" style="padding:6pt 8pt;">
+          <h3>进阶任务（已完成的学生）</h3>
+          <div class="hint-box success" style="padding:6pt 8pt;"><p class="label">额外挑战</p><p>尝试添加一个交互功能：搜索、筛选或排序</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">8 / 18</p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 9: VIDEO DEMO - INTEGRATION ==================== -->
+<section class="slide" id="slide-9">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 视频演示</p>
+  </div>
+  <div class="content content-enter" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8pt 20pt;">
+    <div class="kicker" style="margin-bottom:4pt;"><div class="bar"></div><p>实战演示</p></div>
+    <h1 class="page-title" style="text-align:center;margin-bottom:8pt;font-size:18pt;">项目联调与部署流程</h1>
+    <div style="width:60%;max-height:200pt;aspect-ratio:16/9;background:linear-gradient(135deg,#f0f4f8,#e2e8f0);border-radius:8pt;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+      <div style="font-size:36pt;color:#084E8F;opacity:0.3;margin-bottom:6pt;">▶</div>
+      <p style="font-size:13pt;color:#084E8F;font-weight:700;margin-bottom:4pt;">视频：前后端联调实战</p>
+      <p style="font-size:10pt;color:#666;">（&lt; 3 min）</p>
+    </div>
+    <div style="display:flex;gap:12pt;margin-top:10pt;">
+      <div class="card hover-lift" style="padding:8pt 12pt;text-align:center;">
+        <p style="font-size:18pt;font-weight:700;color:#084E8F;margin:0;">3 min</p>
+        <p style="font-size:10pt;color:#666;margin:0;">视频时长</p>
+      </div>
+      <div class="card hover-lift" style="padding:8pt 12pt;text-align:center;">
+        <p style="font-size:18pt;font-weight:700;color:#EE822F;margin:0;">3 工具</p>
+        <p style="font-size:10pt;color:#666;margin:0;">端到端联调</p>
+      </div>
+      <div class="card hover-lift" style="padding:8pt 12pt;text-align:center;">
+        <p style="font-size:18pt;font-weight:700;color:#75BD42;margin:0;">5 min</p>
+        <p style="font-size:10pt;color:#666;margin:0;">全流程耗时</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">9 / 18</p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 10: MVP ==================== -->
+<section class="slide" id="slide-10">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 知识储备</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><div class="bar"></div><p>范围控制</p></div>
+    <h1 class="page-title">MVP 定义：先跑通，再完美</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card hover-lift">
+          <h3>什么是 MVP？</h3>
+          <p style="margin-bottom:8pt">Minimum Viable Product（最小可行产品）：不要一上来就想做完美的东西，先做一个"能跑通核心流程"的最简单版本。</p>
+          <div class="hint-box"><p class="label">以"农产品价格监测系统"为例</p><p><strong>MVP 版本</strong>：QClaw 搜集 5 个网站的价格 → WorkBuddy 整理成表格 → Trae 显示出来<br><strong>非 MVP 功能</strong>（后续迭代）：自动预警、历史趋势图、多地区对比</p></div>
+        </div>
+        <div class="card hover-lift">
+          <h3>互动：MVP 边界确认（5 分钟）</h3>
+          <p>每组用 1 句话描述 MVP 边界，讲师记录在白板上：</p>
+          <ul class="bullet-list">
+            <li>对边界过大的组，现场协助裁剪</li>
+            <li>对边界过小的组，鼓励增加一个展示亮点</li>
+          </ul>
+          <div class="hint-box warning"><p class="label">常见疑问</p><p>"MVP 是不是太简单了？" → 评委看的是"有没有跑通核心流程"，不是功能多少。一个能稳定跑通的简单系统，比一堆半成品强 100 倍。</p></div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card hover-lift">
+          <h3>MVP 检查清单</h3>
+          <table class="compare-table">
+            <tr><th>检查项</th><th>标准</th><th>是否达标</th></tr>
+            <tr><td>QClaw 采集</td><td>能自动采集并输出结构化文件</td><td>□</td></tr>
+            <tr><td>WorkBuddy 处理</td><td>能读取 QClaw 输出并生成报告</td><td>□</td></tr>
+            <tr><td>Trae 展示</td><td>有界面、有逻辑、有数据</td><td>□</td></tr>
+            <tr><td>数据联调</td><td>数据能从 QClaw 流入 WorkBuddy</td><td>□</td></tr>
+            <tr><td>演示流畅</td><td>10 分钟内能展示完核心功能</td><td>□</td></tr>
+          </table>
+        </div>
+        <div class="card hover-lift">
+          <h3>常见错误预判</h3>
+          <ul class="bullet-list">
+            <li>"沉迷调界面" → 下午不许碰 CSS，先确保功能完整</li>
+            <li>"采集结果太多处理不完" → 限制采集量：先只做 10 条</li>
+            <li>"组内有人闲着" → 分配：记录文档、测试边界、准备需求</li>
+            <li>"想换选题" → Day 4 一律不允许，强制在当前选题内裁剪</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">10 / 18</p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 11: MVP CHECKLIST ==================== -->
+<section class="slide" id="slide-11">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 质量检查</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><div class="bar"></div><p>MVP 标准</p></div>
+    <h1 class="page-title">MVP 标准 Checklist</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card hover-lift">
+          <h3>功能完整性（6 个核心功能）</h3>
+          <div style="display:flex;flex-direction:column;gap:6pt;">
+            <div style="display:flex;align-items:center;gap:8pt;">
+              <div style="width:20pt;height:20pt;border-radius:4pt;background:#75BD42;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10pt;font-weight:700;">✓</div>
+              <div style="flex:1;">
+                <p style="font-size:11pt;margin:0;"><strong>QClaw 自动采集</strong> — 能输出结构化数据文件</p>
+                <div class="progress-bar" style="margin-top:3pt;"><div class="progress-fill" style="width:100%;"></div></div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8pt;">
+              <div style="width:20pt;height:20pt;border-radius:4pt;background:#75BD42;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10pt;font-weight:700;">✓</div>
+              <div style="flex:1;">
+                <p style="font-size:11pt;margin:0;"><strong>WorkBuddy 数据清洗</strong> — 去重、格式化、分类统计</p>
+                <div class="progress-bar" style="margin-top:3pt;"><div class="progress-fill" style="width:100%;"></div></div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8pt;">
+              <div style="width:20pt;height:20pt;border-radius:4pt;background:#75BD42;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10pt;font-weight:700;">✓</div>
+              <div style="flex:1;">
+                <p style="font-size:11pt;margin:0;"><strong>Trae 展示界面</strong> — 有界面、有逻辑、有数据</p>
+                <div class="progress-bar" style="margin-top:3pt;"><div class="progress-fill" style="width:100%;"></div></div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8pt;">
+              <div style="width:20pt;height:20pt;border-radius:4pt;background:#EE822F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10pt;font-weight:700;">~</div>
+              <div style="flex:1;">
+                <p style="font-size:11pt;margin:0;"><strong>搜索功能</strong> — 按关键词过滤数据</p>
+                <div class="progress-bar" style="margin-top:3pt;"><div class="progress-fill" style="width:60%;background:#EE822F;"></div></div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8pt;">
+              <div style="width:20pt;height:20pt;border-radius:4pt;background:#EE822F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10pt;font-weight:700;">~</div>
+              <div style="flex:1;">
+                <p style="font-size:11pt;margin:0;"><strong>筛选功能</strong> — 按分类/日期筛选</p>
+                <div class="progress-bar" style="margin-top:3pt;"><div class="progress-fill" style="width:60%;background:#EE822F;"></div></div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8pt;">
+              <div style="width:20pt;height:20pt;border-radius:4pt;background:#e2e8f0;color:#666;display:flex;align-items:center;justify-content:center;font-size:10pt;font-weight:700;">○</div>
+              <div style="flex:1;">
+                <p style="font-size:11pt;margin:0;"><strong>排序功能</strong> — 按日期/热度排序</p>
+                <div class="progress-bar" style="margin-top:3pt;"><div class="progress-fill" style="width:30%;background:#084E8F;"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card hover-lift">
+          <h3>UI 基础标准</h3>
+          <ul class="bullet-list">
+            <li>响应式布局，适配手机 + 电脑</li>
+            <li>品牌色统一（主色 #084E8F，辅色 #EE822F）</li>
+            <li>字体层级清晰，正文 &gt;= 11pt</li>
+            <li>按钮/链接有 hover 反馈</li>
+          </ul>
+        </div>
+        <div class="card hover-lift">
+          <h3>数据真实标准</h3>
+          <ul class="bullet-list">
+            <li>至少 20 条真实政策数据</li>
+            <li>每条数据包含来源和发布日期</li>
+            <li>分类准确，标签合理</li>
+          </ul>
+        </div>
+        <div class="card hover-lift">
+          <h3>交互流畅标准</h3>
+          <ul class="bullet-list">
+            <li>页面加载无卡顿（&lt; 2s）</li>
+            <li>数据加载有 loading 状态</li>
+            <li>空数据有友好提示</li>
+            <li>操作有即时反馈</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">11 / 18</p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 12: TASK - SPRINT 1 ==================== -->
+<section class="slide" id="slide-12">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 任务布置</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><div class="bar"></div><p>项目冲刺</p></div>
+    <h1 class="page-title">下午任务：项目冲刺 - 功能完善</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card hover-lift">
+          <h3>QClaw 模块完善任务</h3>
+          <ul class="bullet-list">
+            <li><strong>增加采集数量</strong>：从 5 条增加到 10-20 条</li>
+            <li><strong>优化数据质量</strong>：确保每条记录都有来源链接、日期格式统一、分类准确</li>
+            <li><strong>多样化采集源</strong>：尝试不同的关键词组合和分类维度</li>
+          </ul>
+        </div>
+        <div class="card hover-lift">
+          <h3>WorkBuddy 模块完善任务</h3>
+          <ul class="bullet-list">
+            <li><strong>完善清洗规则</strong>：添加更多去重条件、数据验证规则、异常数据处理</li>
+            <li><strong>生成更丰富的报告</strong>：添加数据统计分析、可视化图表数据、趋势分析</li>
+            <li><strong>优化输出格式</strong>：确保 JSON 格式规范、字段名和接口约定一致、编码为 UTF-8</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card hover-lift">
+          <h3>Trae 模块完善任务</h3>
+          <ul class="bullet-list">
+            <li><strong>添加交互功能</strong>：搜索功能、筛选功能、排序功能</li>
+            <li><strong>美化界面</strong>：调整颜色和字体、优化布局、添加动画效果（可选）</li>
+            <li><strong>添加数据可视化</strong>：分类统计图表、时间分布图表、来源分布图表</li>
+          </ul>
+        </div>
+        <div class="card hover-lift">
+          <h3>时间控制</h3>
+          <p>站会同步：10 分钟 | 项目开发：40 分钟 | Trae 模块完善：25 分钟</p>
+          <div class="hint-box warning"><p class="label">纪律</p><p>下午不许碰 CSS！先确保功能完整。功能没做就搞界面的组，助教直接叫停。</p></div>
+        </div>
+        <div class="card hover-lift">
+          <h3>产出模板</h3>
+          <div class="hint-box success"><p class="label">预期产出</p><p>每个模块都能独立运行：QClaw 输出结构化文件、WorkBuddy 生成处理后的报告、Trae 展示有交互的网页</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">12 / 18</p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 13: PRACTICE - SPRINT 1 ==================== -->
+<section class="slide" id="slide-13">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 课堂实操</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><div class="bar"></div><p>实操指导</p></div>
+    <h1 class="page-title">项目冲刺实操：Trae 交互功能实现</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card hover-lift">
+          <h3>搜索功能 Prompt</h3>
+          <div class="code-block">请在数据展示页面添加搜索功能：
+1. 在页面顶部添加搜索框
+2. 用户输入关键词后，实时过滤数据
+3. 支持按标题搜索
+4. 搜索无结果时显示友好提示</div>
+        </div>
+        <div class="card hover-lift">
+          <h3>筛选功能 Prompt</h3>
+          <div class="code-block">请在数据展示页面添加筛选功能：
+1. 添加分类筛选下拉框
+2. 添加日期范围筛选
+3. 筛选条件可以组合使用
+4. 显示当前筛选条件和结果数量</div>
+        </div>
+        <div class="card hover-lift">
+          <h3>排序功能 Prompt</h3>
+          <div class="code-block">请在数据展示页面添加排序功能：
+1. 支持按日期排序（升序/降序）
+2. 支持按标题排序
+3. 点击表头切换排序方式
+4. 显示当前排序状态</div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card hover-lift">
+          <h3>Trae 读取本地 JSON 代码模板</h3>
+          <div class="code-block">fetch('./data/products.json')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('数据文件加载失败');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('加载成功，共', data.length, '条数据');
+    renderProducts(data);
+  })
+  .catch(error => {
+    console.error(error);
+    document.getElementById('error-msg')
+      .textContent = '数据加载失败，请检查数据文件是否存在';
+  });</div>
+        </div>
+        <div class="card hover-lift">
+          <h3>常见错误</h3>
+          <div class="hint-box danger"><p class="label">字段名不匹配</p><p>QClaw 输出的是 "title"，Trae 代码里读的是 "name" → 检查字段映射</p></div>
+          <div class="hint-box danger" style="margin-top:6pt"><p class="label">文件路径错误</p><p>Trae 生成的代码中文件路径是否正确？引用的文件是否存在？</p></div>
+          <div class="hint-box danger" style="margin-top:6pt"><p class="label">编码问题</p><p>中文乱码 → 确保所有环节使用 UTF-8 编码</p></div>
+        </div>
+        <div class="card hover-lift" style="padding:6pt 8pt;">
+          <h3>检查清单</h3>
+          <ul class="bullet-list">
+            <li>搜索功能能按关键词过滤</li>
+            <li>筛选功能能按分类筛选</li>
+            <li>排序功能能按日期排序</li>
+            <li>数据文件路径正确</li>
+            <li>中文显示正常，无乱码</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">13 / 18</p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 14: TASK - INTEGRATION ==================== -->
+<section class="slide" id="slide-14">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 任务布置</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><div class="bar"></div><p>联调与测试</p></div>
+    <h1 class="page-title">项目冲刺：联调与测试</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card hover-lift">
+          <h3>QClaw → WorkBuddy 联调步骤</h3>
+          <div class="timeline-wrap">
+            <div class="timeline-line"></div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content"><p class="year">Step 1：确认数据出口</p><p class="desc">在 QClaw 中完成一次完整采集，明确要求保存到 project-data 文件夹，文件名为 qclaw-output.json，UTF-8 编码</p></div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content"><p class="year">Step 2：确认数据入口</p><p class="desc">WorkBuddy 导入 qclaw-output.json，预览数据，确认字段名和记录数</p></div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content"><p class="year">Step 3：设计转换规则</p><p class="desc">两组同学对照需求，明确转换规则：confidence &lt; 0.8 标记"待核实"，category == "新闻" 归入"动态汇总"</p></div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content"><p class="year">Step 4：端到端测试</p><p class="desc">清空文件夹 → QClaw 采集 → WorkBuddy 读取 → 清洗 → 检查 final-report.docx</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card hover-lift">
+          <h3>WorkBuddy → Trae 联调步骤</h3>
+          <ul class="bullet-list">
+            <li><strong>确认数据出口（WorkBuddy 侧）</strong>：输出文件保存在 data/processed/summary.json，格式正确、字段齐全、编码 UTF-8</li>
+            <li><strong>确认数据入口（Trae 侧）</strong>：Trae 模块能读取 WorkBuddy 处理后的数据文件，数据正确显示（无 undefined、无空白）</li>
+            <li><strong>错误处理</strong>：数据文件缺失时显示友好提示，数据格式错误时显示错误信息</li>
+          </ul>
+        </div>
+        <div class="card hover-lift">
+          <h3>端到端全流程测试</h3>
+          <p>从 QClaw 重新搜集一条新数据 → WorkBuddy 处理 → Trae 刷新确认新数据出现</p>
+          <div class="hint-box success"><p class="label">目标</p><p>全流程耗时 &lt; 5 分钟，数据能顺畅地从 QClaw 流入 WorkBuddy，再流入 Trae</p></div>
+        </div>
+        <div class="card hover-lift">
+          <h3>Bug 修复优先级</h3>
+          <table class="compare-table">
+            <tr><th>优先级</th><th>问题类型</th><th>示例</th></tr>
+            <tr><td style="color:#FF0000;font-weight:700">P0</td><td>阻断性 Bug</td><td>页面空白、按钮无反应、文件读取失败</td></tr>
+            <tr><td style="color:#EE822F;font-weight:700">P1</td><td>功能性 Bug</td><td>筛选有时有效有时无效、数据显示不完整</td></tr>
+            <tr><td style="color:#75BD42;font-weight:700">P2</td><td>体验性 Bug</td><td>按钮颜色不好看、页面加载慢</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">14 / 18</p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 15: PRACTICE - TESTING ==================== -->
+<section class="slide" id="slide-15">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 课堂实操</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><div class="bar"></div><p>测试实操</p></div>
+    <h1 class="page-title">端到端测试记录与 Bug 修复</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card hover-lift">
+          <h3>端到端测试记录表</h3>
+          <table class="compare-table">
+            <tr><th>测试项</th><th>预期结果</th><th>实际结果</th><th>通过</th></tr>
+            <tr><td>QClaw 采集</td><td>输出 JSON 文件</td><td></td><td>□</td></tr>
+            <tr><td>WorkBuddy 读取</td><td>能解析 JSON</td><td></td><td>□</td></tr>
+            <tr><td>WorkBuddy 清洗</td><td>生成处理后文件</td><td></td><td>□</td></tr>
+            <tr><td>Trae 读取</td><td>能加载数据</td><td></td><td>□</td></tr>
+            <tr><td>Trae 展示</td><td>数据正确显示</td><td></td><td>□</td></tr>
+            <tr><td>搜索功能</td><td>能按关键词过滤</td><td></td><td>□</td></tr>
+            <tr><td>筛选功能</td><td>能按分类筛选</td><td></td><td>□</td></tr>
+            <tr><td>排序功能</td><td>能按日期排序</td><td></td><td>□</td></tr>
+          </table>
+        </div>
+        <div class="card hover-lift" style="padding:6pt 8pt;">
+          <h3>问题记录</h3>
+          <div class="hint-box" style="padding:6pt 8pt;"><p class="label">记录格式</p><p style="font-size:10pt;">1. 问题描述：___ 2. 复现步骤：___ 3. 优先级：P0/P1/P2</p></div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card hover-lift">
+          <h3>常见错误排查速查表</h3>
+          <table class="compare-table">
+            <tr><th>问题</th><th>现象</th><th>解决步骤</th></tr>
+            <tr><td>QClaw 采集为空</td><td>返回"未找到相关信息"</td><td>检查采集源 → 简化指令 → 换关键词</td></tr>
+            <tr><td>JSON 字段错位</td><td>title 列显示 content</td><td>检查字段名 → 调整映射 → 改用 CSV</td></tr>
+            <tr><td>中文乱码</td><td>显示为问号</td><td>统一 UTF-8 → 记事本另存为覆盖</td></tr>
+            <tr><td>JSON 有代码块标记</td><td>文件以 ```json 开头</td><td>手动删除标记</td></tr>
+            <tr><td>WorkBuddy 不支持 JSON</td><td>导入无 JSON 选项</td><td>让 QClaw 输出 CSV → Trae 写转换脚本</td></tr>
+            <tr><td>数据中有特殊字符</td><td>JSON 解析失败</td><td>检查引号配对 → 转义特殊字符</td></tr>
+          </table>
+        </div>
+        <div class="card hover-lift">
+          <h3>修复流程</h3>
+          <div class="step-bar">
+            <div class="step-item"><div class="step-dot">1</div></div><div class="step-line active"></div>
+            <div class="step-item"><div class="step-dot">2</div></div><div class="step-line active"></div>
+            <div class="step-item"><div class="step-dot">3</div></div><div class="step-line"></div>
+            <div class="step-item"><div class="step-dot">4</div></div>
+          </div>
+          <p style="font-size:10pt">1. 定位问题（看报错、查路径、对格式）<br>2. 复制报错信息给 Trae<br>3. 按 Trae 建议修复<br>4. 重新测试验证</p>
+        </div>
+        <div class="card hover-lift" style="padding:6pt 8pt;">
+          <h3>互动提示</h3>
+          <div class="hint-box warning" style="padding:6pt 8pt;"><p class="label">分组讨论 3 分钟</p><p style="font-size:10pt;">"你们组最大的 Bug 是什么？计划怎么修？"</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">15 / 18</p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 16: TROUBLESHOOTING GUIDE ==================== -->
+<section class="slide" id="slide-16">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 排错指南</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><div class="bar"></div><p>常见问题</p></div>
+    <h1 class="page-title">联调常见问题排查指南</h1>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10pt;margin-top:4pt;">
+      <div class="card hover-lift" style="padding:8pt;">
+        <div style="display:flex;align-items:center;gap:8pt;margin-bottom:4pt;">
+          <div class="step-num" style="width:24pt;height:24pt;font-size:11pt;">1</div>
+          <h3 style="margin:0;font-size:12pt;">接口 404</h3>
+        </div>
+        <p style="font-size:10.5pt;color:#666;margin-bottom:4pt;"><strong>现象：</strong>浏览器控制台显示 "404 Not Found"</p>
+        <div class="hint-box" style="padding:6pt 8pt;">
+          <p style="font-size:10.5pt;margin:0;"><strong>解决：</strong>检查文件路径拼写 → 确认文件已生成 → 使用 Live Server 运行</p>
+        </div>
+      </div>
+      <div class="card hover-lift" style="padding:8pt;">
+        <div style="display:flex;align-items:center;gap:8pt;margin-bottom:4pt;">
+          <div class="step-num" style="width:24pt;height:24pt;font-size:11pt;background:#EE822F;">2</div>
+          <h3 style="margin:0;font-size:12pt;">CORS 报错</h3>
+        </div>
+        <p style="font-size:10.5pt;color:#666;margin-bottom:4pt;"><strong>现象：</strong>"Access-Control-Allow-Origin" 错误</p>
+        <div class="hint-box warning" style="padding:6pt 8pt;">
+          <p style="font-size:10.5pt;margin:0;"><strong>解决：</strong>使用 Live Server 插件 → 或配置本地代理 → 避免直接打开文件</p>
+        </div>
+      </div>
+      <div class="card hover-lift" style="padding:8pt;">
+        <div style="display:flex;align-items:center;gap:8pt;margin-bottom:4pt;">
+          <div class="step-num" style="width:24pt;height:24pt;font-size:11pt;background:#92181A;">3</div>
+          <h3 style="margin:0;font-size:12pt;">数据格式不匹配</h3>
+        </div>
+        <p style="font-size:10.5pt;color:#666;margin-bottom:4pt;"><strong>现象：</strong>字段显示 undefined 或数据错位</p>
+        <div class="hint-box" style="padding:6pt 8pt;">
+          <p style="font-size:10.5pt;margin:0;"><strong>解决：</strong>对比 JSON 字段名和代码中的字段名 → 统一接口契约 → 添加默认值</p>
+        </div>
+      </div>
+      <div class="card hover-lift" style="padding:8pt;">
+        <div style="display:flex;align-items:center;gap:8pt;margin-bottom:4pt;">
+          <div class="step-num" style="width:24pt;height:24pt;font-size:11pt;background:#75BD42;">4</div>
+          <h3 style="margin:0;font-size:12pt;">页面白屏</h3>
+        </div>
+        <p style="font-size:10.5pt;color:#666;margin-bottom:4pt;"><strong>现象：</strong>浏览器显示空白，无任何内容</p>
+        <div class="hint-box danger" style="padding:6pt 8pt;">
+          <p style="font-size:10.5pt;margin:0;"><strong>解决：</strong>F12 打开控制台查看 JS 报错 → 复制报错给 Trae 修复 → 检查数据文件路径</p>
+        </div>
+      </div>
+      <div class="card hover-lift" style="padding:8pt;grid-column:1 / -1;">
+        <div style="display:flex;align-items:center;gap:8pt;margin-bottom:4pt;">
+          <div class="step-num" style="width:24pt;height:24pt;font-size:11pt;background:#084E8F;">5</div>
+          <h3 style="margin:0;font-size:12pt;">样式错乱</h3>
+        </div>
+        <p style="font-size:10.5pt;color:#666;margin-bottom:4pt;"><strong>现象：</strong>卡片重叠、文字溢出、布局混乱</p>
+        <div class="hint-box warning" style="padding:6pt 8pt;">
+          <p style="font-size:10.5pt;margin:0;"><strong>解决：</strong>检查 CSS 文件是否正确加载 → 在 Trae 中描述问题让 AI 修复 → 优先确保功能，样式最后调</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">16 / 18</p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 17: CHECKLIST ==================== -->
+<section class="slide" id="slide-17">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 进度检查</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><div class="bar"></div><p>日终检查</p></div>
+    <h1 class="page-title">Day 4 日终检查清单</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card hover-lift">
+          <h3>各组完成度检查</h3>
+          <table class="compare-table">
+            <tr><th>检查项</th><th>标准</th><th>1组</th><th>2组</th><th>3组</th><th>4组</th><th>5组</th></tr>
+            <tr><td>QClaw 信息搜集模块</td><td>能自动采集并输出结构化文件</td><td>□</td><td>□</td><td>□</td><td>□</td><td>□</td></tr>
+            <tr><td>WorkBuddy 数据处理模块</td><td>能读取 QClaw 输出并生成报告</td><td>□</td><td>□</td><td>□</td><td>□</td><td>□</td></tr>
+            <tr><td>Trae 展示模块</td><td>有界面、有逻辑、有数据</td><td>□</td><td>□</td><td>□</td><td>□</td><td>□</td></tr>
+            <tr><td>QClaw → WorkBuddy 联调</td><td>数据能顺畅流动</td><td>□</td><td>□</td><td>□</td><td>□</td><td>□</td></tr>
+            <tr><td>WorkBuddy → Trae 联调</td><td>数据能正确展示</td><td>□</td><td>□</td><td>□</td><td>□</td><td>□</td></tr>
+          </table>
+        </div>
+        <div class="card hover-lift">
+          <h3>风险记录</h3>
+          <div class="hint-box"><p class="label">讲师记录</p><p>记录各组进度和风险，调整 Day 5 计划。对进度落后的组，安排助教重点跟进。</p></div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card hover-lift">
+          <h3>今日产出</h3>
+          <ul class="bullet-list">
+            <li>QClaw 信息处理模块可运行（能自动采集目标信息并输出结构化文件）</li>
+            <li>WorkBuddy 办公自动化模块可运行（能读取 QClaw 输出并生成报告）</li>
+            <li>Trae 展示模块可运行（有界面、有逻辑、有数据）</li>
+            <li>至少 50% 小组完成 QClaw → WorkBuddy 联调</li>
+          </ul>
+        </div>
+        <div class="card hover-lift">
+          <h3>课后作业</h3>
+          <ul class="bullet-list">
+            <li>各组修复今天发现的 Bug</li>
+            <li>预习学员手册 Day 5 章节</li>
+            <li>思考：路演时怎么展示你们项目的亮点？</li>
+          </ul>
+        </div>
+        <div class="card hover-lift">
+          <h3>明天预告</h3>
+          <div class="hint-box success"><p class="label">Day 5</p><p>上午：调试技巧 + 测试方法 + 项目打磨<br>下午：路演 PPT 制作 + 演示技巧</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">17 / 18</p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 18: END ==================== -->
+<section class="slide end-body" id="slide-18">
+  <div class="cover-top-bar"></div>
+  <div class="deco-layer">
+    <div class="deco-shape"></div>
+    <div class="deco-accent"></div>
+    <div class="deco-green"></div>
+  </div>
+  <div class="content-layer">
+  <div class="logo-wrap">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="logo-text">AI 智能体工具实训</p>
+  </div>
+  <div class="end-hero">
+    <h1 class="end-title">Day 4 总结</h1>
+    <p class="end-subtitle">项目冲刺 · 整合联调</p>
+    <div class="end-summary">
+      <h3>今日要点回顾</h3>
+      <ul>
+        <li>QClaw 进阶：动态网页采集、反爬策略、数据清洗</li>
+        <li>WorkBuddy 进阶：批量处理、自动化报告、数据可视化</li>
+        <li>Trae 进阶：组件化开发、状态管理、响应式布局</li>
+        <li>三工具整合：数据流设计、接口规范、错误处理</li>
+        <li>联调测试：端到端验证、边界情况、性能优化</li>
+      </ul>
+    </div>
+    <div class="end-next">
+      <p class="label">课后作业</p>
+      <p>1. 各组完成三工具整合联调<br>2. 修复今天发现的所有 Bug<br>3. 准备明天路演材料</p>
+    </div>
+    <div class="end-next" style="margin-top:8pt">
+      <p class="label">明天预告</p>
+      <p>上午：项目打磨 + 性能优化<br>下午：路演彩排 + 最终展示</p>
+    </div>
+  </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">18 / 18</p>
+  </div>
+  <div class="bottom-info">
+    <div><p>AI 智能体工具实训 · 农林高校 2026</p></div>
+    <div style="text-align:right"><p>感谢聆听 · 欢迎交流</p></div>
+  </div>
+</section>
+  </div></div>
+  <div class="cover-top-bar"></div>
+  <div class="deco-layer">
+    <div class="deco-shape"></div>
+    <div class="deco-accent"></div>
+    <div class="deco-green"></div>
+  </div>
+  <div class="content-layer">
+  <div class="logo-wrap">
+    <img src="../../materials/logo-v2.svg" alt="公司 Logo">
+    <p class="logo-text">AI 智能体工具实训</p>
+  </div>
+  <div class="end-hero">
+    <h1 class="end-title">Day 4 总结</h1>
+    <p class="end-subtitle">三工具整合 + 项目冲刺 I</p>
+    <div class="end-summary">
+      <h3>今日要点回顾</h3>
+      <ul>
+        <li>QClaw 进阶技巧：多轮对话、输出格式控制、来源验证、批量处理、角色设定、条件筛选</li>
+        <li>WorkBuddy 进阶技巧：批量文件处理、自动化流程、数据格式转换、条件判断、数据合并</li>
+        <li>三工具联调五步法：确认出口 → 确认入口 → 设计规则 → 端到端测试 → 边界测试</li>
+        <li>MVP 定义：先跑通核心流程，再追求完美</li>
+        <li>项目冲刺：功能完善 + 联调与测试</li>
+      </ul>
+    </div>
+    <div class="end-next">
+      <p class="label">下次预告</p>
+      <p>明天我们将学习调试技巧、测试方法、项目打磨和路演 PPT 制作。请各组今晚修复 Bug，准备好明天的冲刺！</p>
+    </div>
+  </div>
+  </div>
+  <div class="bottom-info">
+    <div><p>AI 智能体工具实训 · 农林高校 2026</p></div>
+    <div style="text-align:right"><p>感谢聆听 · 欢迎交流</p></div>
+  </div>
+</section>
+  </div></div>
+
+<!-- Navigation -->
+<div class="nav-overlay">
+  
+  
+  
+</div>
+
+<script>
+    // Viewport scaling
+    function resizeSlides() {
+      const wrapper = document.getElementById('slideWrapper');
+      if (!wrapper) return;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const sw = 960 * 1.333; // 960pt ≈ 1280px
+      const sh = 540 * 1.333; // 540pt ≈ 720px
+      const scale = Math.min(vw / sw, vh / sh);
+      wrapper.style.transform = 'scale(' + scale + ')';
+    }
+    window.addEventListener('resize', resizeSlides);
+    resizeSlides();
+
+  let currentSlide = 1;
+  const totalSlides = 18;
+  function showSlide(n) {
+    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+    document.getElementById('slide-' + n).classList.add('active');
+    const pn = document.getElementById('page-num'); if(pn) pn.textContent = n + ' / ' + totalSlides;
+  }
+  function nextSlide() { if (currentSlide < totalSlides) { currentSlide++; showSlide(currentSlide); } }
+  function prevSlide() { if (currentSlide > 1) { currentSlide--; showSlide(currentSlide); } }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+    if (e.key === 'ArrowLeft') prevSlide();
+  });
+</script>
+</body>
+</html>

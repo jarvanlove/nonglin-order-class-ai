@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 6 · 就业锦囊 + 正式路演 + 结业</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<link rel="stylesheet" href="../shared/animations.css">
+<link rel="stylesheet" href="../shared/layout.css">
+<link rel="stylesheet" href="../shared/components.css">
+<style>
+  /* ===== 幻灯片系统 ===== */
+  html, body {
+    margin: 0; padding: 0;
+    width: 100vw; height: 100vh;
+    overflow: hidden;
+    background: #1a1a1a;
+    font-family: var(--font-display);
+  }
+  .deck-container {
+    width: 100vw; height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .slide {
+    width: 960pt; height: 540pt;
+    position: relative;
+    background: var(--bg);
+    overflow: hidden;
+    display: none;
+    box-shadow: 0 8pt 32pt rgba(0,0,0,0.3);
+  }
+  .slide.active {
+    display: block;
+  }
+  /* 缩放适配 */
+  .slide-wrapper {
+    transform-origin: center center;
+    transition: transform 0.2s ease;
+  }
+
+  /* ===== 通用Chrome ===== */
+  .top-bar {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: var(--top-bar-h); background: var(--primary); z-index: 100;
+  }
+  .slide-header {
+    position: absolute; top: var(--top-bar-h); left: 0; right: 0;
+    height: var(--header-h); display: flex; align-items: center; justify-content: space-between;
+    padding: 0 var(--content-pad-x); background: var(--bg-white);
+    border-bottom: 1pt solid var(--border); z-index: 10;
+  }
+  .slide-header .logo { height: 22pt; width: auto; }
+  .slide-header .page-meta { font-size: var(--text-2xs); color: var(--muted); }
+  .slide-footer {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: var(--footer-h); display: flex; align-items: center; justify-content: space-between;
+    padding: 0 var(--content-pad-x); background: var(--bg-white);
+    border-top: 1pt solid var(--border); z-index: 10;
+  }
+  .slide-footer p { font-size: var(--text-2xs); color: var(--muted); margin: 0; }
+  .slide-content {
+    position: absolute;
+    top: calc(var(--top-bar-h) + var(--header-h)); bottom: var(--footer-h);
+    left: 0; right: 0; padding: 10pt var(--content-pad-x);
+    box-sizing: border-box; overflow: hidden;
+  }
+  .slide-content.hover-lift .content-block,
+  .slide-content.hover-lift .obj-card,
+  .slide-content.hover-lift .intro-card,
+  .slide-content.hover-lift .task-card,
+  .slide-content.hover-lift .practice-card,
+  .slide-content.hover-lift .tool-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .slide-content.hover-lift .content-block:hover,
+  .slide-content.hover-lift .obj-card:hover,
+  .slide-content.hover-lift .intro-card:hover,
+  .slide-content.hover-lift .task-card:hover,
+  .slide-content.hover-lift .practice-card:hover,
+  .slide-content.hover-lift .tool-card:hover {
+    transform: translateY(-2pt);
+    box-shadow: 0 4pt 12pt rgba(0,0,0,0.08);
+  }
+
+  /* ===== 章节标题栏 ===== */
+  .section-header-bar {
+    display: flex; align-items: center; gap: var(--space-5); margin-bottom: var(--space-4);
+  }
+  .section-header-bar .section-title-box {
+    background: var(--primary); color: var(--bg-white); padding: var(--space-3) var(--space-6);
+    border-radius: 4pt; font-size: var(--text-3xl); font-weight: 700;
+  }
+  .section-header-bar .section-number { font-size: var(--text-3xl); font-weight: 700; color: var(--primary); }
+  .section-header-bar .section-line { flex: 1; height: 3pt; background: var(--primary-dark); border-radius: 2pt; }
+
+  /* ===== 统一内容入场动画 ===== */
+  .content-enter > * {
+    opacity: 0; transform: translateY(12pt) scale(0.98);
+    animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  .content-enter > *:nth-child(1) { animation-delay: 0s; }
+  .content-enter > *:nth-child(2) { animation-delay: 0.1s; }
+  .content-enter > *:nth-child(3) { animation-delay: 0.2s; }
+  .content-enter > *:nth-child(4) { animation-delay: 0.3s; }
+  .content-enter > *:nth-child(5) { animation-delay: 0.4s; }
+  .content-enter > *:nth-child(6) { animation-delay: 0.5s; }
+  .content-enter > *:nth-child(7) { animation-delay: 0.6s; }
+  .content-enter > *:nth-child(8) { animation-delay: 0.7s; }
+
+  /* ===== 封面页 ===== */
+  .cover-body { background: var(--bg); }
+  .cover-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 6pt; background: var(--primary); z-index: 100; }
+  .deco-shape-right { position: absolute; right: 0; top: 0; width: 260pt; height: 540pt; background: var(--primary); clip-path: polygon(35% 0, 100% 0, 100% 100%, 0% 100%); z-index: 0; }
+  .deco-circle-1 { position: absolute; right: 200pt; top: 110pt; width: 80pt; height: 80pt; background: var(--accent); border-radius: 50%; opacity: 0.15; z-index: 0; }
+  .deco-circle-2 { position: absolute; right: 60pt; bottom: 90pt; width: 120pt; height: 120pt; background: var(--success); border-radius: 50%; opacity: 0.12; z-index: 0; }
+  .deco-circle-3 { position: absolute; right: 140pt; top: 280pt; width: 40pt; height: 40pt; background: var(--primary-light); border-radius: 50%; opacity: 0.3; z-index: 0; }
+  .cover-hero { position: absolute; top: 90pt; left: 48pt; right: 300pt; z-index: 2; }
+  .day-label { display: inline-flex; align-items: center; gap: var(--space-5); margin-bottom: var(--space-8); }
+  .day-label .bar { width: 24pt; height: 3pt; background: var(--accent); border-radius: 2pt; }
+  .day-label p { font-size: var(--text-md); color: var(--accent); font-weight: 700; letter-spacing: 0.08em; margin: 0; }
+  .main-title { font-size: var(--text-4xl); font-weight: 700; color: var(--primary); line-height: 1.2; margin: 0 0 var(--space-7) 0; }
+  .main-title .accent { color: var(--accent); }
+  .sub-title { font-size: var(--text-lg); color: var(--light-ink); line-height: 1.6; margin: 0 0 var(--space-12) 0; }
+  .cover-bottom { position: absolute; bottom: 40pt; left: 48pt; right: 48pt; display: flex; justify-content: space-between; align-items: flex-end; z-index: 2; }
+  .cover-bottom p { font-size: var(--text-sm); color: var(--muted); line-height: 1.8; margin: 0; }
+  .cover-logo { position: absolute; top: 20pt; left: 32pt; display: flex; align-items: center; gap: var(--space-5); z-index: 2; }
+  .cover-logo img { height: 28pt; width: auto; }
+  .cover-logo .logo-text { font-size: var(--text-sm); color: var(--primary); font-weight: 700; letter-spacing: 0.05em; }
+  .cover-tag { position: absolute; top: 22pt; right: 32pt; background: rgba(8,78,143,0.08); padding: var(--space-2) var(--space-5); border-radius: 999pt; font-size: var(--text-xs); color: var(--primary); font-weight: 500; z-index: 2; }
+  .cover-illustration { position: absolute; right: 20pt; top: 50%; transform: translateY(-50%); width: 240pt; height: auto; z-index: 0; border-radius: 8pt; }
+
+  /* ===== 目标页 ===== */
+  .obj-header-bar { position: absolute; top: 0; left: 0; right: 0; height: 125pt; background: var(--bg-white); border-bottom: 1pt solid var(--border); z-index: 2; display: flex; align-items: flex-start; padding: 20pt 32pt; }
+  .obj-header-bar h2 { font-size: var(--text-5xl); font-weight: 700; color: var(--primary); margin: 0; }
+  .obj-content { position: absolute; top: 125pt; bottom: var(--footer-h); left: 0; right: 0; padding: 12pt 24pt; box-sizing: border-box; z-index: 2; }
+  .cards-row { display: flex; gap: 10pt; height: 100%; }
+  .obj-card { flex: 1; background: var(--bg-white); border: 1pt solid var(--border); border-radius: 6pt; padding: 10pt; display: flex; flex-direction: column; box-shadow: 0 1pt 4pt rgba(0,0,0,0.04); }
+  .obj-card .card-icon { width: 36pt; height: 36pt; border-radius: 8pt; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-3); font-size: var(--text-lg); font-weight: 700; color: var(--bg-white); }
+  .obj-card:nth-child(1) .card-icon { background: var(--primary); }
+  .obj-card:nth-child(2) .card-icon { background: var(--accent); }
+  .obj-card:nth-child(3) .card-icon { background: var(--success); }
+  .obj-card h3 { font-size: var(--text-2xl); color: var(--secondary); font-weight: 700; margin-bottom: var(--space-3); }
+  .obj-card ul { list-style: none; flex: 1; padding: 0; margin: 0; }
+  .obj-card li { font-size: var(--text-base); color: var(--light-ink); line-height: 1.5; padding-left: 14pt; position: relative; margin-bottom: 6pt; }
+  .obj-card li::before { content: ""; position: absolute; left: 0; top: 7pt; width: 5pt; height: 5pt; border-radius: 50%; background: var(--primary); }
+  .obj-card:nth-child(2) li::before { background: var(--accent); }
+  .obj-card:nth-child(3) li::before { background: var(--success); }
+  .obj-card .highlight-box { background: rgba(8,78,143,0.04); border-left: 2pt solid var(--primary); padding: 8pt 10pt; border-radius: 0 4pt 4pt 0; margin-top: auto; }
+  .obj-card:nth-child(2) .highlight-box { border-left-color: var(--accent); background: rgba(238,130,47,0.04); }
+  .obj-card:nth-child(3) .highlight-box { border-left-color: var(--success); background: rgba(117,189,66,0.04); }
+  .obj-card .highlight-box p { font-size: var(--text-xs); color: var(--muted); line-height: 1.5; margin: 0; }
+
+  /* ===== 导入页 ===== */
+  .intro-header-bar { position: absolute; top: 0; left: 0; right: 0; height: 95pt; background: var(--bg-white); border-bottom: 1pt solid var(--border); z-index: 2; display: flex; align-items: flex-start; padding: 18pt 32pt; }
+  .intro-header-bar h2 { font-size: var(--text-5xl); font-weight: 700; color: var(--primary); margin: 0; }
+  .intro-content { position: absolute; top: 95pt; bottom: var(--footer-h); left: 0; right: 0; padding: 12pt 24pt; box-sizing: border-box; z-index: 2; }
+  .intro-layout { display: flex; gap: 10pt; height: 100%; }
+  .intro-left, .intro-right { flex: 1; display: flex; flex-direction: column; gap: 12pt; }
+  .intro-card { background: var(--bg-white); border: 1pt solid var(--border); border-radius: 6pt; padding: 10pt; box-shadow: 0 1pt 4pt rgba(0,0,0,0.04); }
+  .intro-card h3 { font-size: var(--text-xl); color: var(--info); font-weight: 700; margin-bottom: var(--space-3); }
+  .intro-card p { font-size: var(--text-base); color: var(--light-ink); line-height: 1.5; margin: 0; }
+  .case-box { background: rgba(8,78,143,0.03); border-left: 3pt solid var(--primary); border-radius: 0 4pt 4pt 0; padding: var(--space-3) var(--space-4); margin-top: var(--space-2); }
+  .case-box .case-title { font-size: var(--text-xs); color: var(--primary); font-weight: 700; margin-bottom: var(--space-2); }
+  .question-list { list-style: none; padding: 0; margin: 0; }
+  .question-list li { font-size: var(--text-base); color: var(--light-ink); line-height: 1.5; padding-left: 20pt; position: relative; margin-bottom: 6pt; }
+  .question-list li::before { content: "?"; position: absolute; left: 0; top: 2pt; width: 14pt; height: 14pt; border-radius: 50%; background: var(--accent); color: var(--bg-white); font-size: var(--text-xs); font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+  /* ===== 内容页通用 ===== */
+  .content-two-col { display: flex; gap: var(--space-5); height: calc(100% - 52pt); }
+  .content-col { flex: 1; display: flex; flex-direction: column; gap: var(--space-3); }
+  .content-block { background: var(--bg-white); border: 1pt solid var(--border); border-radius: 6pt; padding: var(--space-3); box-shadow: 0 1pt 4pt rgba(0,0,0,0.04); }
+  .content-block h3 { font-size: var(--text-xl); color: var(--info); font-weight: 700; margin-bottom: var(--space-3); }
+  .content-block p { font-size: var(--text-base); color: var(--light-ink); line-height: 1.5; margin: 0 0 var(--space-3) 0; }
+  .content-block p:last-child { margin-bottom: 0; }
+  .content-block ul { list-style: none; padding: 0; margin: 0; }
+  .content-block ul li { font-size: var(--text-base); color: var(--light-ink); line-height: 1.5; padding-left: var(--space-6); position: relative; margin-bottom: var(--space-2); }
+  .content-block ul li::before { content: ""; position: absolute; left: 0; top: 7pt; width: 5pt; height: 5pt; border-radius: 50%; background: var(--primary); }
+  .image-area { background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%); border: 2pt dashed var(--border); border-radius: 6pt; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60pt; color: var(--muted); font-size: var(--text-base); overflow: hidden; }
+  .image-area img { max-width: 100%; max-height: 160pt; border-radius: 4pt; object-fit: cover; }
+  .key-point { background: rgba(8,78,143,0.04); border-left: 3pt solid var(--primary); border-radius: 0 4pt 4pt 0; padding: var(--space-3) var(--space-4); margin-top: var(--space-2); }
+  .key-point p { font-size: var(--text-base); color: var(--light-ink); line-height: 1.5; margin: 0; }
+  .key-point .point-label { font-size: var(--text-xs); color: var(--primary); font-weight: 700; margin-bottom: var(--space-2); }
+
+  /* ===== 任务页 ===== */
+  .task-layout { display: flex; gap: var(--space-5); height: calc(100% - 52pt); }
+  .task-main { flex: 2; display: flex; flex-direction: column; gap: var(--space-3); }
+  .task-sidebar { flex: 1; display: flex; flex-direction: column; gap: var(--space-3); }
+  .task-card { background: var(--bg-white); border: 1pt solid var(--border); border-radius: 6pt; padding: var(--space-3) var(--space-4); box-shadow: 0 1pt 4pt rgba(0,0,0,0.04); }
+  .task-card h3 { font-size: var(--text-xl); color: var(--info); font-weight: 700; margin-bottom: var(--space-3); }
+  .task-card p { font-size: var(--text-base); color: var(--light-ink); line-height: 1.5; margin: 0 0  var(--space-3) 0; }
+  .step-list { list-style: none; padding: 0; margin: 0; }
+  .step-list li { display: flex; align-items: flex-start; gap: var(--space-3); margin-bottom: var(--space-2); }
+  .step-num { width: 22pt; height: 22pt; border-radius: 50%; background: var(--primary); color: var(--bg-white); font-size: var(--text-xs); font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-text { font-size: var(--text-base); color: var(--light-ink); line-height: 1.5; }
+  .time-control { background: rgba(238,130,47,0.06); border-left: 3pt solid var(--accent); border-radius: 0 4pt 4pt 0; padding: var(--space-3) var(--space-4); }
+  .time-control .time-label { font-size: var(--text-xs); color: var(--accent); font-weight: 700; margin-bottom: var(--space-2); }
+  .time-control p { font-size: var(--text-base); color: var(--light-ink); line-height: 1.5; margin: 0; }
+  .deliverable-box { background: rgba(117,189,66,0.06); border-left: 3pt solid var(--success); border-radius: 0 4pt 4pt 0; padding: var(--space-3) var(--space-4); }
+  .deliverable-box .deliverable-label { font-size: var(--text-xs); color: var(--success); font-weight: 700; margin-bottom: var(--space-2); }
+  .deliverable-box p { font-size: var(--text-base); color: var(--light-ink); line-height: 1.5; margin: 0; }
+
+  /* ===== 实操页 ===== */
+  .practice-layout { display: flex; gap: var(--space-5); height: calc(100% - 48pt); }
+  .practice-col { flex: 1; display: flex; flex-direction: column; gap: var(--space-3); }
+  .practice-card { background: var(--bg-white); border: 1pt solid var(--border); border-radius: 6pt; padding: var(--space-3) var(--space-4); box-shadow: 0 1pt 4pt rgba(0,0,0,0.04); }
+  .practice-card h3 { font-size: var(--text-lg); color: var(--info); font-weight: 700; margin-bottom: var(--space-3); }
+  .screenshot-area { background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%); border: 2pt dashed var(--border); border-radius: 6pt; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70pt; color: var(--muted); font-size: var(--text-base); margin-bottom: var(--space-2); overflow: hidden; }
+  .screenshot-area img { max-width: 100%; max-height: 140pt; border-radius: 4pt; object-fit: cover; }
+  .tip-box { background: rgba(117,189,66,0.06); border-left: 3pt solid var(--success); border-radius: 0 4pt 4pt 0; padding: var(--space-3) var(--space-4); }
+  .tip-box .tip-label { font-size: var(--text-xs); color: var(--success); font-weight: 700; margin-bottom: var(--space-2); }
+  .tip-box p { font-size: var(--text-base); color: var(--light-ink); line-height: 1.5; margin: 0; }
+  .warning-box { background: rgba(255,0,0,0.04); border-left: 3pt solid var(--danger); border-radius: 0 4pt 4pt 0; padding: var(--space-3) var(--space-4); }
+  .warning-box .warning-label { font-size: var(--text-xs); color: var(--danger); font-weight: 700; margin-bottom: var(--space-2); }
+  .warning-box p { font-size: var(--text-base); color: var(--light-ink); line-height: 1.5; margin: 0; }
+
+  /* ===== 封底页 ===== */
+  .end-body { background: var(--bg); }
+  .end-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 6pt; background: var(--primary); z-index: 100; }
+  .end-deco-shape { position: absolute; right: 0; top: 0; width: 260pt; height: 540pt; background: var(--primary); clip-path: polygon(35% 0, 100% 0, 100% 100%, 0% 100%); z-index: 0; }
+  .end-deco-circle-1 { position: absolute; right: 200pt; top: 110pt; width: 80pt; height: 80pt; background: var(--accent); border-radius: 50%; opacity: 0.15; z-index: 0; }
+  .end-deco-circle-2 { position: absolute; right: 60pt; bottom: 90pt; width: 120pt; height: 120pt; background: var(--success); border-radius: 50%; opacity: 0.12; z-index: 0; }
+  .end-hero { position: absolute; top: 50%; left: 48pt; right: 300pt; transform: translateY(-50%); z-index: 2; }
+  .end-title { font-size: var(--text-5xl); font-weight: 700; color: var(--primary); line-height: 1.2; margin: 0 0 var(--space-8) 0; }
+  .end-subtitle { font-size: var(--text-lg); color: var(--light-ink); line-height: 1.6; margin: 0 0 var(--space-10) 0; }
+  .end-summary { background: var(--bg-white); border: 1pt solid var(--border); border-radius: 6pt; padding: var(--space-4); margin-bottom: var(--space-4); box-shadow: 0 1pt 4pt rgba(0,0,0,0.04); }
+  .end-summary h3 { font-size: var(--text-md); color: var(--primary); font-weight: 700; margin-bottom: var(--space-2); }
+  .end-summary ul { list-style: none; padding: 0; margin: 0; }
+  .end-summary li { font-size: var(--text-base); color: var(--light-ink); line-height: 1.5; padding-left: var(--space-6); position: relative; margin-bottom: var(--space-2); }
+  .end-summary li::before { content: "✓"; position: absolute; left: 0; color: var(--success); font-weight: 700; }
+  .end-next { background: rgba(238,130,47,0.06); border-left: 3pt solid var(--accent); border-radius: 0 4pt 4pt 0; padding: var(--space-3) var(--space-4); }
+  .end-next .next-label { font-size: var(--text-xs); color: var(--accent); font-weight: 700; margin-bottom: var(--space-2); }
+  .end-next p { font-size: var(--text-base); color: var(--light-ink); line-height: 1.6; margin: 0; }
+  .end-logo { position: absolute; top: 20pt; left: 32pt; display: flex; align-items: center; gap: var(--space-5); z-index: 2; }
+  .end-logo img { height: 28pt; width: auto; }
+  .end-logo .logo-text { font-size: var(--text-sm); color: var(--primary); font-weight: 700; letter-spacing: 0.05em; }
+  .end-bottom { position: absolute; bottom: 40pt; left: 48pt; right: 48pt; display: flex; justify-content: space-between; align-items: flex-end; z-index: 2; }
+  .end-bottom p { font-size: var(--text-sm); color: var(--muted); line-height: 1.8; margin: 0; }
+
+  /* ===== 特殊组件 ===== */
+  .timeline { display: flex; gap: 10pt; align-items: flex-start; }
+  .timeline-item { flex: 1; text-align: center; position: relative; }
+  .timeline-item::after { content: ""; position: absolute; top: 14pt; left: 50%; right: -50%; height: 2pt; background: var(--border); z-index: 0; }
+  .timeline-item:last-child::after { display: none; }
+  .timeline-dot { width: 28pt; height: 28pt; border-radius: 50%; background: var(--primary); color: var(--bg-white); font-size: var(--text-xs); font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-3); position: relative; z-index: 1; }
+  .timeline-item.accent .timeline-dot { background: var(--accent); }
+  .timeline-item.success .timeline-dot { background: var(--success); }
+  .timeline-year { font-size: var(--text-xs); color: var(--muted); font-weight: 700; margin-bottom: var(--space-1); }
+  .timeline-text { font-size: var(--text-xs); color: var(--light-ink); line-height: 1.5; }
+
+  .compare-table { width: 100%; border-collapse: collapse; font-size: var(--text-base); }
+  .compare-table th { background: var(--primary); color: var(--bg-white); padding: var(--space-3) var(--space-4); text-align: left; font-weight: 700; }
+  .compare-table td { padding: var(--space-3) var(--space-4); border-bottom: 1pt solid var(--border); color: var(--light-ink); }
+  .compare-table tr:nth-child(even) { background: rgba(8,78,143,0.02); }
+
+  .prompt-box { background: rgba(8,78,143,0.04); border-left: 3pt solid var(--primary); border-radius: 0 4pt 4pt 0; padding: var(--space-4) var(--space-5); margin-bottom: var(--space-4); }
+  .prompt-box .label { font-size: var(--text-xs); color: var(--primary); font-weight: 700; margin-bottom: var(--space-2); }
+  .prompt-box p { font-size: var(--text-base); color: var(--light-ink); line-height: 1.5; margin: 0; }
+
+  .interaction-tip { background: rgba(238,130,47,0.08); border-radius: 4pt; padding: var(--space-2) var(--space-3); display: inline-flex; align-items: center; gap: var(--space-2); margin-top: var(--space-2); }
+  .interaction-tip .tip-icon { font-size: var(--text-md); }
+  .interaction-tip p { font-size: var(--text-xs); color: var(--accent); font-weight: 700; margin: 0; }
+
+  .tool-card { background: var(--bg-white); border: 1pt solid var(--border); border-radius: 6pt; padding: var(--space-3); text-align: center; box-shadow: 0 1pt 4pt rgba(0,0,0,0.04); }
+  .tool-card .tool-icon { width: 32pt; height: 32pt; border-radius: 8pt; background: var(--primary); color: var(--bg-white); font-size: var(--text-md); font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-3); }
+  .tool-card h4 { font-size: var(--text-base); color: var(--primary); font-weight: 700; margin-bottom: 4pt; }
+  .tool-card p { font-size: var(--text-sm); color: var(--muted); line-height: 1.5; margin: 0; }
+
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5); }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-5); }
+
+  .output-template { background: rgba(117,189,66,0.04); border: 1pt dashed var(--success); border-radius: 6pt; padding: var(--space-4); }
+  .output-template .template-label { font-size: var(--text-xs); color: var(--success); font-weight: 700; margin-bottom: var(--space-2); }
+  .output-template pre { font-size: var(--text-sm); color: var(--light-ink); line-height: 1.5; margin: 0; font-family: var(--font-mono); white-space: pre-wrap; }
+
+  /* 导航提示 */
+  .nav-hint { position: fixed; bottom: 12pt; right: 12pt; background: rgba(0,0,0,0.7); color: #fff; padding: 6pt 12pt; border-radius: 4pt; font-size: var(--text-sm); z-index: 1000; pointer-events: none; }
+
+  /* 防滚动条 + 防图片遮挡 */
+  html, body { scrollbar-width: none; -ms-overflow-style: none; }
+  html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+  .cover-bottom { z-index: 2; }
+  .slide-content { z-index: 1; }
+
+  /* 打印优化 */
+  @media print {
+    .slide { display: block !important; page-break-after: always; }
+    .nav-hint { display: none; }
+  }
+
+  /* === readability fix: ensure minimum font sizes === */
+  .obj-card li, .intro-card p, .content-block p, .content-block li, .task-card p, .practice-card p, .end-summary li, .step-text, .tip-box p, .warning-box p, .time-control p, .deliverable-box p { font-size: var(--text-base); }
+  .key-point p { font-size: var(--text-base); }
+  .obj-card .highlight-box p, .intro-card .highlight-box p { font-size: var(--text-xs); }
+
+  /* ===== Day 6 特殊组件 ===== */
+  .tag { display: inline-block; padding: 3pt 10pt; border-radius: 999pt; font-size: 10pt; font-weight: 700; margin-top: 4pt; }
+  .tag-primary { background: rgba(8,78,143,0.10); color: #084E8F; }
+  .tag-accent { background: rgba(238,130,47,0.12); color: #EE822F; }
+  .tag-success { background: rgba(117,189,66,0.12); color: #75BD42; }
+
+  .code-block { background: #1e293b; color: #e2e8f0; padding: 8pt 10pt; border-radius: 4pt; font-family: "Consolas", monospace; font-size: 10pt; line-height: 1.5; overflow-x: auto; }
+
+  .redline-card { background: var(--bg-white); border: 1pt solid var(--border); border-radius: 6pt; padding: 10pt 12pt; display: flex; gap: 10pt; align-items: flex-start; margin-bottom: 4pt; }
+  .redline-card .rl-icon { width: 32pt; height: 32pt; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14pt; font-weight: 700; color: #ffffff; flex-shrink: 0; }
+  .redline-card.rl1 .rl-icon { background: #92181A; }
+  .redline-card.rl2 .rl-icon { background: #EE822F; }
+  .redline-card.rl3 .rl-icon { background: #084E8F; }
+  .redline-card h4 { font-size: 12pt; font-weight: 700; margin-bottom: 2pt; }
+  .redline-card.rl1 h4 { color: #92181A; }
+  .redline-card.rl2 h4 { color: #EE822F; }
+  .redline-card.rl3 h4 { color: #084E8F; }
+  .redline-card p { font-size: 10.5pt; color: #333333; line-height: 1.55; }
+
+  .award-card { background: var(--bg-white); border: 1pt solid var(--border); border-radius: 6pt; padding: 8pt 10pt; display: flex; gap: 8pt; align-items: center; margin-bottom: 4pt; }
+  .award-card .aw-icon { width: 28pt; height: 28pt; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12pt; }
+  .award-card .aw-icon.gold { background: rgba(238,130,47,0.12); color: #EE822F; }
+  .award-card .aw-icon.silver { background: rgba(8,78,143,0.10); color: #084E8F; }
+  .award-card .aw-icon.bronze { background: rgba(117,189,66,0.12); color: #75BD42; }
+  .award-card h4 { font-size: 11pt; color: #084E8F; font-weight: 700; }
+  .award-card p { font-size: 10.5pt; color: #666666; }
+
+  .layer-stack { display: flex; flex-direction: column; gap: 4pt; }
+  .layer-item { display: flex; align-items: center; gap: 10pt; padding: 8pt 10pt; border-radius: 4pt; }
+  .layer-item .ly-num { width: 24pt; height: 24pt; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10pt; font-weight: 700; color: #ffffff; flex-shrink: 0; }
+  .layer-item.ly4 { background: rgba(117,189,66,0.10); border-left: 3pt solid #75BD42; }
+  .layer-item.ly4 .ly-num { background: #75BD42; }
+  .layer-item.ly3 { background: rgba(238,130,47,0.08); border-left: 3pt solid #EE822F; }
+  .layer-item.ly3 .ly-num { background: #EE822F; }
+  .layer-item.ly2 { background: rgba(8,78,143,0.06); border-left: 3pt solid #084E8F; }
+  .layer-item.ly2 .ly-num { background: #084E8F; }
+  .layer-item.ly1 { background: rgba(146,24,26,0.06); border-left: 3pt solid #92181A; }
+  .layer-item.ly1 .ly-num { background: #92181A; }
+  .layer-item .ly-title { font-size: 11pt; font-weight: 700; color: #333333; }
+  .layer-item .ly-desc { font-size: 10.5pt; color: #666666; }
+  .layer-arrow { text-align: center; font-size: 14pt; color: #084E8F; line-height: 1; }
+
+  .roadmap-wrap { display: flex; gap: 10pt; margin-bottom: 0pt; }
+  .roadmap-item { flex: 1; background: var(--bg-white); border: 1pt solid var(--border); border-radius: 6pt; padding: 8pt 10pt; text-align: center; position: relative; }
+  .roadmap-item .rd-day { font-size: 10pt; color: #EE822F; font-weight: 700; margin-bottom: 2pt; }
+  .roadmap-item .rd-title { font-size: 10.5pt; color: #084E8F; font-weight: 700; line-height: 1.4; }
+  .roadmap-item .rd-desc { font-size: 10pt; color: #666666; line-height: 1.5; margin-top: 2pt; }
+  .roadmap-arrow { display: flex; align-items: center; color: #084E8F; font-size: 12pt; font-weight: 700; }
+
+  .step-bar { display: flex; gap: 4pt; align-items: center; margin-bottom: 8pt; }
+  .step-item { display: flex; align-items: center; gap: 4pt; }
+  .step-dot { width: 20pt; height: 20pt; border-radius: 50%; background: #084E8F; color: #ffffff; font-size: 10pt; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .step-dot.active { background: #EE822F; }
+  .step-dot.done { background: #75BD42; }
+  .step-line { width: 16pt; height: 2pt; background: #e2e8f0; }
+  .step-line.active { background: #084E8F; }
+
+  .timeline-wrap { position: relative; padding-left: 12pt; }
+  .timeline-line { position: absolute; left: 4pt; top: 8pt; bottom: 8pt; width: 2pt; background: #084E8F; }
+  .timeline-item-v { display: flex; align-items: flex-start; gap: 10pt; margin-bottom: 4pt; position: relative; }
+  .timeline-dot-v { width: 10pt; height: 10pt; border-radius: 50%; background: #084E8F; border: 2pt solid #ffffff; box-shadow: 0 0 0 1pt #084E8F; flex-shrink: 0; margin-top: 3pt; position: relative; z-index: 1; }
+  .timeline-content { flex: 1; background: var(--bg-white); border: 1pt solid var(--border); border-radius: 4pt; padding: 8pt 10pt; }
+  .timeline-content .year { font-size: 10pt; font-weight: 700; color: #084E8F; margin-bottom: 2pt; }
+  .timeline-content .desc { font-size: 10.5pt; color: #333333; line-height: 1.5; }
+
+  .factor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; }
+  .factor-card { background: var(--bg-white); border-left: 3pt solid #084E8F; border-top: 1pt solid var(--border); border-right: 1pt solid var(--border); border-bottom: 1pt solid var(--border); border-radius: 0 4pt 4pt 0; padding: 8pt 10pt; }
+  .factor-card h4 { font-size: 11pt; color: #084E8F; font-weight: 700; margin-bottom: 2pt; }
+  .factor-card p { font-size: 10.5pt; color: #333333; line-height: 1.5; }
+  .factor-card:nth-child(2) { border-left-color: #92181A; } .factor-card:nth-child(2) h4 { color: #92181A; }
+  .factor-card:nth-child(3) { border-left-color: #EE822F; } .factor-card:nth-child(3) h4 { color: #EE822F; }
+  .factor-card:nth-child(4) { border-left-color: #75BD42; } .factor-card:nth-child(4) h4 { color: #75BD42; }
+</style>
+</head>
+<body class="slide-enter">
+
+<div class="deck-container">
+  <div class="slide-wrapper" id="slideWrapper">
+
+<!-- ==================== 第1页：封面 ==================== -->
+<section class="slide cover-body active" data-page="1">
+  <div class="cover-top-bar"></div>
+  <div class="deco-shape-right"></div>
+  <div class="deco-circle-1"></div>
+  <div class="deco-circle-2"></div>
+  <div class="deco-circle-3"></div>
+  <div class="cover-logo">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="logo-text">AI 智能体工具实训</p>
+  </div>
+  <div class="cover-tag"><p>6 天集训 · 第 6 天 · 最后一天</p></div>
+  <div class="cover-hero">
+    <div class="day-label">
+      <div class="bar"></div>
+      <p>DAY 06</p>
+    </div>
+    <h1 class="main-title">就业锦囊 <span class="accent">+</span> 正式路演 <span class="accent">+</span> 结业</h1>
+    <p class="sub-title">简历 AI 优化 · 职场安全规范 · LLM-Wiki 知识管理 · 课程全景回顾 · 路演颁奖</p>
+  </div>
+  <div class="cover-bottom">
+    <div>
+      <p>主讲讲师：吴家文</p>
+      <p>上海中域工业互联网研究院</p>
+    </div>
+    <div style="text-align: right;">
+      <p>2026 年 6 月</p>
+      <p>AI 智能体工具实训</p>
+    </div>
+  </div>
+  <img class="cover-illustration" src="../assets/scenes/graduation-1.jpg" alt="结业">
+</section>
+
+<!-- ==================== 第2页：目标 ==================== -->
+<section class="slide" data-page="2">
+  <div class="deco-layer" style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:0;pointer-events:none;">
+    <img class="header-deco" src="../assets/scenes/student-1.jpg" alt="装饰" style="position:absolute;right:0;bottom:0;width:220pt;height:140pt;object-fit:cover;opacity:0.12;border-radius:8pt 0 0 0;-webkit-mask-image:linear-gradient(to top, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);mask-image:linear-gradient(to top, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);">
+  </div>
+  <div class="obj-header-bar">
+    <h2>今日目标</h2>
+  </div>
+  <div class="obj-content content-enter">
+    <div class="cards-row">
+      <div class="obj-card">
+        <div class="card-icon">知</div>
+        <h3>知识目标</h3>
+        <ul>
+          <li>掌握简历 AI 优化三原则（匹配关键词、成果导向、多版本策略）</li>
+          <li>理解职场 AI 使用的 3 条安全红线</li>
+          <li>掌握 LLM-Wiki 知识管理体系和五层模型</li>
+          <li>完成 6 天课程全景回顾，建立完整学习地图</li>
+        </ul>
+        <div class="highlight-box"><p>核心认知：这 6 天的实训本身就是一个完整项目，可以写成项目经验</p></div>
+      </div>
+      <div class="obj-card">
+        <div class="card-icon">技</div>
+        <h3>技能目标</h3>
+        <ul>
+          <li>能用 AI 工具诊断和优化自己的简历</li>
+          <li>能生成技术岗和非技术岗两个版本的简历</li>
+          <li>能分析真实案例中的 AI 安全问题</li>
+          <li>能建立个人知识管理体系的初步框架</li>
+        </ul>
+        <div class="highlight-box"><p>实战产出：优化版简历草稿 + 职场 AI 使用手册 + 个人知识管理框架</p></div>
+      </div>
+      <div class="obj-card">
+        <div class="card-icon">养</div>
+        <h3>素养目标</h3>
+        <ul>
+          <li>建立"工具会过时，但方法不会"的长期学习思维</li>
+          <li>理解"业务 + AI 工具"复合能力的职场价值</li>
+          <li>培养安全合规使用 AI 的职业意识</li>
+        </ul>
+        <div class="highlight-box"><p>思维转变：从"课程学员"到"具备 AI 工具实操能力的求职者"</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">2 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第3页：导入 ==================== -->
+<section class="slide" data-page="3">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 课程导入</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">导入</div>
+      <div class="section-line"></div>
+    </div>
+    <div class="content-block">
+      <h3>课前思考</h3>
+      <p><strong>这 5 天下来，你觉得自己最大的收获是什么？</strong></p>
+      <p>不管项目做得怎么样，这 5 天你们已经掌握了三个国产 AI 工具的使用方法，体验了跨工具协作的完整流程——这些本身就是很大的收获。今天上午的内容和项目无关，但和你们的未来息息相关。</p>
+    </div>
+    <div class="content-two-col" style="height:auto;margin-top:10pt">
+      <div class="content-col">
+        <div class="content-block">
+          <h3>上午：就业锦囊</h3>
+          <p>简历 AI 优化 + 职场 AI 安全规范 + LLM-Wiki 知识管理 + 课程全景回顾</p>
+          <span class="tag tag-primary">简历 · 安全 · 知识管理</span>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="content-block">
+          <h3>下午：正式路演</h3>
+          <p>各组 8-10 分钟展示 + 评委提问 + 评选颁奖</p>
+          <span class="tag tag-success">展示 · 评选 · 颁奖</span>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="content-block">
+          <h3>最后：结业仪式</h3>
+          <p>讲师总结 + 学员代表发言 + 证书发放 + 合影</p>
+          <span class="tag tag-accent">总结 · 证书 · 合影</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">3 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第4页：6天回顾 ==================== -->
+<section class="slide" data-page="4">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 6 天学习回顾</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">回顾</div>
+      <div class="section-number">01</div>
+      <div class="section-line"></div>
+    </div>
+    <h2 style="font-size:var(--text-2xl);color:var(--secondary);margin:0 0 var(--space-4) 0;">6 天学习旅程全景回顾</h2>
+    <div class="roadmap-wrap">
+      <div class="roadmap-item">
+        <p class="rd-day">DAY 01</p>
+        <p class="rd-title">AI 全景</p>
+        <p class="rd-desc">+ QClaw 上手</p>
+      </div>
+      <div class="roadmap-arrow">→</div>
+      <div class="roadmap-item">
+        <p class="rd-day">DAY 02</p>
+        <p class="rd-title">Agent 深度</p>
+        <p class="rd-desc">+ WorkBuddy 办公</p>
+      </div>
+      <div class="roadmap-arrow">→</div>
+      <div class="roadmap-item">
+        <p class="rd-day">DAY 03</p>
+        <p class="rd-title">Trae 编程</p>
+        <p class="rd-desc">+ 项目启动</p>
+      </div>
+      <div class="roadmap-arrow">→</div>
+      <div class="roadmap-item">
+        <p class="rd-day">DAY 04</p>
+        <p class="rd-title">三工具整合</p>
+        <p class="rd-desc">+ 项目冲刺 I</p>
+      </div>
+      <div class="roadmap-arrow">→</div>
+      <div class="roadmap-item">
+        <p class="rd-day">DAY 05</p>
+        <p class="rd-title">项目冲刺 II</p>
+        <p class="rd-desc">+ 路演准备</p>
+      </div>
+      <div class="roadmap-arrow">→</div>
+      <div class="roadmap-item" style="border:2pt solid #EE822F">
+        <p class="rd-day">DAY 06</p>
+        <p class="rd-title">就业锦囊</p>
+        <p class="rd-desc">+ 路演 + 结业</p>
+      </div>
+    </div>
+    <div class="content-two-col" style="height:calc(100% - 130pt)">
+      <div class="content-col">
+        <div class="content-block">
+          <h3>核心技能 Trio</h3>
+          <div class="image-area" style="min-height:40pt">
+            <p style="font-size:12pt;font-weight:700">
+              <span style="color:#084E8F">QClaw（信息搜集）</span>
+              <span style="color:#666"> → </span>
+              <span style="color:#EE822F">WorkBuddy（数据处理）</span>
+              <span style="color:#666"> → </span>
+              <span style="color:#75BD42">Trae（展示开发）</span>
+            </p>
+          </div>
+        </div>
+        <div class="content-block">
+          <h3>每日核心产出</h3>
+          <ul>
+            <li>Day 1：AI 认知地图 + QClaw 首次采集</li>
+            <li>Day 2：WorkBuddy Excel 清洗 + 项目选题</li>
+            <li>Day 3：Trae Builder 生成代码 + 核心功能</li>
+            <li>Day 4：三工具联调 + MVP 定义</li>
+            <li>Day 5：调试测试 + 路演 PPT + 彩排</li>
+            <li>Day 6：简历优化 + 安全规范 + 知识管理</li>
+          </ul>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="content-block">
+          <h3>互动：一句话总结（10 分钟）</h3>
+          <p>请每位同学用 1 句话总结自己这 6 天最大的收获。</p>
+          <div class="key-point"><p class="point-label">讲师动作</p><p>记录在白板上，汇总成"班级学习成果清单"。</p></div>
+        </div>
+        <div class="content-block">
+          <h3>你的 6 天项目经验</h3>
+          <div class="key-point"><p class="point-label">STAR 法则写法</p><p><strong>S（情境）</strong>：课程要求完成跨工具项目<br><strong>T（任务）</strong>：负责 XXX 模块<br><strong>A（行动）</strong>：使用 QClaw 采集、WorkBuddy 处理、Trae 开发<br><strong>R（结果）</strong>：项目实现了 XXX 功能</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">4 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第5页：简历优化 ==================== -->
+<section class="slide" data-page="5">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 知识储备</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">知识</div>
+      <div class="section-number">02</div>
+      <div class="section-line"></div>
+    </div>
+    <h2 style="font-size:var(--text-2xl);color:var(--secondary);margin:0 0 var(--space-4) 0;">简历 AI 优化：让 HR 6 秒记住你</h2>
+    <div class="content-two-col">
+      <div class="content-col">
+        <div class="content-block">
+          <h3>为什么简历不是"自传"？</h3>
+          <p>HR 看一份简历平均只有 <strong style="color:#92181A;font-size:14pt">6 秒钟</strong>。你的任务不是让 HR 了解你的全部人生，而是让 HR 觉得"这个人值得聊一下"。</p>
+          <div class="warning-box"><p class="warning-label">常见简历问题</p><p>太像"自传"（从小学写到大学）· 只有"做了什么"没有"达成什么" · 没有关键词无法通过 AI 筛选 · 一份简历投所有岗位</p></div>
+        </div>
+        <div class="content-block">
+          <h3>简历优化三原则</h3>
+          <div class="factor-grid">
+            <div class="factor-card"><h4>1. 匹配关键词</h4><p>分析岗位描述（JD）里高频出现的词，确保简历里也有这些词。很多企业用 AI 筛选简历，没有关键词就直接被过滤。</p></div>
+            <div class="factor-card"><h4>2. 成果导向</h4><p>把"我做了什么"改写成"我达成了什么成果"。差："负责数据整理" → 好："用自动化工具将数据处理效率提升 60%"</p></div>
+            <div class="factor-card"><h4>3. 多版本策略</h4><p>技术岗版突出工具和项目经验，非技术岗版突出沟通和协调能力。不要一份简历投所有岗位。</p></div>
+            <div class="factor-card"><h4>6 天项目 = 项目经验</h4><p>QClaw 信息搜集、WorkBuddy 数据处理、Trae 网页开发，任何一项都可以写成项目经验。</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="content-block">
+          <h3>对比：差简历 vs 好简历</h3>
+          <table class="compare-table">
+            <tr><th>模块</th><th>差写法</th><th>好写法</th></tr>
+            <tr><td>个人简介</td><td>本人性格开朗、吃苦耐劳...</td><td>农林高校应届毕业生，具备 AI 工具实操经验，曾用 QClaw+WorkBuddy+Trae 完成跨工具项目...</td></tr>
+            <tr><td>项目经验</td><td>参与了课程项目</td><td>负责数据搜集模块，使用 QClaw 采集 20 条农业政策，效率提升 3 倍</td></tr>
+            <tr><td>技能清单</td><td>熟练使用 Office</td><td>使用 WorkBuddy 完成 Excel 数据清洗与自动化报告生成</td></tr>
+          </table>
+        </div>
+        <div class="content-block">
+          <h3>互动：简历问题诊断（5 分钟）</h3>
+          <p>请 2-3 位同学分享自己的简历，全班一起诊断问题。</p>
+          <div class="tip-box"><p class="tip-label">讲师点评要点</p><p>是否有关键词？是否成果导向？是否可以用 STAR 法则改写？</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">5 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第6页：简历实操 ==================== -->
+<section class="slide" data-page="6">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 课堂实操</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">实操</div>
+      <div class="section-number">03</div>
+      <div class="section-line"></div>
+    </div>
+    <h2 style="font-size:var(--text-2xl);color:var(--secondary);margin:0 0 var(--space-4) 0;">简历 AI 优化实操：四步完成</h2>
+    <div class="content-two-col">
+      <div class="content-col">
+        <div class="content-block">
+          <h3>步骤 1：准备原始材料（5 分钟）</h3>
+          <ul>
+            <li>打开自己现有的简历（哪怕只有一页）</li>
+            <li>准备 1-2 个目标岗位的 JD</li>
+            <li>列出 6 天课程中的具体贡献</li>
+          </ul>
+        </div>
+        <div class="content-block">
+          <h3>步骤 2：AI 简历诊断（5 分钟）</h3>
+          <p>打开 QClaw 或 WorkBuddy，输入诊断 Prompt：</p>
+          <div class="code-block" style="margin-top:6pt;font-size:10pt">请你作为资深 HR 和简历优化专家，帮我诊断这份简历的问题。
+
+【我的简历内容】（粘贴简历全文）
+【目标岗位】（粘贴岗位 JD）
+
+请从以下维度给出诊断：
+1. 这份简历的 3 个最大问题是什么？
+2. 哪些内容与目标岗位匹配？哪些不匹配？
+3. 关键词覆盖度如何？
+4. 给出一个优化后的版本大纲。</div>
+        </div>
+        <div class="content-block">
+          <h3>常见错误预判</h3>
+          <table class="compare-table">
+            <tr><th>错误</th><th>解决步骤</th></tr>
+            <tr><td>学生没有简历</td><td>1. 写最简版 2. 把课程项目作为经验 3. AI 帮扩展</td></tr>
+            <tr><td>AI 回复太笼统</td><td>追加提问："具体指出第几段，给修改对比"</td></tr>
+            <tr><td>不知道目标岗位</td><td>建议先写通用版，再针对具体岗位微调</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="content-block">
+          <h3>步骤 3：针对性优化（10 分钟）</h3>
+          <div class="key-point"><p class="point-label">个人简介优化</p><p>删掉："本人性格开朗、吃苦耐劳..."<br>改成："农林高校应届毕业生，具备 AI 工具实操经验..."</p></div>
+          <div class="warning-box" style="margin-top:6pt"><p class="warning-label">项目经验（STAR 法则）</p><p>S：课程要求完成跨工具项目<br>T：负责 XXX 模块<br>A：使用 QClaw 采集、WorkBuddy 处理、Trae 开发<br>R：项目实现了 XXX 功能</p></div>
+          <div class="tip-box" style="margin-top:6pt"><p class="tip-label">技能清单</p><p>不要只写"熟练使用 Office"<br>要写出具体工具："使用 WorkBuddy 完成 Excel 数据清洗与自动化报告生成"</p></div>
+        </div>
+        <div class="content-block">
+          <h3>步骤 4：生成多版本简历（5 分钟）</h3>
+          <p>请基于基础信息，生成两个版本：</p>
+          <div class="code-block" style="margin-top:4pt;font-size:9.5pt">【版本 A：技术岗】突出工具使用、项目经验
+【版本 B：非技术岗】突出办公自动化、数据效率</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">6 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第7页：AI安全 ==================== -->
+<section class="slide" data-page="7">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 知识储备</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">知识</div>
+      <div class="section-number">04</div>
+      <div class="section-line"></div>
+    </div>
+    <h2 style="font-size:var(--text-2xl);color:var(--secondary);margin:0 0 var(--space-4) 0;">职场 AI 安全规范：3 条红线不能碰</h2>
+    <div class="content-two-col">
+      <div class="content-col">
+        <div class="redline-card rl1">
+          <div class="rl-icon">1</div>
+          <div>
+            <h4>红线 1：公司机密不进 AI</h4>
+            <p>未公开的产品数据、客户名单、财务信息、内部战略文档，绝对不能输入任何 AI 工具（包括国产工具）。</p>
+          </div>
+        </div>
+        <div class="redline-card rl2">
+          <div class="rl-icon">2</div>
+          <div>
+            <h4>红线 2：个人隐私要谨慎</h4>
+            <p>同事的联系方式、学生的个人信息、患者的病历等敏感数据，输入 AI 前要经过脱敏处理或获得授权。</p>
+          </div>
+        </div>
+        <div class="redline-card rl3">
+          <div class="rl-icon">3</div>
+          <div>
+            <h4>红线 3：输出内容要审核</h4>
+            <p>AI 生成的内容可能有错误、偏见或过时信息，用于正式场合前必须人工审核。</p>
+          </div>
+        </div>
+        <div class="content-block">
+          <h3>常见疑问应对</h3>
+          <table class="compare-table" style="font-size:10pt">
+            <tr><th>疑问</th><th>应对话术</th></tr>
+            <tr><td>"国产工具应该很安全吧？"</td><td>数据合规更有保障，但机密和隐私红线与工具国籍无关。</td></tr>
+            <tr><td>"我只是实习生，哪有机会接触机密？"</td><td>实习生反而容易疏忽——"只是帮忙整理"的数据可能含敏感信息。</td></tr>
+            <tr><td>"AI 生成的内容有错误，那是不是不能用？"</td><td>不是不能用，是用之前要审核。AI 输出也要人工校验。</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="content-block">
+          <h3>案例一：代码泄露事件</h3>
+          <div class="warning-box" style="padding:6pt 8pt"><p class="warning-label" style="font-size:10pt">事件</p><p style="font-size:10pt">某实习生把公司内部销售数据输入 ChatGPT 做分析，导致数据泄露，被公司辞退。</p></div>
+          <p style="margin-top:4pt;font-size:10.5pt"><strong>讨论：</strong>违反了哪些原则？脱敏后结果会不同吗？</p>
+        </div>
+        <div class="content-block">
+          <h3>案例二：客户隐私泄露</h3>
+          <div class="warning-box" style="padding:6pt 8pt"><p class="warning-label" style="font-size:10pt">事件</p><p style="font-size:10pt">某医生把患者病历输入 AI 生成诊断建议，未审核直接发给患者，造成误诊。</p></div>
+          <p style="margin-top:4pt;font-size:10.5pt"><strong>讨论：</strong>与案例一的异同？简单脱敏是否足够？</p>
+        </div>
+        <div class="content-block">
+          <h3>案例三：AI 生成内容版权争议</h3>
+          <div class="warning-box" style="padding:6pt 8pt"><p class="warning-label" style="font-size:10pt">事件</p><p style="font-size:10pt">某员工用 AI 生成工作报告，其中包含过时数据，被领导发现后影响晋升。</p></div>
+          <p style="margin-top:4pt;font-size:10.5pt"><strong>讨论：</strong>责任归属？AI 辅助和抄袭的边界？</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">7 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第8页：LLM-Wiki ==================== -->
+<section class="slide" data-page="8">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 知识储备</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">知识</div>
+      <div class="section-number">05</div>
+      <div class="section-line"></div>
+    </div>
+    <h2 style="font-size:var(--text-2xl);color:var(--secondary);margin:0 0 var(--space-4) 0;">LLM-Wiki 知识管理：让知识可复用</h2>
+    <div class="content-two-col">
+      <div class="content-col">
+        <div class="content-block">
+          <h3>为什么知识需要主动管理？</h3>
+          <ul>
+            <li>毕业论文的资料散落在微信收藏、浏览器书签、桌面文件夹、U 盘里，最后找不到了</li>
+            <li>实习时学了一个很巧妙的 Excel 技巧，半年后要用的时候完全想不起来怎么操作</li>
+            <li>同样的问题问了 AI 三次，每次都要重新解释背景</li>
+          </ul>
+          <div class="key-point"><p class="point-label">核心区别</p><p>信息是散的、临时的；知识是结构化的、可复用的。你一直在"消费"信息，但没有"管理"知识。</p></div>
+        </div>
+        <div class="content-block">
+          <h3>5 条核心思想</h3>
+          <div class="factor-grid" style="gap:6pt">
+            <div class="factor-card" style="padding:6pt 8pt"><h4 style="font-size:10.5pt">1. 先进收件箱，再沉淀</h4><p style="font-size:10pt">先全部丢进"收件箱"，定期整理。</p></div>
+            <div class="factor-card" style="padding:6pt 8pt"><h4 style="font-size:10.5pt">2. 项目记忆 ≠ 个人知识</h4><p style="font-size:10pt">项目笔记属"项目层"；提炼的通用方法属"个人层"。</p></div>
+            <div class="factor-card" style="padding:6pt 8pt"><h4 style="font-size:10.5pt">3. 知识要分层</h4><p style="font-size:10pt">项目层 → 个人层 → 共享层 → 输出层。</p></div>
+            <div class="factor-card" style="padding:6pt 8pt"><h4 style="font-size:10.5pt">4. 自然语言驱动</h4><p style="font-size:10pt">不需要复杂标签，用日常语言描述。</p></div>
+          </div>
+          <div class="tip-box" style="margin-top:4pt;padding:6pt 8pt"><p class="tip-label" style="font-size:10pt">第 5 条</p><p style="font-size:10pt"><strong>任意窗口恢复上下文</strong>：3 分钟内找回"当时为什么这样做"的全部背景。</p></div>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="content-block">
+          <h3>LLM-Wiki 五层模型</h3>
+          <div class="layer-stack">
+            <div class="layer-item ly4">
+              <div class="ly-num">4</div>
+              <div><p class="ly-title">输出层</p><p class="ly-desc">文章、演讲、作品（如《如何用 QClaw 高效搜集农业资讯》）</p></div>
+            </div>
+            <div class="layer-arrow">↑</div>
+            <div class="layer-item ly3">
+              <div class="ly-num">3</div>
+              <div><p class="ly-title">共享层</p><p class="ly-desc">可以教给别人的经验（如"QClaw 适合需要频繁搜集资料的场景"）</p></div>
+            </div>
+            <div class="layer-arrow">↑</div>
+            <div class="layer-item ly2">
+              <div class="ly-num">2</div>
+              <div><p class="ly-title">个人层</p><p class="ly-desc">长期适用的方法（如"Prompt 要包含时间范围和输出格式"）</p></div>
+            </div>
+            <div class="layer-arrow">↑</div>
+            <div class="layer-item ly1">
+              <div class="ly-num">1</div>
+              <div><p class="ly-title">项目层</p><p class="ly-desc">具体项目的事实（如"Day 3 我们组用 QClaw 搜集了 10 条农业政策"）</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="content-block">
+          <h3>互动：知识分层练习（10 分钟）</h3>
+          <p>请学生回忆这 6 天学到的内容，分类到不同层级。</p>
+          <div class="warning-box"><p class="warning-label">讲师点评</p><p>分类是否准确？项目层的事实能否提炼为个人层的方法？</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">8 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第9页：知识管理实操 ==================== -->
+<section class="slide" data-page="9">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 课堂实操</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">实操</div>
+      <div class="section-number">06</div>
+      <div class="section-line"></div>
+    </div>
+    <h2 style="font-size:var(--text-2xl);color:var(--secondary);margin:0 0 var(--space-4) 0;">为 6 天课程建立知识管理体系</h2>
+    <div class="content-two-col">
+      <div class="content-col">
+        <div class="content-block">
+          <h3>任务 1：创建收件箱</h3>
+          <div class="task-card" style="margin-bottom:6pt">
+            <div class="step-num">1</div>
+            <div><h4 style="font-size:12pt;color:var(--info);margin-bottom:2pt">在电脑或手机上创建"AI 实训收件箱"文件夹</h4><p>把这几天的笔记、截图、项目文件全部丢进去</p></div>
+          </div>
+        </div>
+        <div class="content-block">
+          <h3>任务 2：初步分类</h3>
+          <p>创建 4 个文件夹：</p>
+          <div class="code-block" style="margin-top:6pt">01_QClaw 技巧
+02_WorkBuddy 技巧
+03_Trae 技巧
+04_项目经验</div>
+        </div>
+        <div class="content-block">
+          <h3>任务 3：写知识沉淀</h3>
+          <p>用自然语言写一段：</p>
+          <div class="code-block" style="margin-top:6pt">"如果下次我要用 AI 工具完成信息搜集任务，我会..."
+
+"如果下次我要用 WorkBuddy 清洗 Excel 数据，我会..."</div>
+          <div class="tip-box" style="margin-top:6pt"><p class="tip-label">关键习惯</p><p>做完项目后花 10 分钟写一段"如果下次再做类似的事，我会..."——这就是知识沉淀。</p></div>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="content-block">
+          <h3>讲师演示</h3>
+          <p>展示自己如何整理课程资料：</p>
+          <ul>
+            <li>收件箱：所有原始素材先丢进去</li>
+            <li>分类：按工具/主题/项目分层</li>
+            <li>沉淀：从具体事实提炼通用方法</li>
+            <li>输出：把经验写成可分享的内容</li>
+          </ul>
+        </div>
+        <div class="content-block">
+          <h3>常见疑问应对</h3>
+          <table class="compare-table">
+            <tr><th>反应</th><th>应对话术</th></tr>
+            <tr><td>"又要学一套新系统，太麻烦了"</td><td>LLM-Wiki 不是让你换工具，而是给你一套整理思路。微信收藏 + 文件夹 + 笔记本，稍微调整分类逻辑就能用。</td></tr>
+            <tr><td>"我记性很好，不需要记笔记"</td><td>记性再好，半年后也会忘。笔记不是为了记住，而是为了在忘记的时候能快速找回。</td></tr>
+            <tr><td>"毕业后谁会坚持？"</td><td>不需要坚持，只需要养成一个习惯：做完项目后花 10 分钟写一段沉淀。</td></tr>
+          </table>
+        </div>
+        <div class="content-block">
+          <h3>产出检查</h3>
+          <ul>
+            <li>创建"AI 实训收件箱"文件夹</li>
+            <li>完成初步分类（至少 3 个文件夹）</li>
+            <li>写至少 1 段知识沉淀</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">9 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第10页：课程全景回顾 ==================== -->
+<section class="slide" data-page="10">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 课程全景回顾</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">回顾</div>
+      <div class="section-number">07</div>
+      <div class="section-line"></div>
+    </div>
+    <h2 style="font-size:var(--text-2xl);color:var(--secondary);margin:0 0 var(--space-4) 0;">6 天完整学习旅程回顾</h2>
+    <div class="content-two-col">
+      <div class="content-col">
+        <div class="content-block">
+          <h3>每日回顾</h3>
+          <div class="timeline-wrap">
+            <div class="timeline-line"></div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">Day 1：AI 全景认知 + QClaw 上手</p><p class="desc">AI 发展简史、Agent 四要素、全球和国产 AI 工具认知地图、QClaw 安装和第一次信息搜集</p></div>
+            </div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">Day 2：Agent 深度 + WorkBuddy 办公</p><p class="desc">OpenClaw 架构和 Hermes GEPA 机制、WorkBuddy Excel 清洗/文件处理/报告生成、跨工具项目启动</p></div>
+            </div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">Day 3：Trae 编程 + 项目开发</p><p class="desc">AI IDE 发展历史和工具生态、Trae Builder 模式、项目核心功能开发</p></div>
+            </div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">Day 4：三工具整合 + 项目冲刺 I</p><p class="desc">QClaw 和 WorkBuddy 进阶技巧、三工具联调流程、项目功能完善和联调测试</p></div>
+            </div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">Day 5：项目冲刺 II + 路演准备</p><p class="desc">调试技巧和测试策略、路演 PPT 制作和演示技巧、项目打磨和彩排</p></div>
+            </div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v" style="background:#EE822F;box-shadow:0 0 0 1pt #EE822F"></div>
+              <div class="timeline-content"><p class="year">Day 6：就业锦囊 + 正式路演 + 结业</p><p class="desc">简历 AI 优化、职场安全规范、LLM-Wiki 知识管理、正式路演和结业仪式</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="content-block">
+          <h3>核心能力清单</h3>
+          <table class="compare-table" style="font-size:10pt">
+            <tr><th>能力</th><th>工具/方法</th><th>场景</th></tr>
+            <tr><td>信息搜集</td><td>QClaw</td><td>市场调研、政策追踪</td></tr>
+            <tr><td>数据处理</td><td>WorkBuddy</td><td>Excel 清洗、报告生成</td></tr>
+            <tr><td>前端开发</td><td>Trae</td><td>网页展示、数据可视化</td></tr>
+            <tr><td>跨工具协作</td><td>三工具联调</td><td>端到端工作流</td></tr>
+            <tr><td>简历优化</td><td>AI 诊断 + STAR</td><td>求职应聘</td></tr>
+            <tr><td>知识管理</td><td>LLM-Wiki</td><td>长期学习、经验沉淀</td></tr>
+          </table>
+        </div>
+        <div class="content-block">
+          <h3>讲师送给你的三句话</h3>
+          <div class="key-point" style="padding:6pt 8pt"><p class="point-label" style="font-size:10pt">第一句</p><p style="font-size:10pt"><strong>工具会过时，但方法不会。</strong>你学到的是"如何让 AI 为你工作"的思维方式。</p></div>
+          <div class="warning-box" style="margin-top:4pt;padding:6pt 8pt"><p style="font-size:10pt"><strong>你的专业背景是优势。</strong>农林业务理解 + AI 工具能力 = 未来最需要的复合能力。</p></div>
+          <div class="tip-box" style="margin-top:4pt;padding:6pt 8pt"><p style="font-size:10pt"><strong>保持好奇心，持续学习。</strong>AI 变化很快，但只要保持热情，就没有什么能难倒你。</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">10 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第11页：路演PPT模板 ==================== -->
+<section class="slide" data-page="11">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 路演准备</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">准备</div>
+      <div class="section-number">08</div>
+      <div class="section-line"></div>
+    </div>
+    <h2 style="font-size:var(--text-2xl);color:var(--secondary);margin:0 0 var(--space-4) 0;">路演 PPT 标准结构：时间轴 + 内容卡片</h2>
+    <div style="display:flex;flex-direction:column;gap:8pt;height:calc(100% - 56pt)">
+      <div class="step-bar" style="margin-bottom:4pt">
+        <div class="step-item"><div class="step-dot">1</div></div><div class="step-line active"></div>
+        <div class="step-item"><div class="step-dot">2</div></div><div class="step-line active"></div>
+        <div class="step-item"><div class="step-dot">3</div></div><div class="step-line active"></div>
+        <div class="step-item"><div class="step-dot">4</div></div><div class="step-line active"></div>
+        <div class="step-item"><div class="step-dot">5</div></div>
+      </div>
+      <div style="display:flex;gap:8pt;flex:1">
+        <div class="content-block" style="flex:1;border-top:3pt solid #084E8F;padding:8pt">
+          <div style="display:flex;align-items:center;gap:6pt;margin-bottom:4pt">
+            <span class="tag tag-primary" style="font-size:9pt">30s</span>
+            <h3 style="margin:0;font-size:11pt">项目背景</h3>
+          </div>
+          <p style="font-size:10pt">为什么做？痛点场景 + 目标用户</p>
+          <p style="font-size:9pt;color:#666;margin-top:2pt">建议 1 页，用故事开场</p>
+        </div>
+        <div class="content-block" style="flex:1;border-top:3pt solid #EE822F;padding:8pt">
+          <div style="display:flex;align-items:center;gap:6pt;margin-bottom:4pt">
+            <span class="tag tag-accent" style="font-size:9pt">1min</span>
+            <h3 style="margin:0;font-size:11pt">核心功能演示</h3>
+          </div>
+          <p style="font-size:10pt">现场演示 trio 工具联动流程</p>
+          <p style="font-size:9pt;color:#666;margin-top:2pt">建议 2-3 页，截图 + 现场</p>
+        </div>
+        <div class="content-block" style="flex:1;border-top:3pt solid #75BD42;padding:8pt">
+          <div style="display:flex;align-items:center;gap:6pt;margin-bottom:4pt">
+            <span class="tag tag-success" style="font-size:9pt">30s</span>
+            <h3 style="margin:0;font-size:11pt">技术架构</h3>
+          </div>
+          <p style="font-size:10pt">三工具如何分工协作</p>
+          <p style="font-size:9pt;color:#666;margin-top:2pt">建议 1 页，架构图</p>
+        </div>
+        <div class="content-block" style="flex:1;border-top:3pt solid #92181A;padding:8pt">
+          <div style="display:flex;align-items:center;gap:6pt;margin-bottom:4pt">
+            <span class="tag tag-primary" style="font-size:9pt;background:rgba(146,24,26,0.10);color:#92181A">20s</span>
+            <h3 style="margin:0;font-size:11pt">团队分工</h3>
+          </div>
+          <p style="font-size:10pt">每人贡献 + 协作亮点</p>
+          <p style="font-size:9pt;color:#666;margin-top:2pt">建议 1 页，照片 + 职责</p>
+        </div>
+        <div class="content-block" style="flex:1;border-top:3pt solid #084E8F;padding:8pt">
+          <div style="display:flex;align-items:center;gap:6pt;margin-bottom:4pt">
+            <span class="tag tag-primary" style="font-size:9pt">20s</span>
+            <h3 style="margin:0;font-size:11pt">总结与展望</h3>
+          </div>
+          <p style="font-size:10pt">收获 + 未来改进方向</p>
+          <p style="font-size:9pt;color:#666;margin-top:2pt">建议 1 页，金句收尾</p>
+        </div>
+      </div>
+      <div class="warning-box" style="padding:6pt 8pt">
+        <p class="warning-label" style="font-size:10pt">关键话术提醒</p>
+        <p style="font-size:10pt">开场抓注意力；演示时引导视线；结尾展示思考深度。</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">11 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第12页：简历Before/After ==================== -->
+<section class="slide" data-page="12">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 简历优化案例</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">案例</div>
+      <div class="section-number">09</div>
+      <div class="section-line"></div>
+    </div>
+    <h2 style="font-size:var(--text-2xl);color:var(--secondary);margin:0 0 var(--space-4) 0;">简历优化 Before / After 真实案例</h2>
+    <div class="content-two-col">
+      <div class="content-col">
+        <div class="content-block" style="border-left:3pt solid #FF0000">
+          <h3 style="color:#FF0000">案例 1：农林专业学生</h3>
+          <div style="display:flex;gap:8pt;margin-top:6pt">
+            <div style="flex:1;background:#fff5f5;border:1pt solid #ffcfcf;border-radius:4pt;padding:6pt 8pt">
+              <p style="font-size:9pt;color:#FF0000;font-weight:700;margin-bottom:2pt">Before</p>
+              <p style="font-size:10pt">"参与了学校组织的 AI 实训课程，学习了一些工具的使用。"</p>
+            </div>
+            <div style="display:flex;align-items:center;font-size:12pt;font-weight:700;color:#666">vs</div>
+            <div style="flex:1;background:#f5fff5;border:1pt solid #cfffcf;border-radius:4pt;padding:6pt 8pt">
+              <p style="font-size:9pt;color:#75BD42;font-weight:700;margin-bottom:2pt">After</p>
+              <p style="font-size:10pt">"完成跨工具 AI 项目：用 QClaw 采集 50+ 条农业政策，WorkBuddy 自动化生成分析报告，Trae 搭建数据可视化网页。"</p>
+            </div>
+          </div>
+        </div>
+        <div class="content-block" style="border-left:3pt solid #FF0000">
+          <h3 style="color:#FF0000">案例 2：零经验转岗</h3>
+          <div style="display:flex;gap:8pt;margin-top:6pt">
+            <div style="flex:1;background:#fff5f5;border:1pt solid #ffcfcf;border-radius:4pt;padding:6pt 8pt">
+              <p style="font-size:9pt;color:#FF0000;font-weight:700;margin-bottom:2pt">Before</p>
+              <p style="font-size:10pt">"没有相关工作经验，但学习能力较强，愿意接受挑战。"</p>
+            </div>
+            <div style="display:flex;align-items:center;font-size:12pt;font-weight:700;color:#666">vs</div>
+            <div style="flex:1;background:#f5fff5;border:1pt solid #cfffcf;border-radius:4pt;padding:6pt 8pt">
+              <p style="font-size:9pt;color:#75BD42;font-weight:700;margin-bottom:2pt">After</p>
+              <p style="font-size:10pt">"6 天 AI 工具实训项目经验：独立完成数据搜集→处理→展示全流程，掌握 QClaw/WorkBuddy/Trae 三工具协作。"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="content-block">
+          <h3>3 个通用优化技巧</h3>
+          <div class="factor-grid" style="gap:6pt">
+            <div class="factor-card" style="border-left-color:#084E8F;padding:6pt 8pt">
+              <h4 style="color:#084E8F;font-size:10.5pt">量化成果</h4>
+              <p style="font-size:10pt">"提升效率"→"处理效率提升 60%"</p>
+            </div>
+            <div class="factor-card" style="border-left-color:#EE822F;padding:6pt 8pt">
+              <h4 style="color:#EE822F;font-size:10.5pt">工具关键词</h4>
+              <p style="font-size:10pt">写出具体工具名：QClaw、WorkBuddy、Trae</p>
+            </div>
+            <div class="factor-card" style="border-left-color:#75BD42;padding:6pt 8pt">
+              <h4 style="color:#75BD42;font-size:10.5pt">项目驱动</h4>
+              <p style="font-size:10pt">用课程项目替代实习经验</p>
+            </div>
+          </div>
+        </div>
+        <div class="tip-box" style="margin-top:4pt;padding:6pt 8pt">
+          <p class="tip-label" style="font-size:10pt">核心原则</p>
+          <p style="font-size:10pt">差简历写"我做了什么"，好简历写"我达成了什么"。用数字、工具名、成果说话。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">12 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第13页：AI伦理讨论 ==================== -->
+<section class="slide" data-page="13">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 职场伦理</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">伦理</div>
+      <div class="section-number">10</div>
+      <div class="section-line"></div>
+    </div>
+    <h2 style="font-size:var(--text-2xl);color:var(--secondary);margin:0 0 var(--space-4) 0;">职场 AI 规范：3 个真实场景讨论</h2>
+    <div style="display:flex;flex-direction:column;gap:8pt;height:calc(100% - 56pt)">
+      <div class="content-block" style="border-left:3pt solid #92181A;padding:6pt 8pt">
+        <h3 style="color:#92181A;font-size:11pt">场景 1：用 AI 写论文是否算学术不端？</h3>
+        <div class="key-point" style="margin-top:2pt;padding:4pt 6pt">
+          <p class="point-label" style="font-size:9pt">情境</p>
+          <p style="font-size:9pt">某学生用 ChatGPT 生成论文初稿，修改后提交，被导师发现。</p>
+        </div>
+        <div style="display:flex;gap:6pt;margin-top:2pt">
+          <div style="flex:1;background:rgba(8,78,143,0.04);border-radius:4pt;padding:4pt 6pt">
+            <p style="font-size:9pt;color:#084E8F;font-weight:700">法律</p>
+            <p style="font-size:9pt">AI 辅助需声明，代写属作弊</p>
+          </div>
+          <div style="flex:1;background:rgba(238,130,47,0.04);border-radius:4pt;padding:4pt 6pt">
+            <p style="font-size:9pt;color:#EE822F;font-weight:700">伦理</p>
+            <p style="font-size:9pt">思想原创性 vs 工具辅助效率</p>
+          </div>
+          <div style="flex:1;background:rgba(117,189,66,0.04);border-radius:4pt;padding:4pt 6pt">
+            <p style="font-size:9pt;color:#75BD42;font-weight:700">建议</p>
+            <p style="font-size:9pt">AI 用于头脑风暴，核心观点自己写</p>
+          </div>
+        </div>
+      </div>
+      <div class="content-block" style="border-left:3pt solid #EE822F;padding:6pt 8pt">
+        <h3 style="color:#EE822F;font-size:11pt">场景 2：公司机密数据能否输入 AI 工具？</h3>
+        <div class="warning-box" style="margin-top:2pt;padding:4pt 6pt">
+          <p class="warning-label" style="font-size:9pt">情境</p>
+          <p style="font-size:9pt">某员工把未发布的产品数据输入 AI 做分析，导致信息泄露。</p>
+        </div>
+        <div style="display:flex;gap:6pt;margin-top:2pt">
+          <div style="flex:1;background:rgba(8,78,143,0.04);border-radius:4pt;padding:4pt 6pt">
+            <p style="font-size:9pt;color:#084E8F;font-weight:700">法律</p>
+            <p style="font-size:9pt">违反保密协议，可能面临追责</p>
+          </div>
+          <div style="flex:1;background:rgba(238,130,47,0.04);border-radius:4pt;padding:4pt 6pt">
+            <p style="font-size:9pt;color:#EE822F;font-weight:700">伦理</p>
+            <p style="font-size:9pt">员工对公司负有忠诚义务</p>
+          </div>
+          <div style="flex:1;background:rgba(117,189,66,0.04);border-radius:4pt;padding:4pt 6pt">
+            <p style="font-size:9pt;color:#75BD42;font-weight:700">建议</p>
+            <p style="font-size:9pt">脱敏后再使用，或申请内部 AI 平台</p>
+          </div>
+        </div>
+      </div>
+      <div class="content-block" style="border-left:3pt solid #084E8F;padding:6pt 8pt">
+        <h3 style="color:#084E8F;font-size:11pt">场景 3：AI 生成代码的版权归属？</h3>
+        <div class="key-point" style="margin-top:2pt;padding:4pt 6pt">
+          <p class="point-label" style="font-size:9pt">情境</p>
+          <p style="font-size:9pt">某开发者用 AI 生成核心算法代码，产品发布后遭遇版权争议。</p>
+        </div>
+        <div style="display:flex;gap:6pt;margin-top:2pt">
+          <div style="flex:1;background:rgba(8,78,143,0.04);border-radius:4pt;padding:4pt 6pt">
+            <p style="font-size:9pt;color:#084E8F;font-weight:700">法律</p>
+            <p style="font-size:9pt">AI 生成内容版权归属尚无定论</p>
+          </div>
+          <div style="flex:1;background:rgba(238,130,47,0.04);border-radius:4pt;padding:4pt 6pt">
+            <p style="font-size:9pt;color:#EE822F;font-weight:700">伦理</p>
+            <p style="font-size:9pt">开发者是否充分理解并审查了 AI 代码？</p>
+          </div>
+          <div style="flex:1;background:rgba(117,189,66,0.04);border-radius:4pt;padding:4pt 6pt">
+            <p style="font-size:9pt;color:#75BD42;font-weight:700">建议</p>
+            <p style="font-size:9pt">AI 代码需人工审查，核心逻辑自己写</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">13 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第14页：课程总结与结业 ==================== -->
+<section class="slide" data-page="14">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 课程总结</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">总结</div>
+      <div class="section-number">11</div>
+      <div class="section-line"></div>
+    </div>
+    <h2 style="font-size:var(--text-2xl);color:var(--secondary);margin:0 0 var(--space-4) 0;">6 天课程知识图谱与结业寄语</h2>
+    <div class="content-two-col">
+      <div class="content-col">
+        <div class="content-block" style="padding:10pt">
+          <h3 style="text-align:center;margin-bottom:8pt">6 天学习知识图谱</h3>
+          <div style="display:flex;align-items:center;justify-content:center;gap:10pt">
+            <div style="width:100pt;height:100pt;border-radius:50%;background:linear-gradient(135deg,#084E8F,#0a6bc4);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12pt;font-weight:700;text-align:center;box-shadow:0 4pt 12pt rgba(8,78,143,0.3)">AI工具<br>实训</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6pt;margin-top:8pt">
+            <div style="background:rgba(8,78,143,0.06);border-radius:4pt;padding:6pt;text-align:center">
+              <p style="font-size:9pt;color:#084E8F;font-weight:700">Day 1</p>
+              <p style="font-size:9pt">AI认知</p>
+              <p style="font-size:8pt;color:#666">全景·Agent·QClaw</p>
+            </div>
+            <div style="background:rgba(238,130,47,0.06);border-radius:4pt;padding:6pt;text-align:center">
+              <p style="font-size:9pt;color:#EE822F;font-weight:700">Day 2</p>
+              <p style="font-size:9pt">Agent深度</p>
+              <p style="font-size:8pt;color:#666">WorkBuddy·办公</p>
+            </div>
+            <div style="background:rgba(117,189,66,0.06);border-radius:4pt;padding:6pt;text-align:center">
+              <p style="font-size:9pt;color:#75BD42;font-weight:700">Day 3</p>
+              <p style="font-size:9pt">AI编程</p>
+              <p style="font-size:8pt;color:#666">Trae·Builder</p>
+            </div>
+            <div style="background:rgba(146,24,26,0.06);border-radius:4pt;padding:6pt;text-align:center">
+              <p style="font-size:9pt;color:#92181A;font-weight:700">Day 4</p>
+              <p style="font-size:9pt">项目冲刺I</p>
+              <p style="font-size:8pt;color:#666">三工具联调</p>
+            </div>
+            <div style="background:rgba(8,78,143,0.06);border-radius:4pt;padding:6pt;text-align:center">
+              <p style="font-size:9pt;color:#084E8F;font-weight:700">Day 5</p>
+              <p style="font-size:9pt">整合打磨</p>
+              <p style="font-size:8pt;color:#666">调试·测试·路演</p>
+            </div>
+            <div style="background:rgba(238,130,47,0.06);border-radius:4pt;padding:6pt;text-align:center">
+              <p style="font-size:9pt;color:#EE822F;font-weight:700">Day 6</p>
+              <p style="font-size:9pt">职业启航</p>
+              <p style="font-size:8pt;color:#666">简历·安全·知识</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="content-block">
+          <h3>结业寄语</h3>
+          <div class="key-point" style="margin-bottom:6pt;padding:6pt 8pt">
+            <p class="point-label" style="font-size:10pt">给农林高校学子的三句话</p>
+            <p style="font-size:10.5pt">1. <strong>工具会过时，但方法不会。</strong>你学到的不是某个软件怎么点，而是"如何让 AI 为你工作"的思维方式。</p>
+          </div>
+          <div class="warning-box" style="margin-bottom:6pt;padding:6pt 8pt">
+            <p style="font-size:10.5pt">2. <strong>你的专业背景是优势，不是劣势。</strong>农林专业的业务理解 + AI 工具能力，正是未来职场最需要的复合能力。</p>
+          </div>
+          <div class="tip-box" style="padding:6pt 8pt">
+            <p style="font-size:10.5pt">3. <strong>保持好奇心，持续学习。</strong>AI 领域变化很快，但只要保持学习热情，就没有什么能难倒你。</p>
+          </div>
+        </div>
+        <div class="content-block">
+          <h3>后续学习路径</h3>
+          <div class="step-bar" style="margin-bottom:6pt">
+            <div class="step-item"><div class="step-dot">1</div></div><div class="step-line active"></div>
+            <div class="step-item"><div class="step-dot">2</div></div><div class="step-line active"></div>
+            <div class="step-item"><div class="step-dot">3</div></div>
+          </div>
+          <p style="font-size:10.5pt">巩固基础（1个月）→ 深入一个工具（2-3个月）→ 完成个人项目（3-6个月）→ 写到简历里 → 持续迭代</p>
+          <span class="tag tag-success" style="margin-top:4pt">未来可期，前程似锦！</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">14 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第15页：路演规则 ==================== -->
+<section class="slide" data-page="15">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 正式路演</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">路演</div>
+      <div class="section-number">12</div>
+      <div class="section-line"></div>
+    </div>
+    <h2 style="font-size:var(--text-2xl);color:var(--secondary);margin:0 0 var(--space-4) 0;">正式路演：规则与评分标准</h2>
+    <div class="content-two-col">
+      <div class="content-col">
+        <div class="content-block">
+          <h3>路演规则</h3>
+          <ul>
+            <li>每组 <strong>8-10 分钟</strong>展示 + <strong>2-3 分钟</strong>评委提问</li>
+            <li>展示顺序抽签决定（或按组号顺序）</li>
+            <li>必须用到 QClaw、WorkBuddy、Trae 三个工具</li>
+            <li>至少 2 名组员参与展示</li>
+            <li>必须有实际运行，不能只放 PPT</li>
+          </ul>
+        </div>
+        <div class="content-block">
+          <h3>路演内容要求</h3>
+          <div class="step-bar">
+            <div class="step-item"><div class="step-dot">1</div></div><div class="step-line active"></div>
+            <div class="step-item"><div class="step-dot">2</div></div><div class="step-line active"></div>
+            <div class="step-item"><div class="step-dot">3</div></div><div class="step-line active"></div>
+            <div class="step-item"><div class="step-dot">4</div></div><div class="step-line active"></div>
+            <div class="step-item"><div class="step-dot">5</div></div>
+          </div>
+          <p style="font-size:11pt">项目背景（1 分钟）→ 技术方案（1-2 分钟）→ 现场演示（4-5 分钟）→ 团队协作（1 分钟）→ 收获与反思（1 分钟）</p>
+        </div>
+        <div class="content-block">
+          <h3>评委组成</h3>
+          <ul>
+            <li>主讲讲师（1 票）</li>
+            <li>助教代表（1 票）</li>
+            <li>学校老师/企业嘉宾（1-2 票，如有）</li>
+            <li>学生互评（每组 1 票，不投自己组）</li>
+          </ul>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="content-block">
+          <h3>评分标准</h3>
+          <table class="compare-table">
+            <tr><th>维度</th><th>权重</th><th>说明</th></tr>
+            <tr><td>功能完整性</td><td>30%</td><td>核心流程是否跑通</td></tr>
+            <tr><td>工具使用熟练度</td><td>25%</td><td>三种工具是否都用到了</td></tr>
+            <tr><td>团队协作</td><td>20%</td><td>分工是否合理、展示是否配合</td></tr>
+            <tr><td>路演表现</td><td>15%</td><td>表达是否清晰、时间控制</td></tr>
+            <tr><td>创新性</td><td>10%</td><td>是否有独特的功能或思路</td></tr>
+          </table>
+        </div>
+        <div class="content-block">
+          <h3>计时规则</h3>
+          <div class="warning-box"><p class="warning-label">助教动作</p><p>剩余 3 分钟举牌"3 分钟" · 剩余 1 分钟举牌"1 分钟" · 时间到举牌"结束"</p></div>
+        </div>
+        <div class="content-block">
+          <h3>应急方案</h3>
+          <table class="compare-table" style="font-size:10pt">
+            <tr><th>问题</th><th>应急方案</th></tr>
+            <tr><td>演示技术故障</td><td>切换到 PPT 讲解备份方案</td></tr>
+            <tr><td>学生紧张忘词</td><td>深呼吸，说"我们最骄傲的功能是..."</td></tr>
+            <tr><td>时间超出</td><td>准备"如果时间不够"的删减方案</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">15 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第16页：评选颁奖 ==================== -->
+<section class="slide" data-page="16">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 评选颁奖</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">颁奖</div>
+      <div class="section-number">13</div>
+      <div class="section-line"></div>
+    </div>
+    <h2 style="font-size:var(--text-2xl);color:var(--secondary);margin:0 0 var(--space-4) 0;">评选奖项与颁奖流程</h2>
+    <div class="content-two-col">
+      <div class="content-col">
+        <div class="award-card">
+          <div class="aw-icon gold">🏆</div>
+          <div><h4>最佳项目奖（1 组）</h4><p>总分第一名</p></div>
+        </div>
+        <div class="award-card">
+          <div class="aw-icon silver">⚙️</div>
+          <div><h4>最佳技术实现奖（1 组）</h4><p>功能完成度 + 工具整合度最高</p></div>
+        </div>
+        <div class="award-card">
+          <div class="aw-icon gold">🎤</div>
+          <div><h4>最佳演示奖（1 组）</h4><p>演示表达得分最高</p></div>
+        </div>
+        <div class="award-card">
+          <div class="aw-icon silver">🤝</div>
+          <div><h4>最佳团队协作奖（1 组）</h4><p>团队协作得分最高</p></div>
+        </div>
+        <div class="award-card">
+          <div class="aw-icon bronze">💡</div>
+          <div><h4>最具创新奖（1 组）</h4><p>创新性得分最高</p></div>
+        </div>
+        <div class="award-card">
+          <div class="aw-icon bronze">⭐</div>
+          <div><h4>优秀项目奖（其余各组）</h4><p>完成路演且总分 >= 60 分</p></div>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="content-block">
+          <h3>评选流程</h3>
+          <div class="timeline-wrap">
+            <div class="timeline-line"></div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">Step 1：收集评分表</p><p class="desc">收集所有评委的评分表</p></div>
+            </div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">Step 2：计算平均分</p><p class="desc">按权重计算每组总分</p></div>
+            </div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">Step 3：讨论奖项归属</p><p class="desc">评委合议，确定各奖项归属</p></div>
+            </div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">Step 4：准备评选结果</p><p class="desc">不公布具体分数，只公布排名和奖项</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="content-block">
+          <h3>颁奖顺序</h3>
+          <ol style="font-size:10pt;color:#333;line-height:1.6;padding-left:14pt">
+            <li>最佳项目奖 / 最佳技术实现奖</li>
+            <li>最佳演示奖 / 最佳团队协作奖</li>
+            <li>最具创新奖 / 优秀项目奖（批量）</li>
+          </ol>
+        </div>
+        <div class="content-block">
+          <h3>公布方式</h3>
+          <div class="tip-box"><p class="tip-label">原则</p><p>讲师逐一公布，每组获奖时全班鼓掌。不公布具体分数。</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">16 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第17页：结业仪式 ==================== -->
+<section class="slide" data-page="17">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 结业仪式</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">结业</div>
+      <div class="section-number">14</div>
+      <div class="section-line"></div>
+    </div>
+    <h2 style="font-size:var(--text-2xl);color:var(--secondary);margin:0 0 var(--space-4) 0;">结业仪式：证书发放与后续资源</h2>
+    <div class="content-two-col">
+      <div class="content-col">
+        <div class="content-block">
+          <h3>结业流程</h3>
+          <div class="timeline-wrap">
+            <div class="timeline-line"></div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">15:00-15:10 讲师总结</p><p class="desc">三句话寄语 + 感谢全程投入</p></div>
+            </div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">15:10-15:20 学员代表发言</p><p class="desc">2-3 位学员分享收获、建议、展望</p></div>
+            </div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">15:20-15:30 证书发放</p><p class="desc">所有完成课程的学生获得结业证书，获奖组获得额外奖状</p></div>
+            </div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">15:30-15:35 后续资源推荐</p><p class="desc">公众号、社区、书籍、实践建议</p></div>
+            </div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v" style="background:#75BD42;box-shadow:0 0 0 1pt #75BD42"></div>
+              <div class="timeline-content"><p class="year">15:35-15:55 合影 + 自由交流</p><p class="desc">全班合影、获奖组合影、小组合影、自由交流</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="content-block">
+          <h3>讲师总结（逐字稿）</h3>
+          <div class="key-point" style="padding:6pt 8pt"><p class="point-label" style="font-size:10pt">第一句话</p><p style="font-size:10pt">工具会过时，但方法不会。你学到的是"如何让 AI 为你工作"的思维方式。</p></div>
+          <div class="warning-box" style="margin-top:4pt;padding:6pt 8pt"><p class="warning-label" style="font-size:10pt">第二句话</p><p style="font-size:10pt">你的专业背景是优势。"业务 + AI 工具"的复合能力，正是未来职场最需要的。</p></div>
+          <div class="tip-box" style="margin-top:4pt;padding:6pt 8pt"><p class="tip-label" style="font-size:10pt">第三句话</p><p style="font-size:10pt">保持好奇心，持续学习。只要保持热情，就没有什么能难倒你。</p></div>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="content-block">
+          <h3>后续学习资源推荐</h3>
+          <div class="factor-grid" style="gap:6pt">
+            <div class="factor-card" style="padding:6pt 8pt"><h4 style="font-size:10.5pt">公众号 / Newsletter</h4><p style="font-size:10pt">机器之心、AI 前线、量子位</p></div>
+            <div class="factor-card" style="padding:6pt 8pt"><h4 style="font-size:10.5pt">社区</h4><p style="font-size:10pt">QClaw 官方社区、Trae 开发者论坛</p></div>
+            <div class="factor-card" style="padding:6pt 8pt"><h4 style="font-size:10.5pt">书籍</h4><p style="font-size:10pt">《AI 时代的学习方法》、《构建第二大脑》</p></div>
+            <div class="factor-card" style="padding:6pt 8pt"><h4 style="font-size:10.5pt">实践建议</h4><p style="font-size:10pt">每季度尝试一个新工具，建立个人工具库</p></div>
+          </div>
+        </div>
+        <div class="content-block">
+          <h3>学员代表发言安排</h3>
+          <ul>
+            <li>请 2-3 位学员代表上台发言</li>
+            <li>发言内容：收获、建议、展望</li>
+          </ul>
+        </div>
+        <div class="content-block">
+          <h3>合影安排</h3>
+          <ul>
+            <li>全班合影、获奖组合影、小组合影</li>
+            <li>自由交流、答疑</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">17 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第18页：课后习题 ==================== -->
+<section class="slide" data-page="18">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 课后习题</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">习题</div>
+      <div class="section-number">15</div>
+      <div class="section-line"></div>
+    </div>
+    <h2 style="font-size:var(--text-2xl);color:var(--secondary);margin:0 0 var(--space-4) 0;">课后习题：检验你的学习成果</h2>
+    <div class="content-two-col">
+      <div class="content-col">
+        <div class="content-block">
+          <h3>一、简历优化（必做）</h3>
+          <div class="task-card" style="margin-bottom:6pt">
+            <div class="step-num">1</div>
+            <div><h4 style="font-size:12pt;color:var(--info);margin-bottom:2pt">用 AI 诊断自己的简历</h4><p>使用 QClaw 或 WorkBuddy，输入诊断 Prompt，获取优化建议</p></div>
+          </div>
+          <div class="task-card" style="margin-bottom:6pt">
+            <div class="step-num" style="background:#EE822F">2</div>
+            <div><h4 style="font-size:12pt;color:var(--info);margin-bottom:2pt">用 STAR 法则改写项目经验</h4><p>把 6 天实训经历改写成 1-2 条项目经验</p></div>
+          </div>
+          <div class="task-card">
+            <div class="step-num" style="background:#75BD42">3</div>
+            <div><h4 style="font-size:12pt;color:var(--info);margin-bottom:2pt">生成两个版本的简历</h4><p>技术岗版和非技术岗版各一份</p></div>
+          </div>
+        </div>
+        <div class="content-block">
+          <h3>二、安全规范（思考）</h3>
+          <p style="font-size:10.5pt">分析场景，指出违反的安全红线：</p>
+          <div class="warning-box" style="margin-top:4pt;padding:6pt 8pt"><p class="warning-label" style="font-size:10pt">场景 A</p><p style="font-size:10pt">某员工把公司未发布财报输入 AI 分析。</p></div>
+          <div class="warning-box" style="margin-top:4pt;padding:6pt 8pt"><p class="warning-label" style="font-size:10pt">场景 B</p><p style="font-size:10pt">某实习生把客户联系方式发给 AI 写文案。</p></div>
+          <div class="warning-box" style="margin-top:4pt;padding:6pt 8pt"><p class="warning-label" style="font-size:10pt">场景 C</p><p style="font-size:10pt">某员工把 AI 生成报告直接提交，未审核。</p></div>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="content-block">
+          <h3>三、知识管理（实践）</h3>
+          <div class="task-card" style="margin-bottom:6pt">
+            <div class="step-num">1</div>
+            <div><h4 style="font-size:12pt;color:var(--info);margin-bottom:2pt">建立个人知识收件箱</h4><p>在电脑或手机上创建文件夹，把 6 天课程资料分类整理</p></div>
+          </div>
+          <div class="task-card" style="margin-bottom:6pt">
+            <div class="step-num" style="background:#EE822F">2</div>
+            <div><h4 style="font-size:12pt;color:var(--info);margin-bottom:2pt">写 3 段知识沉淀</h4><p>分别对应 QClaw、WorkBuddy、Trae 的使用心得</p></div>
+          </div>
+          <div class="task-card">
+            <div class="step-num" style="background:#75BD42">3</div>
+            <div><h4 style="font-size:12pt;color:var(--info);margin-bottom:2pt">知识分层练习</h4><p>把一段项目经验分别写到"项目层"和"个人层"</p></div>
+          </div>
+        </div>
+        <div class="content-block">
+          <h3>四、课程回顾（思考）</h3>
+          <ul style="font-size:10.5pt">
+            <li>QClaw 的 3 个进阶技巧是什么？</li>
+            <li>WorkBuddy 能完成哪些数据处理任务？</li>
+            <li>Trae Builder 模式的核心优势是什么？</li>
+            <li>三工具联调的关键是什么？</li>
+            <li>调试三板斧是哪三板斧？</li>
+            <li>MVP 的定义是什么？</li>
+          </ul>
+        </div>
+        <div class="content-block">
+          <h3>提交要求</h3>
+          <div class="tip-box" style="padding:6pt 8pt"><p class="tip-label" style="font-size:10pt">截止时间</p><p style="font-size:10pt">下周上课前提交优化版简历 + 安全规范分析 + 知识管理截图</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">18 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第19页：拓展延伸 ==================== -->
+<section class="slide" data-page="19">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo" class="logo">
+    <p class="page-meta">Day 6 · 拓展延伸</p>
+  </div>
+  <div class="slide-content content-enter hover-lift">
+    <div class="section-header-bar">
+      <div class="section-title-box">拓展</div>
+      <div class="section-number">16</div>
+      <div class="section-line"></div>
+    </div>
+    <h2 style="font-size:var(--text-2xl);color:var(--secondary);margin:0 0 var(--space-4) 0;">拓展：AI 工具的持续进化之路</h2>
+    <div class="content-two-col">
+      <div class="content-col">
+        <div class="content-block">
+          <h3>AI 工具发展趋势</h3>
+          <div class="factor-grid">
+            <div class="factor-card"><h4>多模态融合</h4><p>文本、图像、音频、视频的统一处理，一个工具搞定所有内容类型</p></div>
+            <div class="factor-card"><h4>Agent 自主化</h4><p>从"你指挥 AI 做"到"AI 自主规划、执行、反思"，人类只需设定目标</p></div>
+            <div class="factor-card"><h4>垂直领域深耕</h4><p>农业、医疗、法律等垂直领域的专用 AI 工具将越来越成熟</p></div>
+            <div class="factor-card"><h4>人机协作常态化</h4><p>未来的工作模式不是"AI 取代人"，而是"会 AI 的人取代不会 AI 的人"</p></div>
+          </div>
+        </div>
+        <div class="content-block">
+          <h3>给你的长期建议</h3>
+          <ul>
+            <li><strong>每季度尝试一个新工具</strong>：保持对新技术的好奇心</li>
+            <li><strong>建立个人工具库</strong>：记录每个工具的适用场景和优缺点</li>
+            <li><strong>关注行业动态</strong>：订阅 1-2 个 AI 领域的公众号或 Newsletter</li>
+            <li><strong>实践出真知</strong>：把学到的工具用到实际工作/学习中</li>
+            <li><strong>分享即学习</strong>：教别人是最好的学习方式</li>
+          </ul>
+        </div>
+      </div>
+      <div class="content-col">
+        <div class="content-block">
+          <h3>推荐学习路径</h3>
+          <div class="timeline-wrap">
+            <div class="timeline-line"></div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">第 1 个月：巩固基础</p><p class="desc">把 6 天课程的内容复习一遍，独立完成一个小项目</p></div>
+            </div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">第 2-3 个月：深入一个工具</p><p class="desc">选择 QClaw/WorkBuddy/Trae 中的一个，深入学习高级功能</p></div>
+            </div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">第 4-6 个月：扩展工具链</p><p class="desc">尝试新的 AI 工具，扩展你的工具库（如 AI 绘画、AI 视频等）</p></div>
+            </div>
+            <div class="timeline-item-v">
+              <div class="timeline-dot-v"></div>
+              <div class="timeline-content"><p class="year">第 6-12 个月：项目实战</p><p class="desc">用 AI 工具完成一个完整的个人项目，写到简历里</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="content-block">
+          <h3>课程数据统计</h3>
+          <table class="compare-table" style="font-size:10pt">
+            <tr><th>指标</th><th>数据</th></tr>
+            <tr><td>出勤率</td><td>___%</td></tr>
+            <tr><td>工具安装完成率</td><td>___%</td></tr>
+            <tr><td>项目完成率</td><td>___%</td></tr>
+            <tr><td>路演参与率</td><td>___%</td></tr>
+            <tr><td>学生满意度</td><td>___分</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p style="margin-left:auto;">19 / 20</p>
+  </div>
+</section>
+
+<!-- ==================== 第20页：封底 ==================== -->
+<section class="slide end-body" data-page="20">
+  <div class="end-top-bar"></div>
+  <div class="end-deco-shape"></div>
+  <div class="end-deco-circle-1"></div>
+  <div class="end-deco-circle-2"></div>
+  <div class="end-logo">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="logo-text">AI 智能体工具实训</p>
+  </div>
+  <div class="end-hero">
+    <h1 class="end-title">结业快乐！</h1>
+    <p class="end-subtitle">6 天 AI 智能体工具实训 · 圆满收官</p>
+    <div class="end-summary">
+      <h3>6 天学习成果回顾</h3>
+      <ul>
+        <li>Day 1-2：掌握 QClaw 信息搜集 + WorkBuddy 数据处理</li>
+        <li>Day 3-5：掌握 Trae 编程开发 + 三工具联调 + 项目冲刺</li>
+        <li>Day 6：简历 AI 优化 + 职场安全规范 + LLM-Wiki 知识管理</li>
+        <li>核心能力：QClaw → WorkBuddy → Trae 端到端工作流</li>
+        <li>思维方式：让 AI 为你工作，而不是被 AI 取代</li>
+      </ul>
+    </div>
+    <div class="end-next">
+      <p class="next-label">未来可期</p>
+      <p>工具会过时，但方法不会。你的专业背景是优势，保持好奇心，持续学习。祝大家毕业顺利，前程似锦！</p>
+    </div>
+  </div>
+  <div class="end-bottom">
+    <div><p>AI 智能体工具实训 · 农林高校 2026</p></div>
+    <div style="text-align:right"><p>感谢聆听 · 欢迎交流 · 前程似锦</p></div>
+  </div>
+</section>
+
+  </div>
+</div>
+
+<!-- Navigation -->
+<div class="nav-hint">← → 或空格键切换幻灯片</div>
+
+<script>
+  // Viewport scaling
+  function resizeSlides() {
+    const wrapper = document.getElementById('slideWrapper');
+    if (!wrapper) return;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const sw = 960 * 1.333;
+    const sh = 540 * 1.333;
+    const scale = Math.min(vw / sw, vh / sh);
+    wrapper.style.transform = 'scale(' + scale + ')';
+  }
+  window.addEventListener('resize', resizeSlides);
+  resizeSlides();
+
+  let currentSlide = 1;
+  const totalSlides = 20;
+  function showSlide(n) {
+    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+    const slide = document.querySelector('.slide[data-page="' + n + '"]');
+    if (slide) slide.classList.add('active');
+  }
+  function nextSlide() { if (currentSlide < totalSlides) { currentSlide++; showSlide(currentSlide); } }
+  function prevSlide() { if (currentSlide > 1) { currentSlide--; showSlide(currentSlide); } }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+    if (e.key === 'ArrowLeft') prevSlide();
+  });
+  document.addEventListener('click', function(e) {
+    const slide = document.querySelector('.slide.active');
+    if (!slide) return;
+    const rect = slide.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    if (x > rect.width * 0.7) nextSlide();
+    else if (x < rect.width * 0.3) prevSlide();
+  });
+</script>
+</body>
+</html>
