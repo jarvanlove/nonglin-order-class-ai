@@ -1,6 +1,6 @@
-# 农林高校 AI 工具实训课程
+# AI 工具实战训练营
 
-> 面向农林高校应届毕业生的 6 天 AI 工具实训课程，理论 + 实践，就业导向。
+> 面向职场人士和高校学生的 5 天 AI 工具案例实训课程，理论 + 实战，每天四段课均有产出。
 
 ---
 
@@ -8,85 +8,60 @@
 
 | 属性 | 内容 |
 |------|------|
-| 授课对象 | 农林高校应届毕业生（计算机 + 非计算机混编，30 人） |
-| 授课时长 | 6 天 × 6.5 小时/天 |
-| 核心工具 | QClaw（信息搜集）+ WorkBuddy（办公自动化）+ Trae（AI 编程） |
-| 课程目标 | 掌握国产 AI 工具技能，建立全球 AI 生态认知，产出可写进简历的跨工具项目 |
-| 后续计划 | 6 天课程结束后沉淀 2-3 天，再为学校老师讲课 |
+| 课程名称 | AI 工具实战训练营 |
+| 授课对象 | 职场人士 / 高校学生（30 人） |
+| 授课时长 | 5 天 × 6.5 小时/天 |
+| 核心工具 | AI 对话 / 办公自动化 / 内容创作 / Vibe Coding / Agentic Engineering |
+| 课程目标 | 掌握 AI 工具底层能力，建立从需求到产出的完整工作流 |
+| 讲师 | 吴家文 |
+| 时间 | 2026 年 6 月 |
+
+## 五天课程安排
+
+| 天数 | 主题 | 核心产出 |
+|------|------|---------|
+| Day 01 | AI 使用底层能力 | 提示词结构、事实核查、学习助手 |
+| Day 02 | AI 办公自动化 | 会议纪要、数据洞察、任务调度、正式报告 |
+| Day 03 | AI 内容创作 + Vibe Design | 传播策略卡、内容三件套、视觉风格板、PPT 故事板 |
+| Day 04 | Vibe Coding 产品实战 | 需求说明书、活动页 v1、AI 小工具、Bug 修复记录 |
+| Day 05 | Agentic Engineering 综合收口 | Agentic 工作流图、综合项目 Demo、LLM-Wiki 知识卡、简历项目经历 |
 
 ## 文件结构
 
 ```
 nonglin-order-class-ai/
-├── content/                          # 6 天详细授课内容
-│   ├── day01-ai-overview/            # Day 1: AI 全景认知 + QClaw 上手
-│   ├── day02-agent-deep/             # Day 2: Agent 深度 + WorkBuddy 办公
-│   ├── day03-coding-ecosystem/       # Day 3: 编程工具生态 + 项目启动
-│   ├── day04-project-sprint1/        # Day 4: 项目冲刺 I
-│   ├── day05-project-sprint2/        # Day 5: 项目冲刺 II
-│   ├── day06-polish-career/          # Day 6: 项目打磨 + 就业锦囊 + LLM-Wiki + 路演结业
-│   └── llm-wiki-lecture/             # LLM-Wiki 授课标准（老师课复用）
-├── slides/                           # 演讲幻灯片（huashu-design 产物）
-│   └── slides-master-outline.md      # 幻灯片总大纲与视觉风格指南
-├── materials/                        # 学员手册 + 实践指导书 + 验收标准
-│   ├── student-handbook.md           # 学员手册（课前预习 + 工具准备）
-│   ├── practice-guide.md             # 实践指导书（给助教的详细步骤）
-│   ├── project-rubric.md             # 项目验收标准与评分细则
-│   └── templates/                    # 模板文件
-│       ├── project-proposal-template.md
-│       ├── weekly-report-template.md
-│       └── resume-template.md
-└── README.md                         # 本文件
+├── content/                    # 详细授课内容
+├── slides/                     # 演讲幻灯片
+│   ├── day01/                  # Day 01 课件
+│   ├── day02/                  # Day 02 课件
+│   ├── day03/                  # Day 03 课件
+│   ├── day04/                  # Day 04 课件
+│   ├── day05/                  # Day 05 课件
+│   └── shared/                 # 共享样式和组件
+├── materials/                  # 素材文件
+│   ├── logo.svg                # 品牌 Logo
+│   ├── logo-v2.svg             # Logo 图标版
+│   └── ...                     # 其他素材
+└── README.md                   # 本文件
 ```
 
 ## 快速导航
 
 ### 讲师备课
-1. 先读 `PRODUCT_SPEC.md` 和 `ARCHITECTURE.md` 了解当前 6 天课程范围
-2. 按天阅读 `content/day0X-xxx/` 下的授课内容
-3. 参考 `materials/practice-guide.md` 了解实践环节细节
-4. 使用 `slides/` 下的幻灯片进行授课
+1. 按天阅读 `slides/day0X/` 下的课件文件
+2. 参考 `content/` 下的授课内容
 
-### 老师课复用（后续给学校老师讲课）
-
-以下模块可直接抽取使用：
-
-| 模块 | 来源文件 | 给老师讲课时的价值 |
-|------|---------|-------------------|
-| AI 通识 | Day 1 上午 | 建立 AI 全景认知 |
-| Agent 原理 | Day 2 上午 | 技术前沿洞察 |
-| 工具选型 | Day 3 上午 | 教学中如何选择 AI 工具 |
-| 教师 AI 素养 | Day 6 下午 | 日常办公提效 + 安全规范 |
-| 知识管理 | Day 6 + `llm-wiki-lecture/lecture-standard.md` | 教师个人知识管理体系 |
-
-建议重组方案：
-- **Day A**：AI 通识（Day 1）+ 工具选型（Day 3 精简版）
-- **Day B**：教师 AI 素养（Day 6 改编版）
-- **Day C**：知识管理（`lecture-standard.md`）
-
-## 内容统计
-
-| 类别 | 文件数 | 字数（约） |
-|------|--------|-----------|
-| 6 天详细授课内容 | 21 个 | 约 24 万字 |
-| 学员手册 | 1 个 | 1.0 万字 |
-| 实践指导书 | 1 个 | 7.7 万字 |
-| 项目验收标准 | 1 个 | 0.8 万字 |
-| 模板文件 | 3 个 | 1.4 万字 |
-| **合计** | **27 个** | **约 35 万字** |
-
-## 关键约束
-
-- 实践阶段禁止使用国外 AI 工具（Claude、Codex、ChatGPT、Cursor）和 VPN
-- 理论课可以介绍国外工具，建立全球视野
-- 不对学生分 A/B 轨道，统一难度，确保 30 人都能跟上
-- QClaw / WorkBuddy / Trae 是教学载体，不是职业标准工具
+### 课程特点
+- **每天四段课**：理论 + 三个案例，每段都有明确产出
+- **禁止国外工具**：实践阶段禁止使用 Claude、Codex、ChatGPT、Cursor 和 VPN
+- **统一难度**：不分 A/B 轨道，确保 30 人都能跟上
+- **产出导向**：每天结束都有可交付的成果
 
 ## 版本记录
 
 | 版本 | 日期 | 说明 |
 |------|------|------|
-| v1.0 | 2026-04-27 | 课程设计规格书定稿 + 全部授课内容完成 |
+| v1.0 | 2026-05-20 | 5 天案例课课程定稿 |
 
 ---
 
