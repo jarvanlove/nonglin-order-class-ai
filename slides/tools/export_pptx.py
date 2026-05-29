@@ -1,7 +1,7 @@
 """
 Export HTML slides to PPTX (one file per day).
 Screenshots each HTML slide via Playwright, then assembles into separate .pptx files.
-Structure: day01/index.html ~ day06/index.html, each with multiple slides.
+Structure: day01/index.html ~ day05/index.html, each with multiple slides.
 Usage: python export_pptx.py
 """
 import os
@@ -12,8 +12,8 @@ from playwright.sync_api import sync_playwright
 from pptx import Presentation
 from pptx.util import Inches
 
-SLIDES_DIR = Path(__file__).parent.resolve()
-SCREENSHOT_DIR = SLIDES_DIR / "_screenshots"
+SLIDES_DIR = Path(__file__).parent.parent.resolve()
+SCREENSHOT_DIR = Path(__file__).parent / "screenshots"
 OUTPUT_DIR = SLIDES_DIR / ".." / "outputs"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -22,7 +22,7 @@ SCREENSHOT_DIR.mkdir(exist_ok=True)
 for old in SCREENSHOT_DIR.glob("*.png"):
     old.unlink()
 
-DAYS = [f"day{i:02d}" for i in range(1, 7)]
+DAYS = [f"day{i:02d}" for i in range(1, 6)]
 
 VIEWPORT = {"width": 1280, "height": 720}
 DEVICE_SCALE = 1
