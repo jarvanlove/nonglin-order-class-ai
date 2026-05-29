@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 6 · 演示准备</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 12pt;
+  }
+  .two-col {
+    display: flex;
+    gap: 16pt;
+    height: calc(100% - 70pt);
+  }
+  .col-left {
+    flex: 1.1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .col-right {
+    flex: 0.9;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .step-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+    display: flex;
+    gap: 10pt;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 24pt; height: 24pt;
+    border-radius: 50%;
+    background: #084E8F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-num p {
+    font-size: 12pt;
+    font-weight: 700;
+    color: #ffffff;
+  }
+  .step-content h4 {
+    font-size: 12pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .step-content p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+  .warn-card {
+    background: rgba(146,24,26,0.04);
+    border: 1pt solid rgba(146,24,26,0.15);
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+  }
+  .warn-card h4 {
+    font-size: 12pt;
+    color: #92181A;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .warn-card ul {
+    list-style: none;
+  }
+  .warn-card li {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.6;
+    padding-left: 14pt;
+    position: relative;
+    margin-bottom: 3pt;
+  }
+  .warn-card li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 7pt;
+    width: 5pt; height: 5pt;
+    border-radius: 50%;
+    background: #92181A;
+  }
+  .script-box {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+    flex: 1;
+  }
+  .script-box h4 {
+    font-size: 12pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .script-item {
+    display: flex;
+    gap: 8pt;
+    margin-bottom: 6pt;
+    align-items: flex-start;
+  }
+  .script-time {
+    font-size: 9pt;
+    color: #EE822F;
+    font-weight: 700;
+    flex-shrink: 0;
+    width: 40pt;
+  }
+  .script-text {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.4;
+  }
+  .rehearse-box {
+    background: #084E8F;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+  }
+  .rehearse-box h4 {
+    font-size: 13pt;
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .rehearse-box p {
+    font-size: 10pt;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.6;
+  }
+  .rehearse-box .highlight {
+    color: #EE822F;
+    font-weight: 700;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 6 · 演示准备</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>上午任务</p>
+    </div>
+    <h1 class="page-title">演示准备：让 10 分钟发挥 100 分效果</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="step-card">
+          <div class="step-num"><p>1</p></div>
+          <div class="step-content">
+            <h4>撰写演示脚本</h4>
+            <p>不是即兴发挥，而是提前写好每一页 PPT 的讲解词。包括：开场白（30 秒）、项目背景（1 分钟）、核心功能演示（5-6 分钟）、技术亮点（1 分钟）、总结（1 分钟）。</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num"><p>2</p></div>
+          <div class="step-content">
+            <h4>时间控制（10-15 分钟）</h4>
+            <p>严格控制每个环节的时间。演示超时是最常见的扣分项。建议：核心功能演示占 60% 时间，其他环节各占 10%。</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num"><p>3</p></div>
+          <div class="step-content">
+            <h4>备用方案（断网、报错）</h4>
+            <p>提前录制好演示视频（屏幕录制），万一现场出故障可以播放视频。准备离线版本的数据和截图。</p>
+          </div>
+        </div>
+        <div class="warn-card">
+          <h4>常见翻车场景</h4>
+          <ul>
+            <li>现场网络不稳定，API 请求超时</li>
+            <li>演示数据被之前的测试污染</li>
+            <li>切换窗口时暴露了桌面隐私文件</li>
+            <li>讲解人紧张忘词，冷场超过 10 秒</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="script-box">
+          <h4>演示脚本模板（10 分钟版）</h4>
+          <div class="script-item">
+            <span class="script-time">0:00</span>
+            <p class="script-text">开场：大家好，我们是 X 组，项目名是...</p>
+          </div>
+          <div class="script-item">
+            <span class="script-time">0:30</span>
+            <p class="script-text">背景：我们发现农林领域存在 XX 问题...</p>
+          </div>
+          <div class="script-item">
+            <span class="script-time">1:30</span>
+            <p class="script-text">方案：我们的解决方案是...</p>
+          </div>
+          <div class="script-item">
+            <span class="script-time">2:30</span>
+            <p class="script-text">演示：现在演示核心功能（QClaw 采集 → WorkBuddy 处理 → Trae 展示）</p>
+          </div>
+          <div class="script-item">
+            <span class="script-time">7:30</span>
+            <p class="script-text">亮点：技术架构和工具整合的创新点</p>
+          </div>
+          <div class="script-item">
+            <span class="script-time">8:30</span>
+            <p class="script-text">总结：项目价值 + 未来展望</p>
+          </div>
+          <div class="script-item">
+            <span class="script-time">9:30</span>
+            <p class="script-text">Q&A：预留 30 秒缓冲</p>
+          </div>
+        </div>
+        <div class="rehearse-box">
+          <h4>彩排要求：至少完整走 2 遍</h4>
+          <p>第一遍：熟悉流程，记录卡壳的地方</p>
+          <p>第二遍：计时，调整语速和环节分配</p>
+          <p>第三遍（可选）：请其他组同学当观众，收集反馈</p>
+          <p style="margin-top: 6pt;"><span class="highlight">黄金法则：如果彩排时超时，正式演示一定也会超时。</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>5 / 16</p>
+  </div>
+</body>
+</html>

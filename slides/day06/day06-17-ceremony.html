@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="notes" content="本页为结业仪式综合页，讲师需提前准备：证书、奖品、合影设备、反馈问卷二维码。建议流程：评选说明（2分钟）→颁奖（5分钟）→证书颁发（3分钟）→合影（3分钟）→反馈与资源（2分钟）。">
+<title>Day 6 · 结业仪式</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #084E8F;
+    overflow: hidden;
+    position: relative;
+    color: #ffffff;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #EE822F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: rgba(255,255,255,0.08);
+    border-bottom: 1pt solid rgba(255,255,255,0.15);
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+    filter: brightness(0) invert(1);
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: rgba(255,255,255,0.7);
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 26pt;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+    margin-bottom: 12pt;
+  }
+  .main-wrap {
+    display: flex;
+    gap: 14pt;
+    height: calc(100% - 60pt);
+  }
+  .left-col {
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .right-col {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .ceremony-card {
+    background: rgba(255,255,255,0.08);
+    border: 1pt solid rgba(255,255,255,0.15);
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+  }
+  .ceremony-card h3 {
+    font-size: 12pt;
+    color: #EE822F;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .ceremony-card ul {
+    list-style: none;
+  }
+  .ceremony-card li {
+    font-size: 10pt;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.6;
+    padding-left: 12pt;
+    position: relative;
+    margin-bottom: 3pt;
+  }
+  .ceremony-card li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 7pt;
+    width: 4pt; height: 4pt;
+    border-radius: 50%;
+    background: #EE822F;
+  }
+  .award-row {
+    display: flex;
+    gap: 8pt;
+    margin-top: 6pt;
+  }
+  .award-box {
+    flex: 1;
+    background: rgba(255,255,255,0.06);
+    border-radius: 4pt;
+    padding: 8pt;
+    text-align: center;
+  }
+  .award-box h4 {
+    font-size: 10pt;
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .award-box p {
+    font-size: 9pt;
+    color: rgba(255,255,255,0.7);
+  }
+  .qr-box {
+    background: #ffffff;
+    border-radius: 6pt;
+    padding: 10pt;
+    text-align: center;
+  }
+  .qr-box h3 {
+    font-size: 11pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .qr-placeholder {
+    width: 80pt; height: 80pt;
+    background: #f0f0f0;
+    border-radius: 4pt;
+    margin: 0 auto 6pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .qr-placeholder p {
+    font-size: 9pt;
+    color: #666666;
+  }
+  .qr-box p {
+    font-size: 9pt;
+    color: #333333;
+  }
+  .res-box {
+    background: rgba(255,255,255,0.08);
+    border: 1pt solid rgba(255,255,255,0.15);
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+    flex: 1;
+  }
+  .res-box h3 {
+    font-size: 12pt;
+    color: #EE822F;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .res-box ul {
+    list-style: none;
+  }
+  .res-box li {
+    font-size: 9pt;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.6;
+    padding-left: 10pt;
+    position: relative;
+    margin-bottom: 2pt;
+  }
+  .res-box li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 6pt;
+    width: 4pt; height: 4pt;
+    border-radius: 50%;
+    background: #75BD42;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: rgba(255,255,255,0.06);
+    border-top: 1pt solid rgba(255,255,255,0.15);
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: rgba(255,255,255,0.7);
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 6 · 结业仪式</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>收官之日</p>
+    </div>
+    <h1 class="page-title">结业仪式：见证成长，展望未来</h1>
+
+    <div class="main-wrap">
+      <div class="left-col">
+        <div class="ceremony-card">
+          <h3>评选与颁奖流程</h3>
+          <ul>
+            <li>评委团由讲师 + 企业导师 + 学生代表组成</li>
+            <li>评分维度：功能完整性(30%) + 技术实现(25%) + 团队协作(15%) + 文档质量(15%) + 路演表现(15%)</li>
+            <li>奖项设置：最佳项目奖(1组) + 最佳技术奖(1组) + 最佳创意奖(1组) + 优秀团队奖(若干)</li>
+          </ul>
+          <div class="award-row">
+            <div class="award-box">
+              <h4>最佳项目</h4>
+              <p>奖杯 + 证书</p>
+            </div>
+            <div class="award-box">
+              <h4>最佳技术</h4>
+              <p>奖杯 + 证书</p>
+            </div>
+            <div class="award-box">
+              <h4>最佳创意</h4>
+              <p>奖杯 + 证书</p>
+            </div>
+          </div>
+        </div>
+        <div class="ceremony-card">
+          <h3>结业证书颁发 & 合影留念</h3>
+          <ul>
+            <li>全体学员依次上台领取结业证书</li>
+            <li>获奖团队与评委团合影</li>
+            <li>全体大合影（建议教室前排或户外）</li>
+            <li>发放课程纪念品（定制 U 盘 / 笔记本）</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="qr-box">
+          <h3>课程反馈问卷</h3>
+          <div class="qr-placeholder">
+            <p>二维码占位<br>（请替换为实际问卷）</p>
+          </div>
+          <p>扫码填写反馈，帮助我们持续改进课程</p>
+        </div>
+        <div class="res-box">
+          <h3>课后资源速查</h3>
+          <ul>
+            <li>课程 PPT 下载：网盘链接（课后发放）</li>
+            <li>QClaw 官方社区：qclaw.qq.com/community</li>
+            <li>Trae 开发者论坛：trae.cn/forum</li>
+            <li>班级微信群：长期保留，有问题随时交流</li>
+            <li>推荐关注：AI 工具动态公众号（每周 30 分钟）</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>21 / 22</p>
+  </div>
+</body>
+</html>

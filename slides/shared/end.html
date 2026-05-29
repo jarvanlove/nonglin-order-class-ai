@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>母版 · 封底页</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="animations.css">
+<link rel="stylesheet" href="layout.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  .end-body {
+    background: var(--bg);
+  }
+
+  /* 顶部装饰条 */
+  .end-top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6pt;
+    background: var(--primary);
+    z-index: 100;
+  }
+
+  /* 右侧装饰图形 - 与封面呼应 */
+  .end-deco-shape {
+    position: absolute;
+    right: 0; top: 0;
+    width: 260pt; height: 540pt;
+    background: var(--primary);
+    clip-path: polygon(35% 0, 100% 0, 100% 100%, 0% 100%);
+    z-index: 0;
+  }
+
+  .end-deco-circle-1 {
+    position: absolute;
+    right: 200pt; top: 110pt;
+    width: 80pt; height: 80pt;
+    background: var(--accent);
+    border-radius: 50%;
+    opacity: 0.15;
+    z-index: 0;
+  }
+
+  .end-deco-circle-2 {
+    position: absolute;
+    right: 60pt; bottom: 90pt;
+    width: 120pt; height: 120pt;
+    background: var(--success);
+    border-radius: 50%;
+    opacity: 0.12;
+    z-index: 0;
+  }
+
+  /* 主内容区 */
+  .end-hero {
+    position: absolute;
+    top: 50%;
+    left: 48pt;
+    right: 300pt;
+    transform: translateY(-50%);
+    z-index: 1;
+  }
+
+  .end-title {
+    font-size: var(--text-5xl);
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.2;
+    margin: 0 0 var(--space-8) 0;
+  }
+
+  .end-subtitle {
+    font-size: var(--text-lg);
+    color: var(--light-ink);
+    line-height: 1.6;
+    margin: 0 0 var(--space-10) 0;
+  }
+
+  .end-summary {
+    background: var(--bg-white);
+    border: 1pt solid var(--border);
+    border-radius: 6pt;
+    padding: var(--space-6);
+    margin-bottom: var(--space-8);
+    box-shadow: 0 1pt 4pt rgba(0,0,0,0.04);
+  }
+
+  .end-summary h3 {
+    font-size: var(--text-md);
+    color: var(--primary);
+    font-weight: 700;
+    margin-bottom: var(--space-4);
+  }
+
+  .end-summary ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .end-summary li {
+    font-size: var(--text-base);
+    color: var(--light-ink);
+    line-height: 1.7;
+    padding-left: var(--space-6);
+    position: relative;
+    margin-bottom: var(--space-3);
+  }
+
+  .end-summary li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--success);
+    font-weight: 700;
+  }
+
+  .end-next {
+    background: rgba(238,130,47,0.06);
+    border-left: 3pt solid var(--accent);
+    border-radius: 0 4pt 4pt 0;
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .end-next .next-label {
+    font-size: var(--text-xs);
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: var(--space-2);
+  }
+
+  .end-next p {
+    font-size: var(--text-base);
+    color: var(--light-ink);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Logo区 */
+  .end-logo {
+    position: absolute;
+    top: 20pt; left: 32pt;
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    z-index: 1;
+  }
+
+  .end-logo img {
+    height: 28pt;
+    width: auto;
+  }
+
+  .end-logo .logo-text {
+    font-size: var(--text-sm);
+    color: var(--primary);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  /* 底部信息 */
+  .end-bottom {
+    position: absolute;
+    bottom: 40pt; left: 48pt;
+    right: 48pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    z-index: 1;
+  }
+
+  .end-bottom p {
+    font-size: var(--text-sm);
+    color: var(--muted);
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  /* 动画 */
+  .end-deco-shape {
+    opacity: 0;
+    animation: fadeInRight 0.8s ease-out forwards;
+  }
+  .end-deco-circle-1 {
+    opacity: 0;
+    animation: scaleIn 0.6s ease-out 0.3s forwards;
+  }
+  .end-deco-circle-2 {
+    opacity: 0;
+    animation: scaleIn 0.6s ease-out 0.4s forwards;
+  }
+  .end-logo {
+    opacity: 0;
+    animation: fadeInDown 0.5s ease-out forwards;
+  }
+  .end-title {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out 0.2s forwards;
+  }
+  .end-subtitle {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.35s forwards;
+  }
+  .end-summary {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.45s forwards;
+  }
+  .end-next {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.55s forwards;
+  }
+  .end-bottom {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.65s forwards;
+  }
+</style>
+</head>
+<body class="end-body">
+
+  <!-- 装饰层 -->
+  <div class="end-top-bar"></div>
+  <div class="end-deco-shape"></div>
+  <div class="end-deco-circle-1"></div>
+  <div class="end-deco-circle-2"></div>
+
+  <!-- Logo -->
+  <div class="end-logo">
+    <img src="media/image2.png" alt="公司 Logo">
+    <p class="logo-text">AI 智能体工具实训</p>
+  </div>
+
+  <!-- 主内容区 -->
+  <div class="end-hero">
+    <h1 class="end-title">今日总结</h1>
+    <p class="end-subtitle">回顾今日所学，为明天的学习做好准备</p>
+
+    <div class="end-summary">
+      <h3>今日要点回顾</h3>
+      <ul>
+        <li>要点 1：今日核心知识点总结</li>
+        <li>要点 2：关键技能操作回顾</li>
+        <li>要点 3：重要概念和注意事项</li>
+      </ul>
+    </div>
+
+    <div class="end-next">
+      <p class="next-label">下次预告</p>
+      <p>明天我们将学习 XXX，请提前准备好 YYY。</p>
+    </div>
+  </div>
+
+  <!-- 底部信息 -->
+  <div class="end-bottom">
+    <div>
+      <p>AI 智能体工具实训 · 农林高校 2026</p>
+    </div>
+    <div style="text-align: right;">
+      <p>感谢聆听 · 欢迎交流</p>
+    </div>
+  </div>
+
+</body>
+</html>

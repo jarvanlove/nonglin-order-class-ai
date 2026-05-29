@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 6 · 评分标准详解</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 14pt 28pt;
+    overflow-y: auto;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 22pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+  }
+  .rubric-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .rubric-row {
+    display: flex;
+    gap: 8pt;
+  }
+  .rubric-card {
+    flex: 1;
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+  }
+  .rubric-card .dim-header {
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 6pt;
+  }
+  .rubric-card .dim-header h4 {
+    font-size: 12pt;
+    color: #084E8F;
+    font-weight: 700;
+  }
+  .rubric-card .dim-header .w-tag {
+    background: rgba(238,130,47,0.12);
+    color: #EE822F;
+    padding: 1pt 6pt;
+    border-radius: 999pt;
+    font-size: 9pt;
+    font-weight: 700;
+  }
+  .grade-row {
+    display: flex;
+    gap: 6pt;
+  }
+  .grade-box {
+    flex: 1;
+    border-radius: 4pt;
+    padding: 6pt 8pt;
+  }
+  .grade-box .g-label {
+    font-size: 9pt;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .grade-box .g-desc {
+    font-size: 9pt;
+    line-height: 1.4;
+  }
+  .grade-a { background: rgba(117,189,66,0.08); border: 1pt solid rgba(117,189,66,0.3); }
+  .grade-a .g-label { color: #75BD42; }
+  .grade-a .g-desc { color: #333333; }
+  .grade-b { background: rgba(8,78,143,0.06); border: 1pt solid rgba(8,78,143,0.2); }
+  .grade-b .g-label { color: #084E8F; }
+  .grade-b .g-desc { color: #333333; }
+  .grade-c { background: rgba(238,130,47,0.06); border: 1pt solid rgba(238,130,47,0.2); }
+  .grade-c .g-label { color: #EE822F; }
+  .grade-c .g-desc { color: #333333; }
+  .grade-d { background: rgba(146,24,26,0.06); border: 1pt solid rgba(146,24,26,0.2); }
+  .grade-d .g-label { color: #92181A; }
+  .grade-d .g-desc { color: #333333; }
+  .pass-line {
+    background: #084E8F;
+    border-radius: 6pt;
+    padding: 8pt 14pt;
+    display: flex;
+    align-items: center;
+    gap: 10pt;
+  }
+  .pass-line .pass-icon {
+    width: 24pt; height: 24pt;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .pass-line .pass-icon p {
+    font-size: 12pt;
+    color: #ffffff;
+    font-weight: 700;
+  }
+  .pass-line p {
+    font-size: 11pt;
+    color: #ffffff;
+    line-height: 1.5;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+  /* Entrance animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12pt); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-12pt); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(12pt); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .kicker {
+    opacity: 0;
+    animation: fadeInLeft 0.4s ease-out forwards;
+  }
+  .page-title {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.1s forwards;
+  }
+  .rubric-wrap {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.2s forwards;
+  }
+  .rubric-row:nth-child(1) .rubric-card {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.3s forwards;
+  }
+  .rubric-row:nth-child(2) .rubric-card {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.4s forwards;
+  }
+  .rubric-row:nth-child(3) .rubric-card:nth-child(1) {
+    opacity: 0;
+    animation: fadeInLeft 0.5s ease-out 0.5s forwards;
+  }
+  .rubric-row:nth-child(3) .rubric-card:nth-child(2) {
+    opacity: 0;
+    animation: fadeInRight 0.5s ease-out 0.5s forwards;
+  }
+  .pass-line {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.6s forwards;
+  }
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 6 · 项目路演</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>评分细则</p>
+    </div>
+    <h1 class="page-title">各维度 A/B/C/D 等级标准</h1>
+
+    <div class="rubric-wrap">
+      <div class="rubric-row">
+        <div class="rubric-card">
+          <div class="dim-header">
+            <h4>功能完整性</h4>
+            <span class="w-tag">30%</span>
+          </div>
+          <div class="grade-row">
+            <div class="grade-box grade-a">
+              <p class="g-label">A 优秀</p>
+              <p class="g-desc">全部核心功能实现，有增值功能，三大工具联调顺畅</p>
+            </div>
+            <div class="grade-box grade-b">
+              <p class="g-label">B 良好</p>
+              <p class="g-desc">全部核心功能实现，三大工具均有使用，基本对接</p>
+            </div>
+            <div class="grade-box grade-c">
+              <p class="g-label">C 合格</p>
+              <p class="g-desc">80%+ 功能实现，1 个工具使用较浅，需手动干预</p>
+            </div>
+            <div class="grade-box grade-d">
+              <p class="g-label">D 不达标</p>
+              <p class="g-desc">功能不足 60%，工具未实质使用或无法运行</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rubric-row">
+        <div class="rubric-card">
+          <div class="dim-header">
+            <h4>技术实现</h4>
+            <span class="w-tag">25%</span>
+          </div>
+          <div class="grade-row">
+            <div class="grade-box grade-a">
+              <p class="g-label">A 优秀</p>
+              <p class="g-desc">方案合理，工具使用规范，有技术亮点，代码清晰</p>
+            </div>
+            <div class="grade-box grade-b">
+              <p class="g-label">B 良好</p>
+              <p class="g-desc">方案合理，工具使用规范，代码结构清晰</p>
+            </div>
+            <div class="grade-box grade-c">
+              <p class="g-label">C 合格</p>
+              <p class="g-desc">方案基本合理，有配置错误，代码少量问题</p>
+            </div>
+            <div class="grade-box grade-d">
+              <p class="g-label">D 不达标</p>
+              <p class="g-desc">方案不合理，工具使用错误，代码大量问题</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rubric-row">
+        <div class="rubric-card" style="flex: 1;">
+          <div class="dim-header">
+            <h4>团队协作</h4>
+            <span class="w-tag">15%</span>
+          </div>
+          <div class="grade-row">
+            <div class="grade-box grade-a">
+              <p class="g-label">A 优秀</p>
+              <p class="g-desc">分工明确，协作机制有效，沟通顺畅</p>
+            </div>
+            <div class="grade-box grade-b">
+              <p class="g-label">B 良好</p>
+              <p class="g-desc">分工明确，有基本协作，沟通正常</p>
+            </div>
+            <div class="grade-box grade-c">
+              <p class="g-label">C 合格</p>
+              <p class="g-desc">分工基本明确，协作不够及时，有轻微冲突</p>
+            </div>
+            <div class="grade-box grade-d">
+              <p class="g-label">D 不达标</p>
+              <p class="g-desc">分工混乱，各自为战，有成员未贡献</p>
+            </div>
+          </div>
+        </div>
+        <div class="rubric-card" style="flex: 1;">
+          <div class="dim-header">
+            <h4>文档质量</h4>
+            <span class="w-tag">15%</span>
+          </div>
+          <div class="grade-row">
+            <div class="grade-box grade-a">
+              <p class="g-label">A 优秀</p>
+              <p class="g-desc">文档完整专业，有图表，使用说明详细</p>
+            </div>
+            <div class="grade-box grade-b">
+              <p class="g-label">B 良好</p>
+              <p class="g-desc">文档完整，结构清晰，有基本图表</p>
+            </div>
+            <div class="grade-box grade-c">
+              <p class="g-label">C 合格</p>
+              <p class="g-desc">文档基本完整，缺少 1-2 项，排版一般</p>
+            </div>
+            <div class="grade-box grade-d">
+              <p class="g-label">D 不达标</p>
+              <p class="g-desc">文档严重缺失，结构混乱，无法指导操作</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pass-line">
+        <div class="pass-icon"><p>✓</p></div>
+        <p><strong>及格线：</strong>总分 ≥ 60 分，且三大工具均有实质性使用，能完成至少 1 个端到端流程演示</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>7 / 22</p>
+  </div>
+</body>
+</html>

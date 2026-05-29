@@ -1,0 +1,26 @@
+.playwright-mcp/
+__pycache__/
+*.pyc
+
+# Local slide QA captures and scratch output.
+_test_*.png
+_test_*.py
+day*_slide*.png
+day*_page*.png
+day*_after_fix*.png
+day*_cover_fix*.png
+day*_current_state.png
+day*_header_test.png
+slides_preview*.png
+slides_speaker*.png
+slides_next.png
+slides_v2.png
+output.txt
+ENDBLOCK
+ENDOFFILE
+
+# Large media files.
+*.mp4
+
+# Generated slide exports.
+outputs/*.pptx

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 2 OpenClaw Skills 机制</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 10pt 20pt;
+  }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .page-title {
+    font-size: 22pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 8pt;
+  }
+
+  .skills-container {
+    display: flex;
+    gap: 10pt;
+    height: calc(100% - 60pt);
+  }
+
+  .skills-left {
+    flex: 1.1;
+    display: flex;
+    flex-direction: column;
+    gap: 6pt;
+  }
+
+  .what-box {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 8pt 10pt;
+  }
+  .what-box h3 {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .what-box p {
+    font-size: 11pt;
+    color: #333333;
+    line-height: 1.65;
+  }
+
+  .skill-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6pt;
+    flex: 1;
+  }
+  .skill-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 5pt;
+    padding: 8pt;
+    display: flex;
+    flex-direction: column;
+  }
+  .skill-card .skill-icon {
+    width: 24pt; height: 24pt;
+    border-radius: 6pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13pt;
+    margin-bottom: 4pt;
+  }
+  .skill-card:nth-child(1) .skill-icon { background: rgba(8,78,143,0.1); color: #084E8F; }
+  .skill-card:nth-child(2) .skill-icon { background: rgba(146,24,26,0.1); color: #92181A; }
+  .skill-card:nth-child(3) .skill-icon { background: rgba(117,189,66,0.1); color: #75BD42; }
+  .skill-card:nth-child(4) .skill-icon { background: rgba(238,130,47,0.1); color: #EE822F; }
+  .skill-card:nth-child(5) .skill-icon { background: rgba(8,78,143,0.1); color: #084E8F; }
+  .skill-card:nth-child(6) .skill-icon { background: rgba(146,24,26,0.1); color: #92181A; }
+
+  .skill-card h4 {
+    font-size: 11pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .skill-card p {
+    font-size: 9pt;
+    color: #333333;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .skills-right {
+    flex: 0.9;
+    display: flex;
+    flex-direction: column;
+    gap: 6pt;
+  }
+
+  .dev-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+    flex: 1;
+  }
+  .dev-card h3 {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .dev-card p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.65;
+    margin-bottom: 6pt;
+  }
+  .dev-card .code-block {
+    background: #f1f5f9;
+    border-radius: 4pt;
+    padding: 6pt 8pt;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+  .dev-card .code-block .comment {
+    color: #666666;
+  }
+  .dev-card .code-block .keyword {
+    color: #084E8F;
+    font-weight: 700;
+  }
+
+  .tip-box {
+    background: rgba(117,189,66,0.06);
+    border-left: 3pt solid #75BD42;
+    border-radius: 0 6pt 6pt 0;
+    padding: 8pt 10pt;
+  }
+  .tip-box h4 {
+    font-size: 12pt;
+    color: #75BD42;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .tip-box p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.55;
+  }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+<meta name="notes" content="Skills机制：强调像装App一样扩展能力，可以举农林相关的Skill例子。">
+</head>
+<body>
+
+  <div class="top-bar"></div>
+
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 2 · 知识储备</p>
+  </div>
+
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>知识储备</p>
+    </div>
+    <h1 class="page-title">OpenClaw Skills：让 Agent 从"会聊天"到"会做事"</h1>
+
+    <div class="skills-container">
+      <div class="skills-left">
+        <div class="what-box">
+          <h3>Skills 是什么？</h3>
+          <p>Skills 是 OpenClaw 的"功能插件"，类似于手机上的 App。没有 Skills 的 Agent 只能聊天；安装了 Skills 的 Agent 可以搜索网页、处理文件、发送微信、查询天气……Skills 让 Agent 的能力无限扩展。</p>
+        </div>
+
+        <div class="skill-grid">
+          <div class="skill-card">
+            <div class="skill-icon">&#128269;</div>
+            <h4>搜索 Skill</h4>
+            <p>调用搜索引擎，实时获取互联网信息，支持多轮搜索和结果汇总</p>
+          </div>
+          <div class="skill-card">
+            <div class="skill-icon">&#128196;</div>
+            <h4>文件处理 Skill</h4>
+            <p>读取、写入、解析各类文件（Excel、Word、PDF、CSV）</p>
+          </div>
+          <div class="skill-card">
+            <div class="skill-icon">&#128172;</div>
+            <h4>微信推送 Skill</h4>
+            <p>绑定微信后，Agent 可以主动发消息、推送报告、提醒任务</p>
+          </div>
+          <div class="skill-card">
+            <div class="skill-icon">&#127758;</div>
+            <h4>天气查询 Skill</h4>
+            <p>获取实时天气、未来预报，支持多城市对比</p>
+          </div>
+          <div class="skill-card">
+            <div class="skill-icon">&#128200;</div>
+            <h4>数据分析 Skill</h4>
+            <p>对数据进行统计计算、生成图表、趋势分析</p>
+          </div>
+          <div class="skill-card">
+            <div class="skill-icon">&#128187;</div>
+            <h4>代码执行 Skill</h4>
+            <p>运行 Python、Shell 等代码，实现自定义逻辑</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="skills-right">
+        <div class="dev-card">
+          <h3>Skills 开发示例</h3>
+          <p>开发一个 Skill 非常简单，只需要定义：名称、描述、参数、执行逻辑。</p>
+          <div class="code-block">
+            <p><span class="comment"># Skill 定义示例：天气查询</span></p>
+            <p><span class="keyword">name:</span> weather_query</p>
+            <p><span class="keyword">description:</span> 查询指定城市的天气</p>
+            <p><span class="keyword">params:</span></p>
+            <p>&nbsp;&nbsp;- city: 城市名称（如"北京"）</p>
+            <p><span class="keyword">logic:</span></p>
+            <p>&nbsp;&nbsp;1. 调用天气 API</p>
+            <p>&nbsp;&nbsp;2. 解析返回数据</p>
+            <p>&nbsp;&nbsp;3. 格式化输出</p>
+          </div>
+        </div>
+
+        <div class="tip-box">
+          <h4>关键洞察</h4>
+          <p>OpenClaw 的社区已贡献数千个 Skills，覆盖办公、开发、生活、教育等各个领域。你不需要自己开发所有 Skill，而是像逛应用商店一样，找到需要的直接安装使用。这也是 OpenClaw 能获得 33 万 Stars 的核心原因——<strong>开放生态</strong>。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>5 / 18</p>
+  </div>
+
+</body>
+</html>

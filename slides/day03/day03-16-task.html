@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 3 · 下午任务布置</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 20pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 10pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 26pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 14pt;
+  }
+  .task-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 10pt;
+    height: calc(100% - 70pt);
+  }
+  .task-row {
+    display: flex;
+    gap: 12pt;
+    flex: 1;
+  }
+  .task-card {
+    flex: 1;
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+    display: flex;
+    flex-direction: column;
+  }
+  .task-card .task-icon {
+    width: 32pt; height: 32pt;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14pt;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8pt;
+  }
+  .task-card:nth-child(1) .task-icon { background: #084E8F; }
+  .task-card:nth-child(2) .task-icon { background: #EE822F; }
+  .task-card:nth-child(3) .task-icon { background: #75BD42; }
+  .task-card h3 {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .task-card ul {
+    list-style: none;
+    flex: 1;
+  }
+  .task-card li {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.7;
+    padding-left: 14pt;
+    position: relative;
+    margin-bottom: 4pt;
+  }
+  .task-card li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 7pt;
+    width: 5pt; height: 5pt;
+    border-radius: 50%;
+    background: #084E8F;
+  }
+  .task-card:nth-child(2) li::before { background: #EE822F; }
+  .task-card:nth-child(3) li::before { background: #75BD42; }
+  .deliver-box {
+    background: #084E8F;
+    border-radius: 6pt;
+    padding: 12pt 16pt;
+    display: flex;
+    gap: 20pt;
+    align-items: center;
+  }
+  .deliver-box h3 {
+    font-size: 13pt;
+    color: #EE822F;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .deliver-box p {
+    font-size: 11pt;
+    color: #ffffff;
+    line-height: 1.6;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+<meta name="notes" content="讲者备注：根据本页内容灵活发挥，建议控制讲解时长，留出互动空间。">
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 3 · 下午任务</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>任务布置</p>
+    </div>
+    <h1 class="page-title">下午任务清单：安装 + 作品 + 项目文档</h1>
+    <div class="task-wrap">
+      <div class="task-row">
+        <div class="task-card">
+          <div class="task-icon">1</div>
+          <h3>个人任务：Trae 安装与基础使用</h3>
+          <ul>
+            <li>完成 Trae 的安装和账号注册</li>
+            <li>进入 Builder 模式，输入测试需求验证是否正常工作</li>
+            <li>熟悉界面布局：左侧文件树、中间编辑器、右侧 Builder 面板</li>
+            <li>尝试切换 Builder / Chat / Solo 三种模式</li>
+          </ul>
+        </div>
+        <div class="task-card">
+          <div class="task-icon">2</div>
+          <h3>个人任务：第一个 Trae 作品</h3>
+          <ul>
+            <li>用 Builder 模式创建一个简单网页（个人介绍页或作品展示页）</li>
+            <li>确保网页能在浏览器中正常显示</li>
+            <li>尝试提出至少 1 次修改意见并观察 AI 如何响应</li>
+            <li>保存项目文件，记住工作区路径</li>
+          </ul>
+        </div>
+        <div class="task-card">
+          <div class="task-icon">3</div>
+          <h3>团队任务：项目启动文档</h3>
+          <ul>
+            <li>确定选题（三选一或自定义）</li>
+            <li>完成项目任务书（目标、范围、周期）</li>
+            <li>完成需求文档（用户故事、功能列表、MVP 定义）</li>
+            <li>完成技术方案（数据流、接口契约、工具选型）</li>
+            <li>完成分工表（角色、负责人、交付物、截止时间）</li>
+          </ul>
+        </div>
+      </div>
+      <div class="deliver-box">
+        <h3>今日交付物</h3>
+        <p>每人：Trae 安装完成 + 一个可运行的网页作品 | 每组：项目任务书 + 需求文档 + 技术方案 + 分工表（Word 或 Markdown 格式，组长收齐后发给讲师）</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>16 / 20</p>
+  </div>
+</body>
+</html>

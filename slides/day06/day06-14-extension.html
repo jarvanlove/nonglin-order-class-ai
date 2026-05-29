@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 6 · 任务拓展</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 12pt;
+  }
+  .two-col {
+    display: flex;
+    gap: 16pt;
+    height: calc(100% - 70pt);
+  }
+  .col-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .col-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .ext-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+    flex: 1;
+  }
+  .ext-card h3 {
+    font-size: 13pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .ext-card ul {
+    list-style: none;
+  }
+  .ext-card li {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.6;
+    padding-left: 14pt;
+    position: relative;
+    margin-bottom: 4pt;
+  }
+  .ext-card li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 7pt;
+    width: 5pt; height: 5pt;
+    border-radius: 50%;
+    background: #084E8F;
+  }
+  .ext-card .highlight {
+    background: rgba(238,130,47,0.06);
+    border-radius: 4pt;
+    padding: 8pt 10pt;
+    margin-top: 6pt;
+  }
+  .ext-card .highlight p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+  .qa-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+  }
+  .qa-card h3 {
+    font-size: 13pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .qa-item {
+    margin-bottom: 8pt;
+    padding-bottom: 8pt;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .qa-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+  .qa-q {
+    font-size: 11pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+  .qa-a {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 6 · 拓展提升</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>进阶指南</p>
+    </div>
+    <h1 class="page-title">任务拓展：从课堂到职场</h1>
+
+    <div class="two-col">
+      <div class="col-left">
+        <div class="ext-card">
+          <h3>如何准备路演答辩</h3>
+          <ul>
+            <li><strong>预判问题：</strong>评委最常问的是"你们的技术难点是什么？""如果数据量扩大 10 倍怎么办？""这个项目和现有方案相比优势在哪？"</li>
+            <li><strong>分工准备：</strong>每个问题指定 1 名主答人，避免冷场。技术问题由技术成员回答，业务问题由产品经理回答。</li>
+            <li><strong>诚实为上：</strong>不会的问题不要瞎编，可以说"这个问题我们目前还没有深入考虑，下一步计划是..."</li>
+            <li><strong>时间意识：</strong>回答控制在 30 秒内，不要展开长篇大论。</li>
+          </ul>
+          <div class="highlight">
+            <p><strong>答辩黄金法则：</strong>评委提问不是为了难倒你，而是为了了解你的思考深度。展现你的思考过程，比给出"标准答案"更重要。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-right">
+        <div class="ext-card">
+          <h3>面试中如何介绍 AI 项目经验</h3>
+          <ul>
+            <li><strong>STAR 法则：</strong>Situation（背景）→ Task（任务）→ Action（行动）→ Result（成果）。用 1 分钟讲清楚。</li>
+            <li><strong>突出工具思维：</strong>不要只讲"我做了什么"，要讲"我如何用 AI 工具提升了效率"。</li>
+            <li><strong>量化成果：</strong>"用 QClaw 自动采集替代了人工搜索，信息搜集效率提升 80%"</li>
+            <li><strong>展示协作：</strong>强调团队分工和跨工具协作，体现你的沟通和项目管理能力。</li>
+          </ul>
+          <div class="highlight">
+            <p><strong>示例开场白：</strong>"在 AI 实训课程中，我主导了一个跨工具项目，用 QClaw 采集农林数据、WorkBuddy 清洗分析、Trae 做可视化界面，最终帮助团队将数据处理时间从 2 天缩短到 2 小时。"</p>
+          </div>
+        </div>
+
+        <div class="qa-card">
+          <h3>常见问题速查</h3>
+          <div class="qa-item">
+            <p class="qa-q">Q: 非计算机专业，面试怎么讲这个项目？</p>
+            <p class="qa-a">A: 强调你的角色（信息搜集、需求分析、文档整理）和学到的工具思维，技术细节交给组内技术成员。</p>
+          </div>
+          <div class="qa-item">
+            <p class="qa-q">Q: 项目不够"高大上"，怎么办？</p>
+            <p class="qa-a">A: 项目的价值不在技术难度，而在解决了什么问题。一个小而美的工具，比一个大而空的平台更有说服力。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>14 / 16</p>
+  </div>
+</body>
+</html>

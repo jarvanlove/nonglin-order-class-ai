@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 1 · AI 发展简史</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 12pt;
+  }
+  .timeline-wrap {
+    position: relative;
+    padding-left: 12pt;
+  }
+  .timeline-line {
+    position: absolute;
+    left: 4pt; top: 8pt; bottom: 8pt;
+    width: 2pt;
+    background: #084E8F;
+  }
+  .timeline-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12pt;
+    margin-bottom: 8pt;
+    position: relative;
+  }
+  .timeline-dot {
+    width: 10pt; height: 10pt;
+    border-radius: 50%;
+    background: #084E8F;
+    border: 2pt solid #ffffff;
+    box-shadow: 0 0 0 1pt #084E8F;
+    flex-shrink: 0;
+    margin-top: 3pt;
+    position: relative;
+    z-index: 1;
+  }
+  .timeline-item.major .timeline-dot {
+    background: #EE822F;
+    box-shadow: 0 0 0 1pt #EE822F;
+    width: 12pt; height: 12pt;
+  }
+  .timeline-item.china .timeline-dot {
+    background: #92181A;
+    box-shadow: 0 0 0 1pt #92181A;
+  }
+  .timeline-item.future .timeline-dot {
+    background: #75BD42;
+    box-shadow: 0 0 0 1pt #75BD42;
+  }
+  .timeline-content {
+    flex: 1;
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 4pt;
+    padding: 7pt 10pt;
+  }
+  .timeline-content .year {
+    font-size: 11pt;
+    font-weight: 700;
+    color: #084E8F;
+    margin-bottom: 2pt;
+  }
+  .timeline-item.major .timeline-content .year { color: #EE822F; }
+  .timeline-item.china .timeline-content .year { color: #92181A; }
+  .timeline-item.future .timeline-content .year { color: #75BD42; }
+  .timeline-content .desc {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+  .two-col-timeline {
+    display: flex;
+    gap: 14pt;
+  }
+  .col-tl {
+    flex: 1;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+<meta name="notes" content="讲者备注：根据本页内容灵活发挥，建议控制讲解时长，留出互动空间。">
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 1 · 知识储备</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>历史脉络</p>
+    </div>
+    <h1 class="page-title">AI 发展简史：从 GPT-1 到 Agent 元年</h1>
+    <div class="two-col-timeline">
+      <div class="col-tl">
+        <div class="timeline-wrap">
+          <div class="timeline-line"></div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <p class="year">2018 · GPT-1</p>
+              <p class="desc">1.17 亿参数，首次证明"预训练 + 微调"范式的可行性</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <p class="year">2019 · GPT-2</p>
+              <p class="desc">15 亿参数，生成能力惊艳但 OpenAI 因"太危险"暂缓完整发布</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <p class="year">2020 · GPT-3</p>
+              <p class="desc">1750 亿参数，"提示工程"概念诞生，AI 开始具备通用任务能力</p>
+            </div>
+          </div>
+          <div class="timeline-item major">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <p class="year">2022.11 · ChatGPT 发布</p>
+              <p class="desc">用户数 5 天破百万，2 个月破亿。AI 从实验室走进大众视野</p>
+            </div>
+          </div>
+          <div class="timeline-item major">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <p class="year">2023.3 · GPT-4 发布</p>
+              <p class="desc">多模态能力（文本 + 图像），推理能力大幅提升，开启"大模型竞赛"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-tl">
+        <div class="timeline-wrap">
+          <div class="timeline-line"></div>
+          <div class="timeline-item china">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <p class="year">2023.6 · 国产大模型爆发</p>
+              <p class="desc">文心一言、通义千问、智谱清言等相继发布，国内 AI 生态加速追赶</p>
+            </div>
+          </div>
+          <div class="timeline-item major">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <p class="year">2024 · Agent 元年</p>
+              <p class="desc">从"对话"到"行动"。AutoGPT、OpenClaw 等 Agent 框架爆发，AI 开始自主执行任务</p>
+            </div>
+          </div>
+          <div class="timeline-item future">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <p class="year">2025-2026 · 国产工具生态成熟</p>
+              <p class="desc">QClaw、WorkBuddy、Trae 等国产工具形成完整工作流，无需 VPN 即可使用</p>
+            </div>
+          </div>
+          <div class="timeline-item" style="margin-top: 6pt;">
+            <div class="timeline-content" style="border-left: 3pt solid #EE822F; background: rgba(238,130,47,0.04);">
+              <p class="year" style="color: #EE822F;">关键洞察</p>
+              <p class="desc">技术演进路线：更大的模型 → 更好的对话 → 自主行动（Agent）。每一次跃迁都带来了新的产品形态和工作方式。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>4 / 18</p>
+  </div>
+</body>
+</html>

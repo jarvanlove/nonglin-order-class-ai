@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 2 Hermes Agent 介绍</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 12pt;
+  }
+
+  .hermes-container {
+    display: flex;
+    gap: 14pt;
+    height: calc(100% - 60pt);
+  }
+
+  .hermes-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+
+  .intro-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+  }
+  .intro-card h3 {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .intro-card p {
+    font-size: 11pt;
+    color: #333333;
+    line-height: 1.65;
+  }
+
+  .evolution-card {
+    background: rgba(146,24,26,0.04);
+    border: 1pt solid rgba(146,24,26,0.15);
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+    flex: 1;
+  }
+  .evolution-card h3 {
+    font-size: 14pt;
+    color: #92181A;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .evolution-card .evo-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .evo-step .step-num {
+    width: 22pt; height: 22pt;
+    border-radius: 50%;
+    background: #92181A;
+    color: #ffffff;
+    font-size: 10pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .evo-step .step-body h4 {
+    font-size: 11pt;
+    color: #333333;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .evo-step .step-body p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+
+  .hermes-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+
+  .compare-table {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    overflow: hidden;
+  }
+  .compare-row {
+    display: flex;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .compare-row:last-child { border-bottom: 0; }
+  .compare-cell {
+    flex: 1;
+    padding: 6pt 8pt;
+    font-size: 10pt;
+    line-height: 1.4;
+  }
+  .compare-header {
+    background: #084E8F;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 10pt;
+  }
+  .compare-cell:first-child {
+    border-right: 1pt solid #e2e8f0;
+    font-weight: 600;
+    color: #084E8F;
+    background: rgba(8,78,143,0.04);
+    flex: 0.8;
+  }
+
+  .highlight-box {
+    background: rgba(238,130,47,0.06);
+    border-left: 3pt solid #EE822F;
+    border-radius: 0 6pt 6pt 0;
+    padding: 10pt 12pt;
+  }
+  .highlight-box h4 {
+    font-size: 12pt;
+    color: #EE822F;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .highlight-box p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.55;
+  }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+<meta name="notes" content="Hermes介绍：核心卖点是自我进化，用实习生越做越顺的类比。">
+</head>
+<body>
+
+  <div class="top-bar"></div>
+
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 2 · 知识储备</p>
+  </div>
+
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>知识储备</p>
+    </div>
+    <h1 class="page-title">Hermes Agent：会自我进化的智能体</h1>
+
+    <div class="hermes-container">
+      <div class="hermes-left">
+        <div class="intro-card">
+          <h3>Hermes Agent 是什么？</h3>
+          <p>Hermes 是另一个前沿开源 Agent 项目，与 OpenClaw 的最大区别在于：<strong>它能自我进化</strong>。OpenClaw 像一个功能丰富的工具箱——你有什么需求，就装什么 Skill；Hermes 像一个不断学习的实习生——它会在工作中总结经验，越做越好。</p>
+        </div>
+
+        <div class="evolution-card">
+          <h3>"自我进化"是什么意思？</h3>
+          <div class="evo-step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>第一次使用</h4>
+              <p>你让 Hermes 整理一份实验报告，它用了一种格式，你反馈"表格太宽了"</p>
+            </div>
+          </div>
+          <div class="evo-step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>记录反馈</h4>
+              <p>Hermes 记住"这个用户喜欢窄表格"，调整提示词策略</p>
+            </div>
+          </div>
+          <div class="evo-step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>第二次使用</h4>
+              <p>同样任务，Hermes 自动使用窄表格格式，无需你再次提醒</p>
+            </div>
+          </div>
+          <div class="evo-step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h4>持续优化</h4>
+              <p>使用次数越多，Hermes 越懂你的偏好，输出质量持续提升</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hermes-right">
+        <div class="compare-table">
+          <div class="compare-row">
+            <div class="compare-cell compare-header">对比维度</div>
+            <div class="compare-cell compare-header">OpenClaw</div>
+            <div class="compare-cell compare-header">Hermes</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-cell">核心定位</div>
+            <div class="compare-cell">万能平台，强调生态扩展</div>
+            <div class="compare-cell">自我学习助手，强调个性化</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-cell">能力扩展</div>
+            <div class="compare-cell">安装 Skills（像装 App）</div>
+            <div class="compare-cell">自动优化提示词</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-cell">个性化</div>
+            <div class="compare-cell">依赖用户手动配置</div>
+            <div class="compare-cell">自动学习用户偏好</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-cell">适用场景</div>
+            <div class="compare-cell">企业级部署、多用户服务</div>
+            <div class="compare-cell">个人助手、长期陪伴</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-cell">上手难度</div>
+            <div class="compare-cell">中等（需了解 Skills）</div>
+            <div class="compare-cell">低（开箱即用，越用越顺）</div>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <h4>Hermes 本地部署配置</h4>
+          <p><strong>最低配置：</strong>4核 CPU / 8GB 内存 / 20GB 硬盘（无 GPU 可用 CPU 推理）<br>
+          <strong>推荐配置：</strong>8核 CPU / 16GB 内存 / NVIDIA RTX 3060 8GB+ / 50GB SSD<br>
+          <strong>提示：</strong>Hermes 比 OpenClaw 更轻量，7B 模型可在 8GB 内存设备流畅运行。自我进化产生的策略缓存约占用 500MB~2GB 空间。</p>
+        </div>
+        <div class="case-box" style="padding: 6pt 8pt;">
+          <p style="font-size: 9pt; color: #666666;">OpenClaw 是"给你工具，你自己搭"；Hermes 是"你只管用，我自己学"。两者互补——OpenClaw 解决"能做什么"，Hermes 解决"做得好不好"。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>6 / 18</p>
+  </div>
+
+</body>
+</html>

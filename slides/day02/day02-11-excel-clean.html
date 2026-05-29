@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 2 Excel 数据清洗实战</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+  }
+
+  .excel-container {
+    display: flex;
+    gap: 14pt;
+    height: calc(100% - 56pt);
+  }
+
+  .excel-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+
+  .scenario-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+  }
+  .scenario-card h3 {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .scenario-card p {
+    font-size: 11pt;
+    color: #333333;
+    line-height: 1.65;
+  }
+
+  .demo-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+    flex: 1;
+  }
+  .demo-card h3 {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .demo-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10pt;
+    margin-bottom: 8pt;
+  }
+  .demo-step .step-num {
+    width: 22pt; height: 22pt;
+    border-radius: 50%;
+    background: #EE822F;
+    color: #ffffff;
+    font-size: 10pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .demo-step .step-body h4 {
+    font-size: 11pt;
+    color: #333333;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .demo-step .step-body p {
+    font-size: 10pt;
+    color: #666666;
+    line-height: 1.5;
+  }
+  .demo-step .step-body .prompt {
+    background: #f1f5f9;
+    border-radius: 3pt;
+    padding: 4pt 8pt;
+    font-size: 9pt;
+    color: #084E8F;
+    font-family: "JetBrains Mono", monospace;
+    margin-top: 3pt;
+  }
+
+  .excel-right {
+    flex: 0.9;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+
+  .func-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+    flex: 1;
+  }
+  .func-card h3 {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .func-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6pt;
+  }
+  .func-item {
+    background: rgba(8,78,143,0.04);
+    border-radius: 4pt;
+    padding: 6pt 8pt;
+  }
+  .func-item h4 {
+    font-size: 10pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .func-item p {
+    font-size: 9pt;
+    color: #333333;
+    line-height: 1.4;
+  }
+
+  .tips-box {
+    background: rgba(117,189,66,0.06);
+    border-left: 3pt solid #75BD42;
+    border-radius: 0 6pt 6pt 0;
+    padding: 10pt 12pt;
+  }
+  .tips-box h4 {
+    font-size: 12pt;
+    color: #75BD42;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .tips-box p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.55;
+  }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+<meta name="notes" content="Excel清洗：现场演示一个真实数据文件的处理过程，让学生看到前后对比。">
+</head>
+<body>
+
+  <div class="top-bar"></div>
+
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 2 · 实战演示</p>
+  </div>
+
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>实战演示</p>
+    </div>
+    <h1 class="page-title">Excel 数据清洗实战：从混乱到整洁</h1>
+
+    <div class="excel-container">
+      <div class="excel-left">
+        <div class="scenario-card">
+          <h3>场景描述</h3>
+          <p>你收到一份从多个渠道收集来的实验数据 Excel 文件：列名不统一、有空行空列、日期格式混乱、部分单元格缺失数据。手动清理需要 2 小时，用 WorkBuddy 只需 2 分钟。</p>
+        </div>
+
+        <div class="demo-card">
+          <h3>操作步骤演示</h3>
+          <div class="demo-step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>上传文件</h4>
+              <p>将 messy_data.xlsx 拖拽到 WorkBuddy 窗口，或点击"选择文件"</p>
+              <div class="prompt">指令："读取这个 Excel 文件"</div>
+            </div>
+          </div>
+          <div class="demo-step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>描述清洗需求</h4>
+              <p>用自然语言告诉 WorkBuddy 需要做什么清理</p>
+              <div class="prompt">指令："统一列名为英文，删除空行，将日期格式改为 YYYY-MM-DD，填充缺失值为该列平均值"</div>
+            </div>
+          </div>
+          <div class="demo-step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>预览与确认</h4>
+              <p>WorkBuddy 展示清洗后的预览，你确认无误后执行</p>
+            </div>
+          </div>
+          <div class="demo-step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h4>导出结果</h4>
+              <p>保存清洗后的文件到指定位置，任务完成</p>
+              <div class="prompt">指令："保存为 clean_data.xlsx 到桌面"</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="excel-right">
+        <div class="func-card">
+          <h3>WorkBuddy 支持的清洗操作</h3>
+          <div class="func-grid">
+            <div class="func-item">
+              <h4>去重</h4>
+              <p>删除重复行或重复列</p>
+            </div>
+            <div class="func-item">
+              <h4>格式统一</h4>
+              <p>日期、数字、文本格式标准化</p>
+            </div>
+            <div class="func-item">
+              <h4>缺失值处理</h4>
+              <p>填充、删除或标记缺失数据</p>
+            </div>
+            <div class="func-item">
+              <h4>列名规范化</h4>
+              <p>统一命名风格（驼峰/下划线等）</p>
+            </div>
+            <div class="func-item">
+              <h4>数据透视</h4>
+              <p>按维度汇总统计</p>
+            </div>
+            <div class="func-item">
+              <h4>图表生成</h4>
+              <p>自动生成柱状图、折线图等</p>
+            </div>
+            <div class="func-item">
+              <h4>筛选过滤</h4>
+              <p>按条件提取子集数据</p>
+            </div>
+            <div class="func-item">
+              <h4>拆分合并</h4>
+              <p>多表合并或一表拆多表</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tips-box">
+          <h4>关键技巧</h4>
+          <p>描述需求时尽量具体：不要说"清理一下"，而要说"删除 A 列的空行，将 B 列的日期统一为 2024-01-01 格式，C 列的缺失值用 0 填充"。越具体，WorkBuddy 执行越准确。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>11 / 18</p>
+  </div>
+
+</body>
+</html>

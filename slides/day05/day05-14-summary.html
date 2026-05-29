@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 5 · 日终总结与预告</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+  }
+  .two-col {
+    display: flex;
+    gap: 16pt;
+    height: calc(100% - 66pt);
+  }
+  .col-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .col-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .text-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 4pt;
+    padding: 10pt 12pt;
+  }
+  .text-card h3 {
+    font-size: 13pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .text-card p {
+    font-size: 10.5pt;
+    color: #333333;
+    line-height: 1.6;
+  }
+  .review-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6pt;
+  }
+  .review-item {
+    background: rgba(8,78,143,0.04);
+    border: 1pt solid #e2e8f0;
+    border-radius: 4pt;
+    padding: 8pt;
+  }
+  .review-item h4 {
+    font-size: 10pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+  .review-item p {
+    font-size: 9.5pt;
+    color: #333333;
+    line-height: 1.4;
+  }
+  .preview-box {
+    background: #084E8F;
+    border-radius: 6pt;
+    padding: 12pt;
+    color: #ffffff;
+  }
+  .preview-box h3 {
+    font-size: 14pt;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .preview-box .preview-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8pt;
+    margin-bottom: 6pt;
+  }
+  .preview-box .preview-num {
+    width: 20pt; height: 20pt;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    color: #ffffff;
+    font-size: 10pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .preview-box .preview-text {
+    font-size: 11pt;
+    line-height: 1.5;
+    opacity: 0.95;
+  }
+  .homework-box {
+    background: rgba(238,130,47,0.06);
+    border: 1pt solid #EE822F;
+    border-radius: 4pt;
+    padding: 10pt 12pt;
+  }
+  .homework-box h3 {
+    font-size: 12pt;
+    color: #EE822F;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .homework-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3pt;
+  }
+  .homework-box li {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+    padding-left: 14pt;
+    position: relative;
+  }
+  .homework-box li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 5pt;
+    width: 5pt; height: 5pt;
+    border-radius: 50%;
+    background: #EE822F;
+  }
+  .quote-box {
+    background: rgba(117,189,66,0.06);
+    border-left: 3pt solid #75BD42;
+    border-radius: 0 4pt 4pt 0;
+    padding: 10pt 12pt;
+    margin-top: auto;
+  }
+  .quote-box p {
+    font-size: 11pt;
+    color: #333333;
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 5 · 日终总结</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>总结与预告</p>
+    </div>
+    <h1 class="page-title">Day 5 重点回顾与 Day 6 预告</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="text-card">
+          <h3>今日重点回顾</h3>
+        </div>
+        <div class="review-grid">
+          <div class="review-item">
+            <h4>Trae 进阶</h4>
+            <p>Chat 模式适合局部修改，Builder 模式适合从零搭建。两种模式灵活切换，效率最高。</p>
+          </div>
+          <div class="review-item">
+            <h4>API 入门</h4>
+            <p>API 是软件间的对话方式。Trae 可以自动生成分调用代码，你只需描述需求。</p>
+          </div>
+          <div class="review-item">
+            <h4>调试三板斧</h4>
+            <p>从下往上读报错、检查文件路径、确认数据格式匹配。遇到报错不慌，系统排查。</p>
+          </div>
+          <div class="review-item">
+            <h4>三工具整合</h4>
+            <p>QClaw 采集 → WorkBuddy 清洗 → Trae 展示。关键是字段名统一和数据格式一致。</p>
+          </div>
+        </div>
+        <div class="text-card" style="border-left: 3pt solid #75BD42; background: rgba(117,189,66,0.04);">
+          <h3 style="color: #75BD42;">今日收获</h3>
+          <p>你学会了让项目"有界面、有逻辑、有数据"——从静态页面到动态应用的关键跨越。调试能力和文档习惯，是区分"会用工具"和"会工程化"的分水岭。</p>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="preview-box">
+          <h3>Day 6 预告：项目打磨 + 就业锦囊</h3>
+          <div class="preview-item">
+            <div class="preview-num">1</div>
+            <p class="preview-text">项目最终调试：修复剩余 Bug，确保演示流畅无中断</p>
+          </div>
+          <div class="preview-item">
+            <div class="preview-num">2</div>
+            <p class="preview-text">路演 PPT 制作：10-15 分钟展示内容，突出项目亮点</p>
+          </div>
+          <div class="preview-item">
+            <div class="preview-num">3</div>
+            <p class="preview-text">简历 AI 优化：用 QClaw/WorkBuddy 诊断和优化简历</p>
+          </div>
+          <div class="preview-item">
+            <div class="preview-num">4</div>
+            <p class="preview-text">职场 AI 规范：安全红线、合规原则、真实案例分析</p>
+          </div>
+        </div>
+        <div class="homework-box">
+          <h3>今晚作业</h3>
+          <ul>
+            <li>各组完成项目文档初稿（README + 技术方案）</li>
+            <li>确保项目能在浏览器中正常运行，无报错</li>
+            <li>准备一份项目介绍草稿（1 分钟版本）</li>
+            <li>回顾今日调试案例，整理成个人笔记</li>
+          </ul>
+        </div>
+        <div class="quote-box">
+          <p>"Day 5 是项目从'能跑'到'好用'的关键一天。明天，我们要让这个项目'能讲'——不仅要做得好，还要说得好。"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>14 / 14</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 4 · MVP 标准与 Checklist</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+  }
+  .mvp-def {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 10pt 14pt;
+    margin-bottom: 10pt;
+    display: flex;
+    gap: 16pt;
+    align-items: center;
+  }
+  .mvp-def .mvp-badge {
+    width: 80pt; height: 50pt;
+    background: #084E8F;
+    border-radius: 6pt;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .mvp-def .mvp-badge p:first-child {
+    font-size: 10pt;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+  }
+  .mvp-def .mvp-badge p:last-child {
+    font-size: 16pt;
+    color: #ffffff;
+    font-weight: 700;
+  }
+  .mvp-def .mvp-text h3 {
+    font-size: 13pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .mvp-def .mvp-text p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+  .checklist-grid {
+    display: flex;
+    gap: 12pt;
+  }
+  .checklist-card {
+    flex: 1;
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt;
+  }
+  .checklist-card h3 {
+    font-size: 13pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 8pt;
+    padding-bottom: 6pt;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .checklist-card ul {
+    list-style: none;
+  }
+  .checklist-card li {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.7;
+    padding-left: 18pt;
+    position: relative;
+    margin-bottom: 5pt;
+  }
+  .checklist-card li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 5pt;
+    width: 12pt; height: 12pt;
+    border: 1.5pt solid #084E8F;
+    border-radius: 3pt;
+  }
+  .checklist-card .done li::before {
+    background: #75BD42;
+    border-color: #75BD42;
+  }
+  .checklist-card .done li::after {
+    content: "";
+    position: absolute;
+    left: 3pt; top: 7pt;
+    width: 4pt; height: 7pt;
+    border-right: 1.5pt solid #ffffff;
+    border-bottom: 1.5pt solid #ffffff;
+    transform: rotate(45deg);
+  }
+  .checklist-card .highlight {
+    background: rgba(146,24,26,0.04);
+    border-left: 2pt solid #92181A;
+    padding: 6pt 8pt;
+    border-radius: 0 4pt 4pt 0;
+    margin-top: 8pt;
+    font-size: 9pt;
+    color: #92181A;
+    line-height: 1.4;
+  }
+  .checklist-card:nth-child(2) h3 { color: #EE822F; }
+  .checklist-card:nth-child(3) h3 { color: #75BD42; }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 项目标准</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>核心概念</p>
+    </div>
+    <h1 class="page-title">MVP = Minimum Viable Product，核心流程跑通即可</h1>
+
+    <div class="mvp-def">
+      <div class="mvp-badge">
+        <p>什么是</p>
+        <p>MVP</p>
+      </div>
+      <div class="mvp-text">
+        <h3>最小可行产品 —— 用最少资源验证核心价值</h3>
+        <p>MVP 不是"半成品"或"粗糙版"，而是一个<strong>功能完整但范围精简</strong>的产品。它的目标是快速验证"这个方向是否可行"，而不是一步到位做出完美产品。先跑通核心链路，再迭代优化细节。</p>
+      </div>
+    </div>
+
+    <div class="checklist-grid">
+      <div class="checklist-card">
+        <h3>QClaw 采集模块</h3>
+        <ul>
+          <li>能自动采集目标信息（至少一个数据源）</li>
+          <li>输出格式统一（JSON / CSV）</li>
+          <li>数据字段完整，无大面积缺失</li>
+          <li>输出文件保存到约定目录</li>
+        </ul>
+        <div class="highlight">
+          <p>标准：手动运行一次，能在 2 分钟内得到结构化数据文件</p>
+        </div>
+      </div>
+      <div class="checklist-card">
+        <h3>WorkBuddy 处理模块</h3>
+        <ul>
+          <li>能正确读取 QClaw 输出的文件</li>
+          <li>完成基本数据清洗和格式转换</li>
+          <li>输出符合预期的 Excel / CSV</li>
+          <li>处理过程无报错中断</li>
+        </ul>
+        <div class="highlight">
+          <p>标准：输入文件放入后，一键执行得到处理结果</p>
+        </div>
+      </div>
+      <div class="checklist-card">
+        <h3>端到端联调</h3>
+        <ul class="done">
+          <li>QClaw 输出 → WorkBuddy 输入 链路畅通</li>
+          <li>数据格式在两个工具间兼容</li>
+          <li>能生成最终报告或展示页面</li>
+          <li>整个过程可重复执行</li>
+        </ul>
+        <div class="highlight">
+          <p>标准：从采集到报告，全流程无人为干预可自动完成</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>7 / 14</p>
+  </div>
+</body>
+</html>

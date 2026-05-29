@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 4 · 联调常见问题</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+  }
+  .two-col {
+    display: flex;
+    gap: 14pt;
+    height: calc(100% - 70pt);
+  }
+  .col-left {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .col-right {
+    flex: 0.8;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .problem-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+    position: relative;
+  }
+  .problem-card .problem-tag {
+    position: absolute;
+    top: -1pt; right: 10pt;
+    background: #92181A;
+    color: #ffffff;
+    font-size: 9pt;
+    font-weight: 700;
+    padding: 2pt 8pt;
+    border-radius: 0 0 4pt 4pt;
+  }
+  .problem-card h3 {
+    font-size: 12pt;
+    color: #92181A;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .problem-card .symptom {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+    margin-bottom: 4pt;
+  }
+  .problem-card .symptom strong {
+    color: #92181A;
+  }
+  .problem-card .solution {
+    background: rgba(117,189,66,0.06);
+    border-left: 2pt solid #75BD42;
+    padding: 5pt 8pt;
+    border-radius: 0 4pt 4pt 0;
+    font-size: 9pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+  .solution-box {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt;
+    flex: 1;
+  }
+  .solution-box h3 {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 10pt;
+    text-align: center;
+  }
+  .solution-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10pt;
+    margin-bottom: 10pt;
+  }
+  .solution-step .step-num {
+    width: 28pt; height: 28pt;
+    background: #084E8F;
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12pt;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .solution-step:nth-child(3) .step-num { background: #EE822F; }
+  .solution-step:nth-child(4) .step-num { background: #75BD42; }
+  .solution-step h4 {
+    font-size: 11pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .solution-step p {
+    font-size: 10pt;
+    color: #666666;
+    line-height: 1.5;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 问题排查</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>排错指南</p>
+    </div>
+    <h1 class="page-title">联调常见问题与排查三板斧</h1>
+
+    <div class="two-col">
+      <div class="col-left">
+        <div class="problem-card">
+          <div class="problem-tag"><p>高频</p></div>
+          <h3>文件路径错误</h3>
+          <p class="symptom"><strong>症状：</strong>WorkBuddy 提示"找不到文件"或"路径不存在"</p>
+          <div class="solution">
+            <p><strong>解决：</strong>① 确认相对路径 vs 绝对路径 ② 检查文件名大小写 ③ 确认文件已生成且未损坏 ④ 使用统一的路径变量管理</p>
+          </div>
+        </div>
+
+        <div class="problem-card">
+          <div class="problem-tag"><p>高频</p></div>
+          <h3>编码格式不一致</h3>
+          <p class="symptom"><strong>症状：</strong>中文显示乱码、CSV 用 Excel 打开后文字变成问号</p>
+          <div class="solution">
+            <p><strong>解决：</strong>① 所有工具统一使用 UTF-8 编码 ② CSV 文件添加 BOM 头 ③ 避免使用记事本编辑，推荐 VS Code ④ 在 prompt 中明确要求"UTF-8 编码"</p>
+          </div>
+        </div>
+
+        <div class="problem-card">
+          <div class="problem-tag"><p>中频</p></div>
+          <h3>数据格式不匹配</h3>
+          <p class="symptom"><strong>症状：</strong>日期解析失败、数值字段被当作文本、字段名不一致</p>
+          <div class="solution">
+            <p><strong>解决：</strong>① 严格遵循接口契约中的字段命名 ② 日期统一为 YYYY-MM-DD ③ 数值不要带单位或逗号 ④ 输出前用 _meta.json 描述字段类型</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-right">
+        <div class="solution-box">
+          <h3>排查三板斧</h3>
+          <div class="solution-step">
+            <div class="step-num"><p>1</p></div>
+            <div>
+              <h4>看文件</h4>
+              <p>检查输出文件是否存在、大小是否正常、用文本编辑器打开看内容是否符合预期</p>
+            </div>
+          </div>
+          <div class="solution-step">
+            <div class="step-num"><p>2</p></div>
+            <div>
+              <h4>对契约</h4>
+              <p>逐条核对接口契约：字段名、数据类型、编码格式、文件路径是否一致</p>
+            </div>
+          </div>
+          <div class="solution-step">
+            <div class="step-num"><p>3</p></div>
+            <div>
+              <h4>分段测</h4>
+              <p>把长链路拆成小段，先确保 QClaw 输出正确，再测 WorkBuddy 读取，最后测端到端</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>9 / 14</p>
+  </div>
+</body>
+</html>

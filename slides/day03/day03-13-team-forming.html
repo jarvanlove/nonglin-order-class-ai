@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 3 · 分组与角色分配</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 20pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 10pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 26pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 14pt;
+  }
+  .team-wrap {
+    display: flex;
+    gap: 16pt;
+    height: calc(100% - 70pt);
+  }
+  .team-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .principle-card {
+    background: #084E8F;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+  }
+  .principle-card h3 {
+    font-size: 13pt;
+    color: #EE822F;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .principle-card p {
+    font-size: 11pt;
+    color: #ffffff;
+    line-height: 1.6;
+  }
+  .role-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8pt;
+    flex: 1;
+  }
+  .role-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 8pt 10pt;
+  }
+  .role-card h4 {
+    font-size: 11pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+  .role-card p {
+    font-size: 9pt;
+    color: #666666;
+    line-height: 1.5;
+  }
+  .role-card .role-tag {
+    display: inline-block;
+    padding: 1pt 6pt;
+    border-radius: 999pt;
+    font-size: 8pt;
+    font-weight: 700;
+    margin-top: 4pt;
+  }
+  .tag-tech { background: rgba(8,78,143,0.10); color: #084E8F; }
+  .tag-non { background: rgba(117,189,66,0.12); color: #4a8a2a; }
+  .tag-all { background: rgba(238,130,47,0.12); color: #c76a1f; }
+  .note-box {
+    background: rgba(238,130,47,0.06);
+    border-left: 3pt solid #EE822F;
+    border-radius: 0 4pt 4pt 0;
+    padding: 8pt 12pt;
+    margin-top: auto;
+  }
+  .note-box p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.6;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+<meta name="notes" content="团队组建：提醒跨专业搭配，明确角色分工（产品经理、开发、测试）。">
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 3 · 项目启动</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>团队组建</p>
+    </div>
+    <h1 class="page-title">分组与角色分配</h1>
+    <div class="team-wrap">
+      <div class="team-col">
+        <div class="principle-card">
+          <h3>分组原则</h3>
+          <p>混合专业分组：每组 4-5 人，确保至少 1 名计算机专业同学 + 2-3 名非计算机专业同学。这样既能保证技术实现，又能发挥不同专业的业务理解优势。</p>
+        </div>
+        <div class="note-box">
+          <p><strong>重要：</strong>每人至少承担一个模块。非计算机同学可以负责 QClaw 信息搜集、WorkBuddy 文档处理、需求分析或路演展示。项目评分不区分专业，统一标准。</p>
+        </div>
+      </div>
+      <div class="team-col">
+        <div class="role-grid">
+          <div class="role-card">
+            <h4>项目经理</h4>
+            <p>统筹进度、组织站会、协调分工、对接讲师</p>
+            <span class="role-tag tag-all">适合所有人</span>
+          </div>
+          <div class="role-card">
+            <h4>信息搜集</h4>
+            <p>负责 QClaw 模块：数据采集、资料整理、来源验证</p>
+            <span class="role-tag tag-non">非计算机友好</span>
+          </div>
+          <div class="role-card">
+            <h4>文档处理</h4>
+            <p>负责 WorkBuddy 模块：数据清洗、报告生成、文件管理</p>
+            <span class="role-tag tag-non">非计算机友好</span>
+          </div>
+          <div class="role-card">
+            <h4>技术开发</h4>
+            <p>负责 Trae 模块：前端页面开发、接口对接、功能实现</p>
+            <span class="role-tag tag-tech">建议计算机专业</span>
+          </div>
+          <div class="role-card">
+            <h4>测试与 QA</h4>
+            <p>功能测试、Bug 记录、用户体验反馈、路演彩排</p>
+            <span class="role-tag tag-all">适合所有人</span>
+          </div>
+          <div class="role-card">
+            <h4>路演展示</h4>
+            <p>PPT 制作、项目讲解、演示操作、答辩准备</p>
+            <span class="role-tag tag-non">非计算机友好</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>13 / 20</p>
+  </div>
+</body>
+</html>

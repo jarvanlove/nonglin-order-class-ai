@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 5 · 任务拓展</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+  }
+  .two-col {
+    display: flex;
+    gap: 16pt;
+    height: calc(100% - 66pt);
+  }
+  .col-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .col-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .text-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 4pt;
+    padding: 10pt 12pt;
+  }
+  .text-card h3 {
+    font-size: 13pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .text-card p {
+    font-size: 10.5pt;
+    color: #333333;
+    line-height: 1.6;
+  }
+  .api-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4pt;
+  }
+  .api-item {
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+    padding: 5pt 8pt;
+    background: rgba(8,78,143,0.04);
+    border-radius: 3pt;
+  }
+  .api-item .api-tag {
+    padding: 1pt 6pt;
+    border-radius: 3pt;
+    font-size: 9pt;
+    font-weight: 700;
+    color: #ffffff;
+    background: #084E8F;
+    flex-shrink: 0;
+  }
+  .api-item .api-desc {
+    font-size: 10pt;
+    color: #333333;
+  }
+  .beauty-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6pt;
+  }
+  .beauty-item {
+    background: rgba(238,130,47,0.06);
+    border: 1pt solid rgba(238,130,47,0.2);
+    border-radius: 4pt;
+    padding: 6pt 8pt;
+  }
+  .beauty-item h4 {
+    font-size: 10pt;
+    color: #EE822F;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .beauty-item p {
+    font-size: 9.5pt;
+    color: #333333;
+    line-height: 1.4;
+  }
+  .tip-box {
+    background: rgba(117,189,66,0.06);
+    border: 1pt solid #75BD42;
+    border-radius: 4pt;
+    padding: 8pt 10pt;
+  }
+  .tip-box h4 {
+    font-size: 11pt;
+    color: #75BD42;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .tip-box p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 5 · 任务拓展</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>进阶挑战</p>
+    </div>
+    <h1 class="page-title">任务拓展：更多数据源 + 页面美化</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="text-card">
+          <h3>如何添加更多 API 数据源</h3>
+          <p>完成基础功能后，可以尝试接入更多 API，让项目数据更丰富。在 Trae Chat 中说："帮我再添加一个 XX API 的调用"，AI 会自动修改代码。</p>
+        </div>
+        <div class="api-list">
+          <div class="api-item">
+            <span class="api-tag">天气</span>
+            <span class="api-desc">显示多城市天气对比</span>
+          </div>
+          <div class="api-item">
+            <span class="api-tag">新闻</span>
+            <span class="api-desc">农业/林业热点新闻聚合</span>
+          </div>
+          <div class="api-item">
+            <span class="api-tag">汇率</span>
+            <span class="api-desc">农产品进出口汇率换算</span>
+          </div>
+          <div class="api-item">
+            <span class="api-tag">地图</span>
+            <span class="api-desc">在地图上标注农业产区</span>
+          </div>
+          <div class="api-item">
+            <span class="api-tag">日历</span>
+            <span class="api-desc">显示农事节气提醒</span>
+          </div>
+        </div>
+        <div class="text-card" style="border-left: 3pt solid #92181A; background: rgba(146,24,26,0.02);">
+          <h3 style="color: #92181A;">拓展注意事项</h3>
+          <p>1. 每添加一个 API，都要测试其在网络不稳定时的表现</p>
+          <p style="margin-top:2pt">2. 注意 API 调用频率限制，不要频繁刷新</p>
+          <p style="margin-top:2pt">3. 如果 API 需要 Key，提前确认是否免费</p>
+          <p style="margin-top:2pt">4. 优先完成基础功能，拓展是"锦上添花"</p>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="text-card">
+          <h3>页面美化技巧（不用写 CSS）</h3>
+          <p>所有美化需求都可以用自然语言描述给 Trae，让 AI 生成 CSS。以下是常用的美化方向：</p>
+        </div>
+        <div class="beauty-grid">
+          <div class="beauty-item">
+            <h4>配色方案</h4>
+            <p>"把页面改成绿色主题，适合农业项目"</p>
+          </div>
+          <div class="beauty-item">
+            <h4>卡片样式</h4>
+            <p>"把列表改成卡片形式，带阴影和圆角"</p>
+          </div>
+          <div class="beauty-item">
+            <h4>响应式布局</h4>
+            <p>"让页面在手机上也正常显示"</p>
+          </div>
+          <div class="beauty-item">
+            <h4>动画效果</h4>
+            <p>"给卡片添加悬停放大效果"</p>
+          </div>
+          <div class="beauty-item">
+            <h4>图标美化</h4>
+            <p>"在天气状况旁添加对应的图标"</p>
+          </div>
+          <div class="beauty-item">
+            <h4>表格优化</h4>
+            <p>"给表格添加斑马纹和悬停高亮"</p>
+          </div>
+        </div>
+        <div class="tip-box">
+          <h4>Trae 美化提示词模板</h4>
+          <p>"请美化这个页面：1. 使用简洁专业的配色 2. 添加卡片阴影和圆角 3. 表格添加悬停效果 4. 整体风格适合学术/农业类项目。不要改变功能逻辑。"</p>
+        </div>
+        <div class="text-card" style="border-left: 3pt solid #75BD42; background: rgba(117,189,66,0.04);">
+          <h3 style="color: #75BD42;">时间分配建议</h3>
+          <p>如果基础功能已完成（14:00-16:00）：16:00-17:00 做拓展，17:00-17:30 写文档。</p>
+          <p style="margin-top:2pt">如果基础功能未完成：放弃拓展，专注完成核心功能 + 文档。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>12 / 14</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 2 封面 · Agent 深度 + WorkBuddy 办公</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6pt;
+    background: #084E8F;
+  }
+
+  .logo-wrap {
+    position: absolute;
+    top: 20pt; left: 32pt;
+    display: flex;
+    align-items: center;
+    gap: 10pt;
+  }
+  .logo-wrap img {
+    height: 28pt;
+    width: auto;
+  }
+  .logo-text {
+    font-size: 12pt;
+    color: #084E8F;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .course-tag {
+    position: absolute;
+    top: 22pt; right: 32pt;
+    background: rgba(8,78,143,0.08);
+    padding: 4pt 12pt;
+    border-radius: 999pt;
+    font-size: 11pt;
+    color: #084E8F;
+    font-weight: 500;
+  }
+
+  .hero {
+    position: absolute;
+    top: 90pt; left: 48pt; right: 48pt;
+  }
+
+  .day-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 16pt;
+  }
+  .day-label .bar {
+    width: 24pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .day-label p {
+    font-size: 14pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .main-title {
+    font-size: 44pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 16pt;
+  }
+  .main-title span {
+    color: #EE822F;
+  }
+
+  .sub-title {
+    font-size: 18pt;
+    color: #333333;
+    line-height: 1.6;
+    margin-bottom: 40pt;
+  }
+
+  .bottom-info {
+    position: absolute;
+    bottom: 40pt; left: 48pt; right: 48pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .info-left p {
+    font-size: 12pt;
+    color: #666666;
+    line-height: 1.8;
+  }
+  .info-right {
+    text-align: right;
+  }
+  .info-right p {
+    font-size: 12pt;
+    color: #666666;
+    line-height: 1.8;
+  }
+
+  .deco-shape {
+    position: absolute;
+    right: 0; top: 0;
+    width: 220pt; height: 540pt;
+    background: #084E8F;
+    clip-path: polygon(40% 0, 100% 0, 100% 100%, 0% 100%);
+    z-index: 0;
+  }
+  .deco-accent {
+    position: absolute;
+    right: 180pt; top: 120pt;
+    width: 80pt; height: 80pt;
+    background: #EE822F;
+    border-radius: 50%;
+    opacity: 0.15;
+    z-index: 0;
+  }
+  .deco-green {
+    position: absolute;
+    right: 60pt; bottom: 80pt;
+    width: 120pt; height: 120pt;
+    background: #75BD42;
+    border-radius: 50%;
+    opacity: 0.12;
+    z-index: 0;
+  }
+
+  .content-layer {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20pt); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20pt); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-20pt); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(20pt); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .deco-shape {
+    opacity: 0;
+    animation: fadeInRight 0.8s ease-out forwards;
+  }
+  .deco-accent {
+    opacity: 0;
+    animation: scaleIn 0.6s ease-out 0.3s forwards;
+  }
+  .deco-green {
+    opacity: 0;
+    animation: scaleIn 0.6s ease-out 0.4s forwards;
+  }
+  .logo-wrap {
+    opacity: 0;
+    animation: fadeInDown 0.5s ease-out forwards;
+  }
+  .course-tag {
+    opacity: 0;
+    animation: fadeInDown 0.5s ease-out 0.1s forwards;
+  }
+  .day-label {
+    opacity: 0;
+    animation: fadeInLeft 0.5s ease-out 0.2s forwards;
+  }
+  .main-title {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out 0.3s forwards;
+  }
+  .sub-title {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.45s forwards;
+  }
+  .bottom-info {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.6s forwards;
+  }
+</style>
+<meta name="notes" content="开场白：欢迎学生，简要介绍今日课程安排，提醒签到和座位分组。">
+</head>
+<body>
+
+  <div class="deco-shape"></div>
+  <div class="deco-accent"></div>
+  <div class="deco-green"></div>
+  <div class="top-bar"></div>
+
+  <div class="content-layer">
+    <div class="logo-wrap">
+      <img src="../../materials/logo.svg" alt="公司 Logo">
+      <p class="logo-text">AI 智能体工具实训</p>
+    </div>
+
+    <div class="course-tag">
+      <p>6 天集训 · 第 2 天</p>
+    </div>
+
+    <div class="hero">
+      <div class="day-label">
+        <div class="bar"></div>
+        <p>DAY 02</p>
+      </div>
+      <h1 class="main-title">Agent 深度 <span>+</span> WorkBuddy 办公</h1>
+      <p class="sub-title">理解 OpenClaw 架构，掌握 GEPA 进化机制，用 WorkBuddy 实现办公自动化</p>
+    </div>
+
+    <div class="bottom-info">
+      <div class="info-left">
+        <p>授课对象：农林高校应届毕业生（计算机 + 非计算机混编，30 人）</p>
+        <p>授课时长：上午 3 小时 + 下午 3.5 小时</p>
+      </div>
+      <div class="info-right">
+        <p>2026 年 5 月</p>
+        <p>主讲讲师</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

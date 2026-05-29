@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 5 · 课程导入</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 12pt;
+  }
+  .two-col {
+    display: flex;
+    gap: 18pt;
+    height: calc(100% - 70pt);
+  }
+  .col-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10pt;
+  }
+  .col-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10pt;
+  }
+  .text-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 4pt;
+    padding: 10pt 12pt;
+  }
+  .text-card h3 {
+    font-size: 13pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .text-card p {
+    font-size: 11pt;
+    color: #333333;
+    line-height: 1.65;
+  }
+  .status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8pt;
+  }
+  .status-item {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 4pt;
+    padding: 10pt;
+    text-align: center;
+  }
+  .status-item .status-icon {
+    font-size: 20pt;
+    margin-bottom: 4pt;
+  }
+  .status-item .status-label {
+    font-size: 10pt;
+    color: #666666;
+    margin-bottom: 2pt;
+  }
+  .status-item .status-value {
+    font-size: 11pt;
+    font-weight: 700;
+    color: #084E8F;
+  }
+  .status-item.done {
+    border-color: #75BD42;
+    background: rgba(117,189,66,0.04);
+  }
+  .status-item.done .status-value {
+    color: #75BD42;
+  }
+  .status-item.pending {
+    border-color: #EE822F;
+    background: rgba(238,130,47,0.04);
+  }
+  .status-item.pending .status-value {
+    color: #EE822F;
+  }
+  .highlight-box {
+    background: #084E8F;
+    border-radius: 6pt;
+    padding: 14pt;
+    color: #ffffff;
+  }
+  .highlight-box h3 {
+    font-size: 14pt;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .highlight-box p {
+    font-size: 12pt;
+    line-height: 1.7;
+    opacity: 0.95;
+  }
+  .arrow-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6pt;
+    padding: 8pt;
+    background: rgba(8,78,143,0.04);
+    border-radius: 4pt;
+  }
+  .arrow-flow .flow-item {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 4pt;
+    padding: 6pt 10pt;
+    font-size: 10pt;
+    font-weight: 600;
+    color: #084E8F;
+  }
+  .arrow-flow .flow-arrow {
+    font-size: 14pt;
+    color: #EE822F;
+    font-weight: 700;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 5 · 课程导入</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>导入</p>
+    </div>
+    <h1 class="page-title">从 Day 4 的 MVP 到 Day 5 的"完整项目"</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="text-card">
+          <h3>Day 4 回顾：我们完成了什么？</h3>
+          <p>Day 4 的核心产出是 MVP（最小可行产品）——能跑通 QClaw → WorkBuddy 的数据流。让我们快速检查各组进度：</p>
+        </div>
+        <div class="status-grid">
+          <div class="status-item done">
+            <p class="status-icon">&#10003;</p>
+            <p class="status-label">QClaw 采集</p>
+            <p class="status-value">已完成</p>
+          </div>
+          <div class="status-item done">
+            <p class="status-icon">&#10003;</p>
+            <p class="status-label">WorkBuddy 处理</p>
+            <p class="status-value">已完成</p>
+          </div>
+          <div class="status-item pending">
+            <p class="status-icon">&#9679;</p>
+            <p class="status-label">Trae 展示</p>
+            <p class="status-value">进行中</p>
+          </div>
+        </div>
+        <div class="text-card">
+          <h3>Day 4 常见问题复盘</h3>
+          <p><strong>QClaw 输出格式不统一</strong>：部分组返回的是 Markdown 代码块包裹的 JSON，需要手动清理标记。</p>
+          <p style="margin-top:4pt"><strong>WorkBuddy 字段映射错位</strong>：title 列显示的是 content 内容，原因是字段名未统一。</p>
+          <p style="margin-top:4pt"><strong>数据流未完全打通</strong>：约 40% 的组需要手动复制粘贴数据，未实现自动流转。</p>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="highlight-box">
+          <h3>今天的核心目标</h3>
+          <p>"让项目有界面、有逻辑、有数据"</p>
+          <p style="margin-top:6pt; font-size:11pt;">Day 4 的 MVP 证明了"数据能流动"，Day 5 要让这个数据流有一个漂亮的界面，让用户能真正"用起来"。</p>
+        </div>
+        <div class="text-card">
+          <h3>三工具数据流全景</h3>
+          <div class="arrow-flow">
+            <p class="flow-item">QClaw 采集</p>
+            <p class="flow-arrow">&#8594;</p>
+            <p class="flow-item">WorkBuddy 清洗</p>
+            <p class="flow-arrow">&#8594;</p>
+            <p class="flow-item">Trae 展示</p>
+          </div>
+          <p style="margin-top:6pt; font-size:10pt; color:#666666;">上午：Trae 进阶技巧 + API 入门 + 调试方法。下午：三工具整合联调 + 测试 + 文档撰写。</p>
+        </div>
+        <div class="text-card" style="border-left: 3pt solid #92181A; background: rgba(146,24,26,0.02);">
+          <h3 style="color: #92181A;">讲师提醒</h3>
+          <p>Day 5 是项目从"能跑"到"好用"的关键一天。上午的理论内容（API、调试）是下午实操的基础，请务必跟上。如果 Day 4 的 MVP 还有遗留问题，上午课间找助教解决。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>3 / 14</p>
+  </div>
+</body>
+</html>

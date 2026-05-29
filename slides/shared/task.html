@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>母版 · 任务页</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="animations.css">
+<link rel="stylesheet" href="layout.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  .task-body {
+    background: var(--bg);
+  }
+
+  .task-top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: var(--top-bar-h);
+    background: var(--primary);
+    z-index: 100;
+  }
+
+  .task-header {
+    position: absolute;
+    top: var(--top-bar-h); left: 0; right: 0;
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--content-pad-x);
+    background: var(--bg-white);
+    border-bottom: 1pt solid var(--border);
+    z-index: 10;
+  }
+
+  .task-header .logo {
+    height: 22pt;
+    width: auto;
+  }
+
+  .task-header .page-meta {
+    font-size: var(--text-2xs);
+    color: var(--muted);
+  }
+
+  .task-content {
+    position: absolute;
+    top: calc(var(--top-bar-h) + var(--header-h));
+    bottom: var(--footer-h);
+    left: 0; right: 0;
+    padding: var(--content-pad-y) var(--content-pad-x);
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .section-header-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    margin-bottom: var(--space-6);
+  }
+
+  .section-header-bar .section-title-box {
+    background: var(--primary);
+    color: var(--bg-white);
+    padding: var(--space-4) var(--space-8);
+    border-radius: 4pt;
+    font-size: var(--text-3xl);
+    font-weight: 700;
+  }
+
+  .section-header-bar .section-number {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .section-header-bar .section-line {
+    flex: 1;
+    height: 3pt;
+    background: var(--primary-dark);
+    border-radius: 2pt;
+  }
+
+  .task-layout {
+    display: flex;
+    gap: var(--space-6);
+    height: calc(100% - 50pt);
+  }
+
+  .task-main {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .task-sidebar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .task-card {
+    background: var(--bg-white);
+    border: 1pt solid var(--border);
+    border-radius: 6pt;
+    padding: var(--space-5);
+    box-shadow: 0 1pt 4pt rgba(0,0,0,0.04);
+  }
+
+  .task-card h3 {
+    font-size: var(--text-xl);
+    color: var(--info);
+    font-weight: 700;
+    margin-bottom: var(--space-4);
+  }
+
+  .task-card p {
+    font-size: var(--text-base);
+    color: var(--light-ink);
+    line-height: 1.7;
+    margin: 0 0 var(--space-4) 0;
+  }
+
+  .step-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .step-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+
+  .step-num {
+    width: 22pt;
+    height: 22pt;
+    border-radius: 50%;
+    background: var(--primary);
+    color: var(--bg-white);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step-text {
+    font-size: var(--text-base);
+    color: var(--light-ink);
+    line-height: 1.6;
+  }
+
+  .time-control {
+    background: rgba(238,130,47,0.06);
+    border-left: 3pt solid var(--accent);
+    border-radius: 0 4pt 4pt 0;
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .time-control .time-label {
+    font-size: var(--text-xs);
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: var(--space-2);
+  }
+
+  .time-control p {
+    font-size: var(--text-base);
+    color: var(--light-ink);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .deliverable-box {
+    background: rgba(117,189,66,0.06);
+    border-left: 3pt solid var(--success);
+    border-radius: 0 4pt 4pt 0;
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .deliverable-box .deliverable-label {
+    font-size: var(--text-xs);
+    color: var(--success);
+    font-weight: 700;
+    margin-bottom: var(--space-2);
+  }
+
+  .deliverable-box p {
+    font-size: var(--text-base);
+    color: var(--light-ink);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .task-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: var(--footer-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--content-pad-x);
+    background: var(--bg-white);
+    border-top: 1pt solid var(--border);
+    z-index: 10;
+  }
+
+  .task-footer p {
+    font-size: var(--text-2xs);
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* 动画 */
+  .section-header-bar {
+    opacity: 0;
+    animation: fadeInLeft 0.5s ease-out forwards;
+  }
+  .task-card:nth-child(1) {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.1s forwards;
+  }
+  .task-card:nth-child(2) {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.2s forwards;
+  }
+  .task-sidebar .task-card {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.25s forwards;
+  }
+</style>
+</head>
+<body class="task-body">
+
+  <div class="task-top-bar"></div>
+
+  <div class="task-header">
+    <img class="logo" src="media/image2.png" alt="公司 Logo">
+    <p class="page-meta">Day X · 任务布置</p>
+  </div>
+
+  <div class="task-content">
+    <div class="section-header-bar">
+      <div class="section-title-box">任务布置</div>
+      <div class="section-number">02</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="task-layout">
+      <div class="task-main">
+        <div class="task-card">
+          <h3>任务说明</h3>
+          <p>请根据今日所学内容，完成以下实践任务。任务分为基础版和进阶版，建议先完成基础版。</p>
+          <div class="time-control">
+            <p class="time-label">时间控制</p>
+            <p>总时长：45 分钟 | 基础版：20 分钟 | 进阶版：25 分钟</p>
+          </div>
+        </div>
+
+        <div class="task-card">
+          <h3>操作步骤</h3>
+          <ul class="step-list">
+            <li>
+              <span class="step-num">1</span>
+              <span class="step-text">打开工具，完成基础配置</span>
+            </li>
+            <li>
+              <span class="step-num">2</span>
+              <span class="step-text">按照示例输入 Prompt，获取第一轮结果</span>
+            </li>
+            <li>
+              <span class="step-num">3</span>
+              <span class="step-text">根据反馈优化 Prompt，迭代 2-3 轮</span>
+            </li>
+            <li>
+              <span class="step-num">4</span>
+              <span class="step-text">整理输出结果，保存为指定格式</span>
+            </li>
+            <li>
+              <span class="step-num">5</span>
+              <span class="step-text">提交给助教检查，获取反馈</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="task-sidebar">
+        <div class="task-card">
+          <h3>交付物</h3>
+          <div class="deliverable-box">
+            <p class="deliverable-label">必须提交</p>
+            <p>1. 操作截图 2-3 张<br>2. 最终输出文件<br>3. 遇到的问题记录</p>
+          </div>
+        </div>
+
+        <div class="task-card">
+          <h3>评分标准</h3>
+          <ul class="bullet-list">
+            <li>完成度（40%）：是否完成所有步骤</li>
+            <li>质量（30%）：输出结果的质量</li>
+            <li>创新（20%）：是否有额外尝试</li>
+            <li>规范（10%）：文件命名和格式</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>X / XX</p>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 5 · API 接入实战</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 8pt 16pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 22pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 6pt;
+  }
+  .two-col {
+    display: flex;
+    gap: 8pt;
+    height: calc(100% - 56pt);
+  }
+  .col-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6pt;
+  }
+  .col-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4pt;
+  }
+  .text-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 4pt;
+    padding: 5pt 8pt;
+  }
+  .text-card h3 {
+    font-size: 12pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .text-card p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.45;
+  }
+  .step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5pt;
+  }
+  .step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8pt;
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 4pt;
+    padding: 6pt 8pt;
+  }
+  .step-num {
+    width: 22pt; height: 22pt;
+    border-radius: 50%;
+    background: #084E8F;
+    color: #ffffff;
+    font-size: 11pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-content {
+    flex: 1;
+  }
+  .step-content h4 {
+    font-size: 11pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 1pt;
+  }
+  .step-content p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.4;
+  }
+  .api-table {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 4pt;
+    overflow: hidden;
+  }
+  .api-row {
+    display: flex;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .api-row:last-child { border-bottom: 0; }
+  .api-cell {
+    padding: 4pt 6pt;
+    font-size: 10pt;
+  }
+  .api-header {
+    background: #084E8F;
+    color: #ffffff;
+    font-weight: 700;
+  }
+  .api-cell:first-child {
+    width: 80pt;
+    border-right: 1pt solid #e2e8f0;
+    font-weight: 600;
+    color: #084E8F;
+    background: rgba(8,78,143,0.04);
+  }
+  .api-header .api-cell:first-child {
+    background: #084E8F;
+    color: #ffffff;
+  }
+  .code-snippet {
+    background: #1a1a1a;
+    border-radius: 4pt;
+    padding: 4pt 6pt;
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-size: 8.5pt;
+    color: #e2e8f0;
+    line-height: 1.35;
+    overflow: hidden;
+  }
+  .code-snippet .comment { color: #75BD42; }
+  .code-snippet .string { color: #EE822F; }
+  .tip-box {
+    background: rgba(117,189,66,0.06);
+    border: 1pt solid #75BD42;
+    border-radius: 4pt;
+    padding: 4pt 6pt;
+  }
+  .tip-box h4 {
+    font-size: 10.5pt;
+    color: #75BD42;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .tip-box p {
+    font-size: 9.5pt;
+    color: #333333;
+    line-height: 1.4;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 5 · API 接入实战</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>动手实操</p>
+    </div>
+    <h1 class="page-title">API 接入实战：从调用到展示</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="text-card">
+          <h3>推荐公开 API（无需注册 Key）</h3>
+        </div>
+        <div class="api-table">
+          <div class="api-row api-header">
+            <div class="api-cell">API</div>
+            <div class="api-cell">用途</div>
+            <div class="api-cell">返回格式</div>
+          </div>
+          <div class="api-row">
+            <div class="api-cell">农产品价格 API</div>
+            <div class="api-cell">农业农村部市场价格</div>
+            <div class="api-cell">JSON</div>
+          </div>
+          <div class="api-row">
+            <div class="api-cell">气象灾害预警 API</div>
+            <div class="api-cell">台风/霜冻/干旱预警</div>
+            <div class="api-cell">JSON</div>
+          </div>
+          <div class="api-row">
+            <div class="api-cell">土壤墒情 API</div>
+            <div class="api-cell">土壤湿度与灌溉建议</div>
+            <div class="api-cell">JSON</div>
+          </div>
+          <div class="api-row">
+            <div class="api-cell">农业气象 API</div>
+            <div class="api-cell">温度/降水/湿度对作物影响</div>
+            <div class="api-cell">JSON</div>
+          </div>
+        </div>
+        <div class="step-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>选择一个公开 API</h4>
+              <p>推荐从农业气象 API 开始，数据简单、返回稳定。在 Trae Chat 中问："推荐一个免费的农业气象 API"。</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>在 Trae 中调用 API</h4>
+              <p>在 Builder 模式描述："创建一个网页，调用农业气象 API 显示当前区域的温度、湿度和农事建议"。</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>数据显示到页面上</h4>
+              <p>AI 会自动生成 fetch 代码和 HTML 展示逻辑。确认 Plan 后执行，在浏览器中预览效果。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="code-snippet">
+          <p class="comment">// Trae 自动生成的 API 调用代码示例</p>
+          <p style="margin-top:4pt">fetch(<span class="string">'https://api.agriweather.example/v1/current'</span>)</p>
+          <p>  .then(response => response.json())</p>
+          <p>  .then(data => {</p>
+          <p>    <span class="comment">// 把数据插入到页面元素中</span></p>
+          <p>    document.getElementById(<span class="string">'region'</span>).textContent = data.region;</p>
+          <p>    document.getElementById(<span class="string">'temp'</span>).textContent = data.temp + <span class="string">'°C'</span>;</p>
+          <p>  })</p>
+          <p>  .catch(error => {</p>
+          <p>    console.error(<span class="string">'获取气象数据失败:'</span>, error);</p>
+          <p>  });</p>
+        </div>
+        <div class="text-card">
+          <h3>实战演示：天气数据展示</h3>
+          <p><strong>目标</strong>：创建一个简单的气象卡片，显示区域、温度、湿度与农事建议。</p>
+          <p style="margin-top:3pt"><strong>Trae 提示词</strong>：</p>
+          <p style="font-size:10pt; color:#666666; margin-top:2pt; padding:4pt; background:#f8fafc; border-radius:2pt;">"帮我创建一个 HTML 页面，调用公开农业气象 API，显示当前区域的温度、湿度和农事建议。页面要有一个卡片样式，显示区域名、温度、湿度。如果 API 调用失败，显示友好的错误提示。"</p>
+        </div>
+        <div class="tip-box">
+          <h4>联调技巧</h4>
+          <p>如果 API 返回的数据结构和预期不同，把 API 返回的完整内容复制到 Trae Chat 中，说："API 返回了这个数据，帮我修改代码正确解析"。AI 会自动调整字段映射。</p>
+        </div>
+        <div class="text-card" style="border-left: 3pt solid #92181A; background: rgba(146,24,26,0.02);">
+          <h3 style="color: #92181A;">常见报错</h3>
+          <p><strong>CORS 错误</strong>：浏览器安全策略阻止跨域请求。解决：使用 Trae 的 Live Server 运行，或让 AI 改用代理方案。</p>
+          <p style="margin-top:3pt"><strong>404 错误</strong>：API 地址拼写错误或服务已下线。解决：检查 URL，或换一个 API。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>6 / 14</p>
+  </div>
+</body>
+</html>

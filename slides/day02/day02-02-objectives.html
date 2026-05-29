@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 2 学习目标</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 20pt 28pt;
+  }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 10pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .page-title {
+    font-size: 26pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 16pt;
+  }
+
+  .objective-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14pt;
+    height: calc(100% - 80pt);
+  }
+
+  .obj-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 14pt;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Entrance animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(15pt); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-15pt); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .kicker {
+    opacity: 0;
+    animation: fadeInLeft 0.4s ease-out forwards;
+  }
+  .page-title {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.1s forwards;
+  }
+  .obj-card:nth-child(1) {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.2s forwards;
+  }
+  .obj-card:nth-child(2) {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.3s forwards;
+  }
+  .obj-card:nth-child(3) {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.4s forwards;
+  }
+  .obj-card .obj-icon {
+    width: 36pt; height: 36pt;
+    border-radius: 8pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16pt;
+    font-weight: 700;
+    margin-bottom: 10pt;
+    color: #ffffff;
+  }
+  .obj-card:nth-child(1) .obj-icon { background: #084E8F; }
+  .obj-card:nth-child(2) .obj-icon { background: #75BD42; }
+  .obj-card:nth-child(3) .obj-icon { background: #EE822F; }
+
+  .obj-card h3 {
+    font-size: 15pt;
+    font-weight: 700;
+    color: #084E8F;
+    margin-bottom: 10pt;
+  }
+
+  .obj-card ul {
+    list-style: none;
+    flex: 1;
+  }
+  .obj-card ul li {
+    font-size: 11pt;
+    color: #333333;
+    line-height: 1.7;
+    padding-left: 14pt;
+    position: relative;
+    margin-bottom: 6pt;
+  }
+  .obj-card ul li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 7pt;
+    width: 5pt; height: 5pt;
+    border-radius: 50%;
+    background: #084E8F;
+  }
+  .obj-card:nth-child(2) ul li::before { background: #75BD42; }
+  .obj-card:nth-child(3) ul li::before { background: #EE822F; }
+
+  .obj-card .highlight-box {
+    background: rgba(8,78,143,0.04);
+    border-left: 2pt solid #084E8F;
+    padding: 8pt 10pt;
+    border-radius: 0 4pt 4pt 0;
+    margin-top: auto;
+  }
+  .obj-card:nth-child(2) .highlight-box {
+    background: rgba(117,189,66,0.06);
+    border-left-color: #75BD42;
+  }
+  .obj-card:nth-child(3) .highlight-box {
+    background: rgba(238,130,47,0.06);
+    border-left-color: #EE822F;
+  }
+  .obj-card .highlight-box p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+</style>
+<meta name="notes" content="学习目标页：用1分钟快速浏览今日三大目标，让学生带着预期听课。">
+</head>
+<body>
+
+  <div class="top-bar"></div>
+
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 2 · 学习目标</p>
+  </div>
+
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>今日目标</p>
+    </div>
+    <h1 class="page-title">今天学完，你能收获什么？</h1>
+
+    <div class="objective-grid">
+      <div class="obj-card">
+        <div class="obj-icon">知</div>
+        <h3>知识目标</h3>
+        <ul>
+          <li>掌握 OpenClaw 四层架构的核心原理，能说出每一层的功能和作用</li>
+          <li>理解 Hermes Agent 的 GEPA 进化机制，能通俗解释"遗传-帕累托提示进化"</li>
+          <li>能清晰对比 OpenClaw 与 Hermes 的核心差异，说出各自的适用场景</li>
+        </ul>
+        <div class="highlight-box">
+          <p>核心产出：能向非技术人员讲清楚 Agent 平台的底层逻辑</p>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-icon">技</div>
+        <h3>技能目标</h3>
+        <ul>
+          <li>独立完成 WorkBuddy 的安装、注册和基础配置</li>
+          <li>使用 WorkBuddy 完成 Excel 数据清洗（去重、格式统一、缺失值处理）</li>
+          <li>配置周报自动化流程，实现从多个源文件到格式化报告的自动生成</li>
+        </ul>
+        <div class="highlight-box">
+          <p>核心产出：一份可重复使用的周报自动化模板</p>
+        </div>
+      </div>
+
+      <div class="obj-card">
+        <div class="obj-icon">养</div>
+        <h3>素养目标</h3>
+        <ul>
+          <li>建立 Agent 平台选型逻辑：面对不同需求时知道该选什么工具</li>
+          <li>理解"工具会过时，但方法不会"——掌握底层思维比记住操作步骤更重要</li>
+          <li>培养跨工具协作意识：为 Day 3 的项目启动做好思维准备</li>
+        </ul>
+        <div class="highlight-box">
+          <p>核心产出：形成自己的 AI 工具选型判断框架</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>2 / 18</p>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 1 · Trae 简介</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 20pt 36pt;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 10pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 28pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 16pt;
+  }
+  .preview-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 8pt;
+    padding: 20pt 24pt;
+    margin-bottom: 16pt;
+  }
+  .preview-card h2 {
+    font-size: 18pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 10pt;
+  }
+  .preview-card p {
+    font-size: 12pt;
+    color: #333333;
+    line-height: 1.7;
+    margin-bottom: 10pt;
+  }
+  .builder-box {
+    background: rgba(8,78,143,0.04);
+    border-left: 3pt solid #084E8F;
+    border-radius: 0 4pt 4pt 0;
+    padding: 10pt 14pt;
+    margin-bottom: 10pt;
+  }
+  .builder-box h4 {
+    font-size: 12pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .builder-box p {
+    font-size: 11pt;
+    color: #333333;
+    line-height: 1.5;
+    margin-bottom: 0;
+  }
+  .feature-tags {
+    display: flex;
+    gap: 8pt;
+    flex-wrap: wrap;
+  }
+  .feature-tags .tag {
+    display: inline-block;
+    padding: 4pt 10pt;
+    border-radius: 999pt;
+    font-size: 10pt;
+    font-weight: 700;
+  }
+  .tag-blue { background: rgba(8,78,143,0.10); color: #084E8F; }
+  .tag-orange { background: rgba(238,130,47,0.12); color: #EE822F; }
+  .tag-green { background: rgba(117,189,66,0.12); color: #75BD42; }
+  .coming-soon {
+    background: rgba(238,130,47,0.06);
+    border: 1pt solid rgba(238,130,47,0.15);
+    border-radius: 6pt;
+    padding: 12pt 16pt;
+    display: flex;
+    align-items: center;
+    gap: 10pt;
+  }
+  .coming-soon .badge {
+    background: #EE822F;
+    color: #ffffff;
+    padding: 4pt 10pt;
+    border-radius: 4pt;
+    font-size: 10pt;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .coming-soon p {
+    font-size: 11pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+<meta name="notes" content="讲者备注：根据本页内容灵活发挥，建议控制讲解时长，留出互动空间。">
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 1 · 明日预告</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>工具预告</p>
+    </div>
+    <h1 class="page-title">Trae：用说话的方式写代码</h1>
+    <div class="preview-card">
+      <h2>字节跳动的 AI IDE</h2>
+      <p>Trae 是字节跳动推出的 AI 编程工具（IDE），内置 Builder 模式——你只需要用自然语言描述需求，AI 就能帮你生成代码、搭建网页、开发小程序。不需要手写复杂代码。</p>
+      <div class="builder-box">
+        <h4>Builder 模式是什么？</h4>
+        <p>在 Builder 模式下，你不需要写代码，只需要像跟同事交代任务一样描述需求，Trae 会自动生成完整的代码文件、项目结构，甚至帮你运行测试。对于没有编程基础的同学来说，这是门槛最低的入门方式。</p>
+      </div>
+      <div class="feature-tags">
+        <span class="tag tag-blue">自然语言生成代码</span>
+        <span class="tag tag-orange">自动调试修复</span>
+        <span class="tag tag-green">项目骨架搭建</span>
+        <span class="tag tag-blue">Builder 模式</span>
+      </div>
+    </div>
+    <div class="coming-soon">
+      <span class="badge">Day 3</span>
+      <p>后天我们将深入学习 Trae 的安装、Builder 模式的使用，以及如何用自然语言开发一个完整的项目。今天和明天先掌握信息处理和办公自动化。</p>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>14 / 18</p>
+  </div>
+</body>
+</html>

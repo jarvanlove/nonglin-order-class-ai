@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 3 · 课堂实操指导</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 20pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 10pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 26pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 14pt;
+  }
+  .practice-wrap {
+    display: flex;
+    gap: 16pt;
+    height: calc(100% - 70pt);
+  }
+  .practice-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .guide-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+    flex: 1;
+  }
+  .guide-card h3 {
+    font-size: 13pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .guide-step {
+    display: flex;
+    gap: 8pt;
+    margin-bottom: 6pt;
+  }
+  .guide-step .num {
+    width: 18pt; height: 18pt;
+    border-radius: 50%;
+    background: #084E8F;
+    color: #ffffff;
+    font-size: 9pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1pt;
+  }
+  .guide-step p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+  .error-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+  }
+  .error-card h3 {
+    font-size: 12pt;
+    color: #92181A;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .error-item {
+    margin-bottom: 5pt;
+    padding-bottom: 5pt;
+    border-bottom: 1pt solid #f5f5f5;
+  }
+  .error-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+  .error-item h4 {
+    font-size: 10pt;
+    color: #333333;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .error-item p {
+    font-size: 9pt;
+    color: #666666;
+    line-height: 1.4;
+  }
+  .doc-card {
+    background: rgba(117,189,66,0.06);
+    border: 1pt solid rgba(117,189,66,0.2);
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+    margin-top: auto;
+  }
+  .doc-card h3 {
+    font-size: 12pt;
+    color: #4a8a2a;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .doc-card ul {
+    list-style: none;
+  }
+  .doc-card li {
+    font-size: 9pt;
+    color: #333333;
+    line-height: 1.6;
+    padding-left: 12pt;
+    position: relative;
+  }
+  .doc-card li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 6pt;
+    width: 4pt; height: 4pt;
+    border-radius: 50%;
+    background: #75BD42;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+<meta name="notes" content="实操指导：这是下午核心环节，讲师和助教全场巡视，5分钟解决不了的问题及时介入。">
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 3 · 实操指导</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>实操指南</p>
+    </div>
+    <h1 class="page-title">课堂实操：手把手带你完成第一个作品</h1>
+    <div class="practice-wrap">
+      <div class="practice-col">
+        <div class="guide-card">
+          <h3>Trae Builder 操作步骤</h3>
+          <div class="guide-step">
+            <div class="num">1</div>
+            <p>打开 Trae，点击左侧 Builder 图标进入 Builder 模式</p>
+          </div>
+          <div class="guide-step">
+            <div class="num">2</div>
+            <p>在输入框中描述需求（参考："创建一个农产品价格展示网页"）</p>
+          </div>
+          <div class="guide-step">
+            <div class="num">3</div>
+            <p>等待 AI 生成代码（约 10-30 秒），观察左侧文件树的变化</p>
+          </div>
+          <div class="guide-step">
+            <div class="num">4</div>
+            <p>点击运行按钮（或按 F5），在浏览器中查看效果</p>
+          </div>
+          <div class="guide-step">
+            <div class="num">5</div>
+            <p>不满意？直接在 Builder 中输入修改要求，AI 会迭代更新</p>
+          </div>
+          <div class="guide-step">
+            <div class="num">6</div>
+            <p>满意后，保存项目。文件保存在你的工作区文件夹中</p>
+          </div>
+        </div>
+        <div class="doc-card">
+          <h3>项目文档模板清单</h3>
+          <ul>
+            <li>项目任务书：目标、范围、周期、团队</li>
+            <li>需求文档：用户故事、功能列表、MVP 范围</li>
+            <li>技术方案：数据流图、接口契约、工具选型</li>
+            <li>分工表：角色、负责人、交付物、截止时间</li>
+          </ul>
+        </div>
+      </div>
+      <div class="practice-col">
+        <div class="error-card">
+          <h3>常见报错处理速查</h3>
+          <div class="error-item">
+            <h4>安装时提示"系统版本过低"</h4>
+            <p>确认系统版本（Win10+/macOS12+）。版本过低请联系讲师安排替代方案。</p>
+          </div>
+          <div class="error-item">
+            <h4>Trae 打开后很卡 / 闪退</h4>
+            <p>关闭其他软件释放内存，确保磁盘有 5GB+ 空间。4GB 内存电脑可能无法流畅运行。</p>
+          </div>
+          <div class="error-item">
+            <h4>Builder 模式无响应</h4>
+            <p>检查网络连接（不要开 VPN），尝试重启 Trae。如果持续无响应，切换到 Chat 模式测试。</p>
+          </div>
+          <div class="error-item">
+            <h4>生成的代码运行报错</h4>
+            <p>把报错信息复制到 Builder 中，输入"修复这个报错"。AI 会自动分析并修复。</p>
+          </div>
+          <div class="error-item">
+            <h4>浏览器显示空白</h4>
+            <p>检查文件路径是否正确。尝试手动找到 index.html 双击打开，或更换浏览器。</p>
+          </div>
+          <div class="error-item">
+            <h4>修改后效果没变化</h4>
+            <p>确保保存了文件（Ctrl+S），然后刷新浏览器（F5）。有时需要重新运行项目。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>17 / 20</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 2 Hermes 安全与隐私机制</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 12pt;
+  }
+
+  .sec-container {
+    display: flex;
+    gap: 14pt;
+    height: calc(100% - 60pt);
+  }
+
+  .sec-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+
+  .storage-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+  }
+  .storage-card h3 {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .storage-card p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.65;
+    margin-bottom: 6pt;
+  }
+  .boundary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+    margin-top: 6pt;
+  }
+  .boundary-table th {
+    background: #084E8F;
+    color: #ffffff;
+    padding: 5pt 7pt;
+    text-align: left;
+    font-weight: 700;
+  }
+  .boundary-table td {
+    padding: 5pt 7pt;
+    border-bottom: 1pt solid #e2e8f0;
+    color: #333333;
+  }
+  .boundary-table tr:nth-child(even) {
+    background: rgba(8,78,143,0.03);
+  }
+
+  .privacy-card {
+    background: rgba(146,24,26,0.04);
+    border: 1pt solid rgba(146,24,26,0.15);
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+    flex: 1;
+  }
+  .privacy-card h3 {
+    font-size: 14pt;
+    color: #92181A;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .privacy-card p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.65;
+    margin-bottom: 6pt;
+  }
+  .privacy-card .concept {
+    background: #ffffff;
+    border-left: 2pt solid #92181A;
+    border-radius: 0 4pt 4pt 0;
+    padding: 6pt 8pt;
+    margin-bottom: 6pt;
+  }
+  .privacy-card .concept h4 {
+    font-size: 10pt;
+    color: #92181A;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .privacy-card .concept p {
+    font-size: 9pt;
+    color: #333333;
+    line-height: 1.5;
+    margin-bottom: 0;
+  }
+
+  .sec-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+
+  .warning-card {
+    background: rgba(238,130,47,0.06);
+    border: 1pt solid rgba(238,130,47,0.2);
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+    flex: 1;
+  }
+  .warning-card h3 {
+    font-size: 14pt;
+    color: #EE822F;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .warning-card p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.65;
+    margin-bottom: 6pt;
+  }
+  .warning-card ul {
+    list-style: none;
+  }
+  .warning-card ul li {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.6;
+    padding-left: 14pt;
+    position: relative;
+    margin-bottom: 4pt;
+  }
+  .warning-card ul li::before {
+    content: "!";
+    position: absolute;
+    left: 0;
+    color: #EE822F;
+    font-weight: 700;
+  }
+
+  .case-box {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+  }
+  .case-box h4 {
+    font-size: 11pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .case-box p {
+    font-size: 9pt;
+    color: #666666;
+    line-height: 1.5;
+  }
+
+  .tip-box {
+    background: rgba(117,189,66,0.06);
+    border-left: 3pt solid #75BD42;
+    border-radius: 0 6pt 6pt 0;
+    padding: 10pt 12pt;
+  }
+  .tip-box h4 {
+    font-size: 12pt;
+    color: #75BD42;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .tip-box p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.55;
+  }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+<meta name="notes" content="安全隐私：这是重点警示页，用真实案例强调农林敏感数据的保护意识。">
+</head>
+<body>
+
+  <div class="top-bar"></div>
+
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 2 · 知识储备</p>
+  </div>
+
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>知识储备</p>
+    </div>
+    <h1 class="page-title">Hermes 安全与隐私：你的数据去哪了</h1>
+
+    <div class="sec-container">
+      <div class="sec-left">
+        <div class="storage-card">
+          <h3>用户数据存储方式</h3>
+          <p>Hermes 的自我进化依赖对用户偏好的学习，这涉及两类数据的存储：</p>
+          <table class="boundary-table">
+            <tr><th>数据类型</th><th>存储位置</th><th>用途</th></tr>
+            <tr><td>对话历史</td><td>本地数据库</td><td>上下文理解</td></tr>
+            <tr><td>偏好配置</td><td>本地配置文件</td><td>个性化输出</td></tr>
+            <tr><td>进化策略</td><td>本地模型缓存</td><td>提示词优化</td></tr>
+            <tr><td>匿名统计</td><td>云端（可选）</td><td>产品改进</td></tr>
+          </table>
+        </div>
+
+        <div class="privacy-card">
+          <h3>隐私保护设计概念</h3>
+          <div class="concept">
+            <h4>差分隐私（Differential Privacy）</h4>
+            <p>在数据中添加精心设计的"噪声"，使得无法从输出结果反推任何单个个体的信息。好比在班级平均分统计中，加入微小随机波动，保护每位学生的具体成绩不被泄露。</p>
+          </div>
+          <div class="concept">
+            <h4>联邦学习（Federated Learning）</h4>
+            <p>模型在各个用户的本地设备上训练，只将"学习到的参数更新"上传到云端聚合，原始数据始终不离开本地。好比每个农技站本地学习农户需求，只上传经验总结而非具体农户信息。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-right">
+        <div class="warning-card">
+          <h3>农林场景下的敏感数据注意</h3>
+          <p>农林领域有大量特殊敏感信息，使用 AI 工具时需格外谨慎：</p>
+          <ul>
+            <li><strong>试验数据：</strong>未发表的育种数据、田间试验结果可能涉及知识产权，避免上传至公共 AI 平台</li>
+            <li><strong>农户信息：</strong>姓名、电话、种植面积、收入等属于个人隐私，需脱敏后使用</li>
+            <li><strong>地理坐标：</strong>高标准农田、试验基地的精确 GPS 坐标可能涉及国家安全</li>
+            <li><strong>基因数据：</strong>作物基因组、种质资源信息属于战略资源，严禁通过公共网络传输</li>
+            <li><strong>政策文件：</strong>内部农业普查数据、未公开的补贴政策需遵守保密规定</li>
+          </ul>
+        </div>
+
+        <div class="case-box">
+          <h4>真实案例警示</h4>
+          <p>某省农业科研人员将未发表的杂交水稻试验数据输入某国外在线 AI 工具寻求分析建议，导致数据被平台记录并用于模型训练。后续该工具生成的回答中出现了与试验高度相似的产量数据，造成潜在知识产权风险。</p>
+        </div>
+
+        <div class="tip-box">
+          <h4>安全使用原则</h4>
+          <p>1. 涉密数据不上公网：使用本地化部署的国产工具<br>2. 上传前脱敏：删除姓名、电话、精确坐标等敏感字段<br>3. 区分内外网：内部试验数据只在局域网环境处理<br>4. 定期清理：删除对话历史和本地缓存中的敏感内容</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>6b / 20</p>
+  </div>
+
+</body>
+</html>

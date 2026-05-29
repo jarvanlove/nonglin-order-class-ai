@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 2 WorkBuddy 安装与配置</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 12pt;
+  }
+
+  .install-container {
+    display: flex;
+    gap: 14pt;
+    height: calc(100% - 56pt);
+  }
+
+  .install-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+
+  .req-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+  }
+  .req-card h3 {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .req-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5pt;
+  }
+  .req-item {
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+    font-size: 10pt;
+    color: #333333;
+  }
+  .req-item .req-dot {
+    width: 6pt; height: 6pt;
+    border-radius: 50%;
+    background: #75BD42;
+    flex-shrink: 0;
+  }
+
+  .steps-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+    flex: 1;
+  }
+  .steps-card h3 {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10pt;
+    margin-bottom: 8pt;
+  }
+  .step-item .step-num {
+    width: 22pt; height: 22pt;
+    border-radius: 50%;
+    background: #084E8F;
+    color: #ffffff;
+    font-size: 10pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-item .step-body h4 {
+    font-size: 11pt;
+    color: #333333;
+    font-weight: 700;
+    margin-bottom: 1pt;
+  }
+  .step-item .step-body p {
+    font-size: 10pt;
+    color: #666666;
+    line-height: 1.4;
+  }
+
+  .install-right {
+    flex: 0.9;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+
+  .download-card {
+    background: #084E8F;
+    border-radius: 6pt;
+    padding: 16pt;
+    text-align: center;
+  }
+  .download-card .url {
+    font-size: 20pt;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.02em;
+  }
+  .download-card p {
+    font-size: 11pt;
+    color: rgba(255,255,255,0.85);
+    margin-top: 6pt;
+  }
+
+  .test-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+    flex: 1;
+  }
+  .test-card h3 {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .test-card .test-step {
+    background: rgba(117,189,66,0.06);
+    border-left: 2pt solid #75BD42;
+    border-radius: 0 4pt 4pt 0;
+    padding: 8pt 10pt;
+    margin-bottom: 6pt;
+  }
+  .test-card .test-step p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+
+  .trouble-box {
+    background: rgba(146,24,26,0.04);
+    border-left: 3pt solid #92181A;
+    border-radius: 0 6pt 6pt 0;
+    padding: 10pt 12pt;
+  }
+  .trouble-box h4 {
+    font-size: 12pt;
+    color: #92181A;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .trouble-box p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.55;
+  }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+<meta name="notes" content="WorkBuddy安装：让学生同步操作，提醒注册账号。">
+</head>
+<body>
+
+  <div class="top-bar"></div>
+
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 2 · 工具学习</p>
+  </div>
+
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>工具学习</p>
+    </div>
+    <h1 class="page-title">WorkBuddy 安装与配置指南</h1>
+
+    <div class="install-container">
+      <div class="install-left">
+        <div class="req-card">
+          <h3>系统要求</h3>
+          <div class="req-list">
+            <div class="req-item">
+              <div class="req-dot"></div>
+              <p>操作系统：Windows 10 及以上 / macOS 12 及以上</p>
+            </div>
+            <div class="req-item">
+              <div class="req-dot"></div>
+              <p>内存：4GB 及以上</p>
+            </div>
+            <div class="req-item">
+              <div class="req-dot"></div>
+              <p>磁盘空间：至少 2GB 可用空间</p>
+            </div>
+            <div class="req-item">
+              <div class="req-dot"></div>
+              <p>网络：校园网即可，无需 VPN</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="steps-card">
+          <h3>安装步骤</h3>
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>访问官网下载</h4>
+              <p>打开浏览器，访问 workbuddycn.com，点击"立即下载"</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>选择系统版本</h4>
+              <p>Windows 选 .exe 安装包，Mac 选 .dmg 安装包</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>运行安装程序</h4>
+              <p>双击安装包，按提示完成安装（约 5-10 分钟）</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h4>注册账号</h4>
+              <p>打开 WorkBuddy，用手机号或邮箱注册并登录</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">5</div>
+            <div class="step-body">
+              <h4>测试运行</h4>
+              <p>点击"新建任务"，输入简单指令测试是否正常</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="install-right">
+        <div class="download-card">
+          <p class="url">workbuddycn.com</p>
+          <p>官方下载地址，预计安装时间 15-20 分钟</p>
+        </div>
+
+        <div class="test-card">
+          <h3>安装后测试</h3>
+          <div class="test-step">
+            <p><strong>测试 1：</strong>输入"帮我把桌面的图片文件按日期分类"，观察 WorkBuddy 是否能正确识别并执行</p>
+          </div>
+          <div class="test-step">
+            <p><strong>测试 2：</strong>输入"读取这个 Excel 文件并统计每列的平均值"，验证文件读取和计算功能</p>
+          </div>
+          <div class="test-step">
+            <p><strong>测试 3：</strong>尝试 Craft 模式和 Agent 模式各完成一个简单任务，熟悉两种交互方式</p>
+          </div>
+        </div>
+
+        <div class="trouble-box">
+          <h4>常见问题</h4>
+          <p>收不到验证码？等待 2-3 分钟后重发，或改用邮箱注册。安装后打不开？检查系统版本是否满足要求，或联系助教协助。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>10 / 18</p>
+  </div>
+
+</body>
+</html>

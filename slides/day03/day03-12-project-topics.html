@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 3 · 推荐项目选题</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 20pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 10pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 26pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 14pt;
+  }
+  .topics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10pt;
+    height: calc(100% - 70pt);
+  }
+  .topic-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+    display: flex;
+    flex-direction: column;
+  }
+  .topic-card .topic-num {
+    width: 26pt; height: 26pt;
+    border-radius: 50%;
+    background: #084E8F;
+    color: #ffffff;
+    font-size: 11pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 6pt;
+  }
+  .topic-card:nth-child(2) .topic-num { background: #EE822F; }
+  .topic-card:nth-child(3) .topic-num { background: #75BD42; }
+  .topic-card:nth-child(4) .topic-num { background: #92181A; }
+  .topic-card h3 {
+    font-size: 13pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .topic-card p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.6;
+    flex: 1;
+  }
+  .tool-flow {
+    display: flex;
+    gap: 4pt;
+    margin-top: 6pt;
+    flex-wrap: wrap;
+  }
+  .tool-tag {
+    padding: 2pt 7pt;
+    border-radius: 4pt;
+    font-size: 8pt;
+    font-weight: 700;
+  }
+  .tag-qclaw { background: rgba(8,78,143,0.10); color: #084E8F; }
+  .tag-wb { background: rgba(238,130,47,0.12); color: #c76a1f; }
+  .tag-trae { background: rgba(117,189,66,0.12); color: #4a8a2a; }
+  .custom-box {
+    background: rgba(146,24,26,0.04);
+    border: 1pt dashed #92181A;
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .custom-box h3 {
+    font-size: 13pt;
+    color: #92181A;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .custom-box p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.6;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+<meta name="notes" content="项目选题：引导学生选择农林相关课题，鼓励结合本专业实际问题。">
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 3 · 项目启动</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>选题推荐</p>
+    </div>
+    <h1 class="page-title">推荐项目选题（三选一或自定义）</h1>
+    <div class="topics-grid">
+      <div class="topic-card">
+        <div class="topic-num">1</div>
+        <h3>农产品价格监测助手</h3>
+        <p>用 QClaw 自动采集多个农产品价格网站的数据，用 WorkBuddy 整理成结构化表格，用 Trae 制作一个价格展示网页，支持搜索和筛选功能。</p>
+        <div class="tool-flow">
+          <span class="tool-tag tag-qclaw">QClaw 采集</span>
+          <span class="tool-tag tag-wb">WorkBuddy 整理</span>
+          <span class="tool-tag tag-trae">Trae 展示</span>
+        </div>
+      </div>
+      <div class="topic-card">
+        <div class="topic-num">2</div>
+        <h3>病虫害识别知识库</h3>
+        <p>用 QClaw 搜集常见农作物病虫害的图片和防治方法，用 WorkBuddy 清洗整理成标准格式，用 Trae 制作一个可查询的知识库网页。</p>
+        <div class="tool-flow">
+          <span class="tool-tag tag-qclaw">QClaw 搜集</span>
+          <span class="tool-tag tag-wb">WorkBuddy 清洗</span>
+          <span class="tool-tag tag-trae">Trae 前端</span>
+        </div>
+      </div>
+      <div class="topic-card">
+        <div class="topic-num">3</div>
+        <h3>农业政策自动推送系统</h3>
+        <p>用 QClaw 定时抓取农业政策网站更新，用 WorkBuddy 提取关键信息并生成摘要，用 Trae 制作一个政策展示和订阅页面。</p>
+        <div class="tool-flow">
+          <span class="tool-tag tag-qclaw">QClaw 抓取</span>
+          <span class="tool-tag tag-wb">WorkBuddy 摘要</span>
+          <span class="tool-tag tag-trae">Trae 页面</span>
+        </div>
+      </div>
+      <div class="topic-card custom-box">
+        <div class="topic-num">4</div>
+        <h3>自定义选题</h3>
+        <p>如果你有更好的想法，可以向讲师提出申请。要求：必须用到 QClaw + WorkBuddy + Trae 三种工具，且能在 5 天内完成 MVP。需讲师批准后方可执行。</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>12 / 20</p>
+  </div>
+</body>
+</html>

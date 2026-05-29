@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 2 课堂实操指导</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+  }
+
+  .practice-container {
+    display: flex;
+    gap: 14pt;
+    height: calc(100% - 56pt);
+  }
+
+  .practice-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+
+  .guide-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+  }
+  .guide-card h3 {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .guide-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10pt;
+    margin-bottom: 6pt;
+  }
+  .guide-step .step-num {
+    width: 22pt; height: 22pt;
+    border-radius: 50%;
+    background: #084E8F;
+    color: #ffffff;
+    font-size: 10pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .guide-step .step-body h4 {
+    font-size: 11pt;
+    color: #333333;
+    font-weight: 700;
+    margin-bottom: 1pt;
+  }
+  .guide-step .step-body p {
+    font-size: 10pt;
+    color: #666666;
+    line-height: 1.5;
+  }
+
+  .template-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+    flex: 1;
+  }
+  .template-card h3 {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .template-card p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.65;
+    margin-bottom: 6pt;
+  }
+  .template-card .template-list {
+    list-style: none;
+  }
+  .template-list li {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.7;
+    padding-left: 14pt;
+    position: relative;
+  }
+  .template-list li::before {
+    content: "\2713";
+    position: absolute;
+    left: 0;
+    color: #75BD42;
+    font-weight: 700;
+  }
+
+  .practice-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+
+  .error-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+    flex: 1;
+  }
+  .error-card h3 {
+    font-size: 14pt;
+    color: #92181A;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .error-item {
+    background: rgba(146,24,26,0.04);
+    border-left: 2pt solid #92181A;
+    border-radius: 0 4pt 4pt 0;
+    padding: 6pt 10pt;
+    margin-bottom: 6pt;
+  }
+  .error-item h4 {
+    font-size: 11pt;
+    color: #92181A;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .error-item p {
+    font-size: 9pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+
+  .tip-box {
+    background: rgba(117,189,66,0.06);
+    border-left: 3pt solid #75BD42;
+    border-radius: 0 6pt 6pt 0;
+    padding: 10pt 12pt;
+  }
+  .tip-box h4 {
+    font-size: 12pt;
+    color: #75BD42;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .tip-box p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.55;
+  }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+<meta name="notes" content="实操指导：这是下午核心环节，讲师和助教全场巡视，5分钟解决不了的问题及时介入。">
+</head>
+<body>
+
+  <div class="top-bar"></div>
+
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 2 · 实操指导</p>
+  </div>
+
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>实操指导</p>
+    </div>
+    <h1 class="page-title">课堂实操：手把手带你完成</h1>
+
+    <div class="practice-container">
+      <div class="practice-left">
+        <div class="guide-card">
+          <h3>WorkBuddy 操作步骤</h3>
+          <div class="guide-step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>打开 WorkBuddy</h4>
+              <p>双击桌面图标启动，确保已登录账号</p>
+            </div>
+          </div>
+          <div class="guide-step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>选择工作模式</h4>
+              <p>新手建议先用 Craft 模式熟悉操作，熟练后切换 Agent 模式</p>
+            </div>
+          </div>
+          <div class="guide-step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>上传或指定文件</h4>
+              <p>拖拽文件到窗口，或点击"选择文件"按钮</p>
+            </div>
+          </div>
+          <div class="guide-step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h4>输入自然语言指令</h4>
+              <p>用中文描述你要做什么，尽量具体明确</p>
+            </div>
+          </div>
+          <div class="guide-step">
+            <div class="step-num">5</div>
+            <div class="step-body">
+              <h4>预览与确认</h4>
+              <p>检查 WorkBuddy 的预览结果，确认无误后执行</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="template-card">
+          <h3>报告模板配置要点</h3>
+          <p>配置模板时，注意以下关键设置：</p>
+          <ul class="template-list">
+            <li>指定输出格式（Word / PDF / HTML）</li>
+            <li>设置数据源路径（支持相对路径和绝对路径）</li>
+            <li>定义数据提取规则（列名映射、筛选条件）</li>
+            <li>配置图表类型和样式</li>
+            <li>设置自动保存位置和文件名规则</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="practice-right">
+        <div class="error-card">
+          <h3>Excel 清洗常见报错与解决</h3>
+          <div class="error-item">
+            <h4>"无法读取文件格式"</h4>
+            <p>原因：文件可能是旧版 .xls 或损坏。解决：另存为 .xlsx 格式后重试。</p>
+          </div>
+          <div class="error-item">
+            <h4>"列名包含特殊字符"</h4>
+            <p>原因：列名有空格、斜杠等。解决：先重命名列名，或在指令中指定"用下划线替换特殊字符"。</p>
+          </div>
+          <div class="error-item">
+            <h4>"内存不足，无法处理"</h4>
+            <p>原因：文件过大（超过 10 万行）。解决：先拆分文件，或只读取需要的列。</p>
+          </div>
+          <div class="error-item">
+            <h4>"日期格式解析失败"</h4>
+            <p>原因：日期格式不统一（如 2024/1/1 和 1-Jan-2024 混用）。解决：指令中指定"将所有日期统一为 YYYY-MM-DD 格式"。</p>
+          </div>
+          <div class="error-item">
+            <h4>"输出文件被占用"</h4>
+            <p>原因：目标文件正被其他程序打开。解决：关闭 Excel/Word 后重试，或更换输出路径。</p>
+          </div>
+        </div>
+
+        <div class="tip-box">
+          <h4>助教支持</h4>
+          <p>遇到问题不要卡太久！先对照左侧常见报错自查，5 分钟解决不了就举手叫助教。今天的目标是"做出来"，不是"独自攻克所有难题"。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>15 / 18</p>
+  </div>
+
+</body>
+</html>

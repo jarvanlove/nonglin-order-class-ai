@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>母版 · 实操页</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="animations.css">
+<link rel="stylesheet" href="layout.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  .practice-body {
+    background: var(--bg);
+  }
+
+  .practice-top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: var(--top-bar-h);
+    background: var(--primary);
+    z-index: 100;
+  }
+
+  .practice-header {
+    position: absolute;
+    top: var(--top-bar-h); left: 0; right: 0;
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--content-pad-x);
+    background: var(--bg-white);
+    border-bottom: 1pt solid var(--border);
+    z-index: 10;
+  }
+
+  .practice-header .logo {
+    height: 22pt;
+    width: auto;
+  }
+
+  .practice-header .page-meta {
+    font-size: var(--text-2xs);
+    color: var(--muted);
+  }
+
+  .practice-content {
+    position: absolute;
+    top: calc(var(--top-bar-h) + var(--header-h));
+    bottom: var(--footer-h);
+    left: 0; right: 0;
+    padding: var(--content-pad-y) var(--content-pad-x);
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .section-header-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    margin-bottom: var(--space-5);
+  }
+
+  .section-header-bar .section-title-box {
+    background: var(--primary);
+    color: var(--bg-white);
+    padding: var(--space-4) var(--space-8);
+    border-radius: 4pt;
+    font-size: var(--text-3xl);
+    font-weight: 700;
+  }
+
+  .section-header-bar .section-number {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .section-header-bar .section-line {
+    flex: 1;
+    height: 3pt;
+    background: var(--primary-dark);
+    border-radius: 2pt;
+  }
+
+  .practice-layout {
+    display: flex;
+    gap: var(--space-6);
+    height: calc(100% - 45pt);
+  }
+
+  .practice-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .practice-card {
+    background: var(--bg-white);
+    border: 1pt solid var(--border);
+    border-radius: 6pt;
+    padding: var(--space-5);
+    box-shadow: 0 1pt 4pt rgba(0,0,0,0.04);
+  }
+
+  .practice-card h3 {
+    font-size: var(--text-lg);
+    color: var(--info);
+    font-weight: 700;
+    margin-bottom: var(--space-4);
+  }
+
+  .screenshot-area {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+    border: 2pt dashed var(--border);
+    border-radius: 6pt;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 140pt;
+    color: var(--muted);
+    font-size: var(--text-md);
+    margin-bottom: var(--space-4);
+  }
+
+  .screenshot-area img {
+    max-width: 100%;
+    max-height: 180pt;
+    border-radius: 4pt;
+  }
+
+  .tip-box {
+    background: rgba(117,189,66,0.06);
+    border-left: 3pt solid var(--success);
+    border-radius: 0 4pt 4pt 0;
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .tip-box .tip-label {
+    font-size: var(--text-xs);
+    color: var(--success);
+    font-weight: 700;
+    margin-bottom: var(--space-2);
+  }
+
+  .tip-box p {
+    font-size: var(--text-base);
+    color: var(--light-ink);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .warning-box {
+    background: rgba(255,0,0,0.04);
+    border-left: 3pt solid var(--danger);
+    border-radius: 0 4pt 4pt 0;
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .warning-box .warning-label {
+    font-size: var(--text-xs);
+    color: var(--danger);
+    font-weight: 700;
+    margin-bottom: var(--space-2);
+  }
+
+  .warning-box p {
+    font-size: var(--text-base);
+    color: var(--light-ink);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .practice-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: var(--footer-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--content-pad-x);
+    background: var(--bg-white);
+    border-top: 1pt solid var(--border);
+    z-index: 10;
+  }
+
+  .practice-footer p {
+    font-size: var(--text-2xs);
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* 动画 */
+  .section-header-bar {
+    opacity: 0;
+    animation: fadeInLeft 0.5s ease-out forwards;
+  }
+  .practice-card:nth-child(1) {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.1s forwards;
+  }
+  .practice-card:nth-child(2) {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.2s forwards;
+  }
+</style>
+</head>
+<body class="practice-body">
+
+  <div class="practice-top-bar"></div>
+
+  <div class="practice-header">
+    <img class="logo" src="media/image2.png" alt="公司 Logo">
+    <p class="page-meta">Day X · 课堂实操</p>
+  </div>
+
+  <div class="practice-content">
+    <div class="section-header-bar">
+      <div class="section-title-box">课堂实操</div>
+      <div class="section-number">03</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="practice-layout">
+      <div class="practice-col">
+        <div class="practice-card">
+          <h3>步骤一：XXX 操作</h3>
+          <div class="screenshot-area">
+            <p>[ 截图占位区 ]</p>
+          </div>
+          <p style="font-size: var(--text-base); color: var(--light-ink); line-height: 1.6; margin: 0;">
+            操作说明文字，描述这一步需要做什么，注意哪些关键点。
+          </p>
+        </div>
+
+        <div class="practice-card">
+          <h3>步骤二：XXX 操作</h3>
+          <div class="screenshot-area">
+            <p>[ 截图占位区 ]</p>
+          </div>
+          <p style="font-size: var(--text-base); color: var(--light-ink); line-height: 1.6; margin: 0;">
+            操作说明文字。
+          </p>
+        </div>
+      </div>
+
+      <div class="practice-col">
+        <div class="practice-card">
+          <h3>注意事项</h3>
+          <div class="warning-box">
+            <p class="warning-label">常见错误</p>
+            <p>1. 不要 XXX，否则会导致 YYY<br>2. 注意 ZZZ 的设置，默认可能不正确</p>
+          </div>
+        </div>
+
+        <div class="practice-card">
+          <h3>技巧提示</h3>
+          <div class="tip-box">
+            <p class="tip-label">效率技巧</p>
+            <p>使用快捷键 Ctrl+K 可以快速唤起功能面板，比鼠标点击快 3 倍。</p>
+          </div>
+        </div>
+
+        <div class="practice-card">
+          <h3>检查清单</h3>
+          <ul class="bullet-list">
+            <li>已完成步骤 1</li>
+            <li>已完成步骤 2</li>
+            <li>输出结果符合预期</li>
+            <li>已保存文件到指定位置</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="practice-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>X / XX</p>
+  </div>
+
+</body>
+</html>

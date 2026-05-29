@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 2 OpenClaw vs Hermes 对比</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 12pt;
+  }
+
+  .compare-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10pt;
+    height: calc(100% - 56pt);
+  }
+
+  .compare-table-wrap {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    overflow: hidden;
+    flex: 1;
+  }
+  .compare-row {
+    display: flex;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .compare-row:last-child { border-bottom: 0; }
+  .compare-cell {
+    flex: 1;
+    padding: 8pt 10pt;
+    font-size: 10pt;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+  }
+  .compare-header {
+    background: #084E8F;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 11pt;
+    padding: 9pt 10pt;
+  }
+  .compare-cell:first-child {
+    border-right: 1pt solid #e2e8f0;
+    font-weight: 600;
+    color: #084E8F;
+    background: rgba(8,78,143,0.04);
+    flex: 0.7;
+  }
+  .compare-cell:nth-child(2) {
+    border-right: 1pt solid #e2e8f0;
+  }
+
+  .bottom-cards {
+    display: flex;
+    gap: 10pt;
+  }
+  .bottom-card {
+    flex: 1;
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+  }
+  .bottom-card h4 {
+    font-size: 12pt;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .bottom-card p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+  .bottom-card.openclaw { border-left: 3pt solid #084E8F; }
+  .bottom-card.openclaw h4 { color: #084E8F; }
+  .bottom-card.hermes { border-left: 3pt solid #92181A; }
+  .bottom-card.hermes h4 { color: #92181A; }
+  .bottom-card.both { border-left: 3pt solid #75BD42; }
+  .bottom-card.both h4 { color: #75BD42; }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+<meta name="notes" content="工具对比：帮助学生建立选型框架，不同场景选不同工具。">
+</head>
+<body>
+
+  <div class="top-bar"></div>
+
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 2 · 知识储备</p>
+  </div>
+
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>知识储备</p>
+    </div>
+    <h1 class="page-title">OpenClaw vs Hermes：全方位对比</h1>
+
+    <div class="compare-container">
+      <div class="compare-table-wrap">
+        <div class="compare-row">
+          <div class="compare-cell compare-header">对比维度</div>
+          <div class="compare-cell compare-header">OpenClaw</div>
+          <div class="compare-cell compare-header">Hermes Agent</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell">核心定位</div>
+          <div class="compare-cell">万能平台，强调生态和扩展性</div>
+          <div class="compare-cell">自我学习助手，强调个性化和持续优化</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell">架构特点</div>
+          <div class="compare-cell">四层架构（接入/能力/核心/数据），模块化设计</div>
+          <div class="compare-cell">以 GEPA 进化引擎为核心，围绕提示词优化展开</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell">能力扩展</div>
+          <div class="compare-cell">安装 Skills（像手机装 App），社区贡献丰富</div>
+          <div class="compare-cell">自动优化提示词，无需手动安装插件</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell">扩展性</div>
+          <div class="compare-cell">极高，支持自定义 Skills、多模型接入、私有化部署</div>
+          <div class="compare-cell">中等，进化机制本身可配置，但功能扩展依赖底层能力</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell">个性化</div>
+          <div class="compare-cell">依赖用户手动配置（选择 Skills、调整参数）</div>
+          <div class="compare-cell">自动学习用户偏好，使用越多越懂你</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell">适用场景</div>
+          <div class="compare-cell">企业级服务、多用户平台、需要丰富功能集成的场景</div>
+          <div class="compare-cell">个人助手、长期陪伴、需要深度个性化的场景</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell">上手难度</div>
+          <div class="compare-cell">中等，需要了解 Skills 生态和配置方法</div>
+          <div class="compare-cell">低，开箱即用，越用越顺</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell">社区规模</div>
+          <div class="compare-cell">330K+ Stars，全球最大的开源 Agent 社区</div>
+          <div class="compare-cell">新兴项目，社区快速增长中</div>
+        </div>
+      </div>
+
+      <div class="bottom-cards">
+        <div class="bottom-card openclaw">
+          <h4>选 OpenClaw 如果...</h4>
+          <p>你需要搭建一个功能丰富的 AI 服务平台，支持多种接入渠道，或者需要集成大量外部工具。</p>
+        </div>
+        <div class="bottom-card hermes">
+          <h4>选 Hermes 如果...</h4>
+          <p>你想要一个越用越懂你的个人助手，不希望花太多时间配置，愿意让 Agent 自己学习和进化。</p>
+        </div>
+        <div class="bottom-card both">
+          <h4>也可以两者结合</h4>
+          <p>用 OpenClaw 搭建基础平台（接入层 + Skills），用 Hermes 的 GEPA 机制优化核心提示词策略。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>8 / 18</p>
+  </div>
+
+</body>
+</html>

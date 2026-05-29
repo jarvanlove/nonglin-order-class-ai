@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 5 · 测试与文档</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 10pt 20pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 8pt;
+  }
+  .two-col {
+    display: flex;
+    gap: 12pt;
+    height: calc(100% - 66pt);
+  }
+  .col-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6pt;
+  }
+  .col-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6pt;
+  }
+  .text-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 4pt;
+    padding: 8pt 10pt;
+  }
+  .text-card h3 {
+    font-size: 13pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .text-card p {
+    font-size: 10.5pt;
+    color: #333333;
+    line-height: 1.6;
+  }
+  .test-level {
+    background: #ffffff;
+    border-left: 3pt solid #084E8F;
+    border-top: 1pt solid #e2e8f0;
+    border-right: 1pt solid #e2e8f0;
+    border-bottom: 1pt solid #e2e8f0;
+    border-radius: 0 4pt 4pt 0;
+    padding: 6pt 8pt;
+  }
+  .test-level h4 {
+    font-size: 11pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .test-level p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.4;
+  }
+  .test-level:nth-child(3) { border-left-color: #EE822F; }
+  .test-level:nth-child(3) h4 { color: #EE822F; }
+  .test-level:nth-child(4) { border-left-color: #92181A; }
+  .test-level:nth-child(4) h4 { color: #92181A; }
+  .bug-priority {
+    display: flex;
+    flex-direction: column;
+    gap: 4pt;
+  }
+  .bug-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 6pt;
+    padding: 4pt 6pt;
+    border-radius: 3pt;
+  }
+  .bug-item.p0 { background: rgba(146,24,26,0.06); border: 1pt solid rgba(146,24,26,0.2); }
+  .bug-item.p1 { background: rgba(238,130,47,0.06); border: 1pt solid rgba(238,130,47,0.2); }
+  .bug-item.p2 { background: rgba(8,78,143,0.04); border: 1pt solid rgba(8,78,143,0.15); }
+  .bug-tag {
+    padding: 1pt 6pt;
+    border-radius: 3pt;
+    font-size: 9pt;
+    font-weight: 700;
+    color: #ffffff;
+    flex-shrink: 0;
+  }
+  .bug-item.p0 .bug-tag { background: #92181A; }
+  .bug-item.p1 .bug-tag { background: #EE822F; }
+  .bug-item.p2 .bug-tag { background: #084E8F; }
+  .bug-desc {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.35;
+  }
+  .readme-template {
+    background: #1a1a1a;
+    border-radius: 4pt;
+    padding: 6pt 8pt;
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-size: 8pt;
+    color: #e2e8f0;
+    line-height: 1.4;
+    overflow: hidden;
+  }
+  .readme-template .comment { color: #75BD42; }
+  .readme-template .section { color: #EE822F; }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 5 · 测试与文档</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>质量保障</p>
+    </div>
+    <h1 class="page-title">测试与文档：让项目从"能用"到"好用"</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="text-card">
+          <h3>三级测试体系</h3>
+        </div>
+        <div class="test-level">
+          <h4>功能测试：核心流程是否跑通</h4>
+          <p>列出项目所有功能点，每个至少测试一次正常流程。例如：点击搜索按钮 → 输入关键词 → 确认结果正确显示。</p>
+        </div>
+        <div class="test-level">
+          <h4>边界测试：异常情况处理</h4>
+          <p>测试极端情况：空输入、超长输入、特殊字符、网络断开、数据文件缺失。好的项目应该在异常时给出友好提示，而不是崩溃。</p>
+        </div>
+        <div class="test-level">
+          <h4>用户验收测试（UAT）</h4>
+          <p>找另一组同学当"用户"，观察他们是否能独立完成任务。记录困惑点和操作卡点——这些就是需要优化的地方。</p>
+        </div>
+        <div class="text-card">
+          <h3>Bug 修复优先级</h3>
+          <div class="bug-priority">
+            <div class="bug-item p0">
+              <span class="bug-tag">P0</span>
+              <p class="bug-desc">阻断性 Bug：页面空白、按钮无反应、数据读取失败——必须立即修复</p>
+            </div>
+            <div class="bug-item p1">
+              <span class="bug-tag">P1</span>
+              <p class="bug-desc">功能性 Bug：筛选有时无效、数据显示不完整——尽量修复</p>
+            </div>
+            <div class="bug-item p2">
+              <span class="bug-tag">P2</span>
+              <p class="bug-desc">体验性 Bug：按钮颜色不好看、加载慢——有余力再修</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="text-card">
+          <h3>项目文档：README 撰写模板</h3>
+          <p>README 是项目的"门面"，让其他人（包括明天的你自己）能快速理解这个项目是做什么的、怎么运行。</p>
+        </div>
+        <div class="readme-template">
+          <p class="section"># 项目名称</p>
+          <p class="comment">// 一句话描述项目做什么</p>
+          <p style="margin-top:4pt" class="section">## 功能特性</p>
+          <p class="comment">// 列出 3-5 个核心功能</p>
+          <p style="margin-top:4pt" class="section">## 技术方案</p>
+          <p class="comment">// 用了哪些工具，数据怎么流转</p>
+          <p style="margin-top:4pt" class="section">## 安装与运行</p>
+          <p class="comment">// 步骤 1、2、3...</p>
+          <p style="margin-top:4pt" class="section">## 项目结构</p>
+          <p class="comment">// 目录树说明</p>
+          <p style="margin-top:4pt" class="section">## 团队成员</p>
+          <p class="comment">// 分工表</p>
+        </div>
+        <div class="text-card" style="border-left: 3pt solid #75BD42; background: rgba(117,189,66,0.04);">
+          <h3 style="color: #75BD42;">文档撰写技巧</h3>
+          <p>1. <strong>先写项目简介</strong>：用一句话说明项目解决什么问题。</p>
+          <p style="margin-top:2pt">2. <strong>再列功能清单</strong>：不要写太多，3-5 个核心功能即可。</p>
+          <p style="margin-top:2pt">3. <strong>技术方案要画数据流</strong>：用文字或箭头说明 QClaw → WorkBuddy → Trae 的流转过程。</p>
+          <p style="margin-top:2pt">4. <strong>安装步骤要具体</strong>：不要写"打开 Trae"，要写"双击桌面 Trae 图标，等待加载完成"。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>9 / 14</p>
+  </div>
+</body>
+</html>

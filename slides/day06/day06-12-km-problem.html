@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 6 · 知识管理痛点</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 20pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 10pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 26pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 14pt;
+  }
+  .problem-grid {
+    display: flex;
+    gap: 12pt;
+    margin-bottom: 14pt;
+  }
+  .problem-card {
+    flex: 1;
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 14pt;
+    position: relative;
+  }
+  .problem-card .num {
+    position: absolute;
+    top: -8pt; left: 14pt;
+    background: #92181A;
+    color: #ffffff;
+    font-size: 10pt;
+    font-weight: 700;
+    width: 20pt; height: 20pt;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .problem-card h3 {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-top: 8pt;
+    margin-bottom: 8pt;
+  }
+  .problem-card p {
+    font-size: 11pt;
+    color: #333333;
+    line-height: 1.6;
+  }
+  .problem-card .example {
+    background: rgba(146,24,26,0.04);
+    border-left: 2pt solid #92181A;
+    padding: 6pt 8pt;
+    border-radius: 0 4pt 4pt 0;
+    margin-top: 8pt;
+  }
+  .problem-card .example p {
+    font-size: 10pt;
+    color: #666666;
+    line-height: 1.5;
+  }
+  .root-box {
+    background: #084E8F;
+    border-radius: 8pt;
+    padding: 16pt 24pt;
+    display: flex;
+    align-items: center;
+    gap: 16pt;
+  }
+  .root-box .root-icon {
+    width: 40pt; height: 40pt;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .root-box .root-icon p {
+    font-size: 18pt;
+    color: #ffffff;
+    font-weight: 700;
+  }
+  .root-box .root-text h3 {
+    font-size: 15pt;
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .root-box .root-text p {
+    font-size: 12pt;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.5;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 6 · 知识管理</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>痛点诊断</p>
+    </div>
+    <h1 class="page-title">这些场景，你中招了吗？</h1>
+
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="num"><p>1</p></div>
+        <h3>资料散落各处</h3>
+        <p>微信收藏、浏览器书签、桌面文件夹、U盘、网盘……同一个资料存了 3 份，需要时却一份都找不到。</p>
+        <div class="example">
+          <p>"我明明记得那篇论文收藏了，是在微信还是浏览器？"</p>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="num"><p>2</p></div>
+        <h3>重复问同样的问题</h3>
+        <p>同样的问题问了 AI 三次，每次都要重新解释背景。上次得到的完美答案，这次再也复现不了。</p>
+        <div class="example">
+          <p>"上次 AI 给我的 Excel 公式特别好用，但我忘了当时怎么问的……"</p>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="num"><p>3</p></div>
+        <h3>学会就忘</h3>
+        <p>学了一个很巧妙的技巧，当时觉得"以后肯定常用"，半年后要用的时候完全想不起来怎么操作。</p>
+        <div class="example">
+          <p>"实习时学的那个数据透视表技巧，现在怎么做的来着？"</p>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="num"><p>4</p></div>
+        <h3>项目结束 = 知识归零</h3>
+        <p>项目做完了，文档散落在群里、邮件里、某个文件夹里。下次遇到类似项目，从零开始。</p>
+        <div class="example">
+          <p>"上次那个项目的踩坑记录在哪？新项目组又踩了一遍同样的坑。"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="root-box">
+      <div class="root-icon"><p>根</p></div>
+      <div class="root-text">
+        <h3>根源：你一直在"消费"信息，但没有"管理"知识</h3>
+        <p>信息是散的、临时的、一次性的；知识是结构化的、可复用的、持续增值的。收藏不等于学习，保存不等于管理。</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>12 / 22</p>
+  </div>
+</body>
+</html>

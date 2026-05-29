@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 5 · 下午任务布置</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+  }
+  .task-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14pt;
+    height: calc(100% - 70pt);
+  }
+  .task-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 14pt;
+    display: flex;
+    flex-direction: column;
+  }
+  .task-card .task-header {
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 10pt;
+    padding-bottom: 8pt;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .task-card .task-num {
+    width: 28pt; height: 28pt;
+    border-radius: 50%;
+    background: #084E8F;
+    color: #ffffff;
+    font-size: 14pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .task-card .task-title {
+    font-size: 14pt;
+    font-weight: 700;
+    color: #084E8F;
+  }
+  .task-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6pt;
+  }
+  .task-card li {
+    font-size: 10.5pt;
+    color: #333333;
+    line-height: 1.6;
+    padding-left: 14pt;
+    position: relative;
+  }
+  .task-card li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 6pt;
+    width: 5pt; height: 5pt;
+    border-radius: 50%;
+    background: #084E8F;
+  }
+  .task-card .task-meta {
+    margin-top: 8pt;
+    padding: 8pt;
+    background: rgba(8,78,143,0.04);
+    border-radius: 4pt;
+    font-size: 10pt;
+    color: #666666;
+  }
+  .task-card:nth-child(2) .task-num { background: #EE822F; }
+  .task-card:nth-child(2) li::before { background: #EE822F; }
+  .task-card:nth-child(2) .task-meta { background: rgba(238,130,47,0.06); }
+  .task-card:nth-child(3) .task-num { background: #75BD42; }
+  .task-card:nth-child(3) li::before { background: #75BD42; }
+  .task-card:nth-child(3) .task-meta { background: rgba(117,189,66,0.06); }
+  .time-bar {
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 10pt;
+    padding: 8pt 12pt;
+    background: #084E8F;
+    border-radius: 4pt;
+    color: #ffffff;
+  }
+  .time-bar p {
+    font-size: 11pt;
+    font-weight: 600;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 5 · 下午任务</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>任务布置</p>
+    </div>
+    <h1 class="page-title">下午任务：冲刺项目核心功能与整合</h1>
+    <div class="time-bar">
+      <p>时间：14:00 - 17:30（3.5 小时，含 15 分钟休息）| 目标：完成以下三项任务</p>
+    </div>
+    <div class="task-grid">
+      <div class="task-card">
+        <div class="task-header">
+          <div class="task-num">1</div>
+          <p class="task-title">Trae 核心模块完成</p>
+        </div>
+        <ul>
+          <li>项目页面有完整的界面（导航栏、内容区、页脚）</li>
+          <li>页面能正确读取 WorkBuddy 处理后的数据文件</li>
+          <li>数据以表格或卡片形式展示，无 undefined 或空白</li>
+          <li>至少实现一个交互功能（如搜索、筛选、排序）</li>
+          <li>如果条件允许，接入一个公开 API 显示实时数据</li>
+        </ul>
+        <div class="task-meta">
+          <p>验收标准：在浏览器中打开页面，能看到真实数据，交互正常</p>
+        </div>
+      </div>
+      <div class="task-card">
+        <div class="task-header">
+          <div class="task-num">2</div>
+          <p class="task-title">三工具整合联调</p>
+        </div>
+        <ul>
+          <li>QClaw 采集的数据能自动保存到约定位置</li>
+          <li>WorkBuddy 能读取 QClaw 输出并正确清洗</li>
+          <li>Trae 页面能读取 WorkBuddy 的输出并展示</li>
+          <li>全流程跑通一次：采集 → 清洗 → 展示，无需手动复制粘贴</li>
+          <li>数据文件缺失时，页面显示友好提示</li>
+        </ul>
+        <div class="task-meta">
+          <p>验收标准：修改 QClaw 数据后，刷新 Trae 页面能看到更新</p>
+        </div>
+      </div>
+      <div class="task-card">
+        <div class="task-header">
+          <div class="task-num">3</div>
+          <p class="task-title">项目文档初稿</p>
+        </div>
+        <ul>
+          <li>README.md：项目简介、功能特性、安装步骤、团队成员</li>
+          <li>技术方案文档：数据流说明、模块分工、接口约定</li>
+          <li>使用说明：如何运行项目、常见问题</li>
+          <li>文档用 Markdown 格式，保存在项目 docs/ 目录</li>
+        </ul>
+        <div class="task-meta">
+          <p>验收标准：陌生人阅读 README 后，能独立运行项目</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>10 / 14</p>
+  </div>
+</body>
+</html>

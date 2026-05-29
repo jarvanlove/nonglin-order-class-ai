@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 4 · 课堂实操指导</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+  }
+  .two-col {
+    display: flex;
+    gap: 14pt;
+    height: calc(100% - 70pt);
+  }
+  .col-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .col-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .step-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+  }
+  .step-card h3 {
+    font-size: 13pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .step-list {
+    list-style: none;
+  }
+  .step-list li {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.6;
+    padding-left: 18pt;
+    position: relative;
+    margin-bottom: 4pt;
+  }
+  .step-list li .num {
+    position: absolute;
+    left: 0; top: 1pt;
+    width: 14pt; height: 14pt;
+    background: #084E8F;
+    color: #ffffff;
+    border-radius: 50%;
+    font-size: 8pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .error-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+  }
+  .error-card h3 {
+    font-size: 12pt;
+    color: #92181A;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .error-item {
+    background: rgba(146,24,26,0.03);
+    border-left: 2pt solid #92181A;
+    padding: 5pt 8pt;
+    border-radius: 0 4pt 4pt 0;
+    margin-bottom: 5pt;
+  }
+  .error-item h4 {
+    font-size: 10pt;
+    color: #92181A;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .error-item p {
+    font-size: 9pt;
+    color: #666666;
+    line-height: 1.4;
+  }
+  .checklist-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+    flex: 1;
+  }
+  .checklist-card h3 {
+    font-size: 13pt;
+    color: #75BD42;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .checklist-card ul {
+    list-style: none;
+  }
+  .checklist-card li {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.7;
+    padding-left: 18pt;
+    position: relative;
+    margin-bottom: 4pt;
+  }
+  .checklist-card li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 5pt;
+    width: 12pt; height: 12pt;
+    border: 1.5pt solid #75BD42;
+    border-radius: 3pt;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 4 · 实操指导</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>手把手</p>
+    </div>
+    <h1 class="page-title">开发步骤、报错处理与联调 Checklist</h1>
+
+    <div class="two-col">
+      <div class="col-left">
+        <div class="step-card">
+          <h3>推荐开发步骤</h3>
+          <ul class="step-list">
+            <li><span class="num">1</span>明确数据需求：确定要采集什么数据、输出什么格式</li>
+            <li><span class="num">2</span>编写 QClaw prompt：先单条测试，确认输出格式正确</li>
+            <li><span class="num">3</span>批量采集：将测试通过的 prompt 用于批量数据采集</li>
+            <li><span class="num">4</span>验证输出：检查文件内容、编码、字段完整性</li>
+            <li><span class="num">5</span>编写 WorkBuddy 处理脚本：读取 → 清洗 → 转换 → 输出</li>
+            <li><span class="num">6</span>端到端测试：从采集到报告，全流程跑一遍</li>
+            <li><span class="num">7</span>修复问题：对照 checklist 逐项排查</li>
+          </ul>
+        </div>
+
+        <div class="error-card">
+          <h3>常见报错速查</h3>
+          <div class="error-item">
+            <h4>"File not found"</h4>
+            <p>检查路径拼写、确认文件已生成、使用绝对路径测试</p>
+          </div>
+          <div class="error-item">
+            <h4>"UnicodeDecodeError"</h4>
+            <p>编码问题！确认文件为 UTF-8，CSV 加 BOM 头</p>
+          </div>
+          <div class="error-item">
+            <h4>"KeyError: 'xxx'"</h4>
+            <p>字段名不匹配！核对 JSON/CSV 表头与脚本中的字段名</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-right">
+        <div class="checklist-card">
+          <h3>联调 Checklist（完成一项勾一项）</h3>
+          <ul>
+            <li>QClaw 能独立运行并输出文件</li>
+            <li>输出文件编码为 UTF-8，中文正常显示</li>
+            <li>输出文件包含所有约定字段，无大面积缺失</li>
+            <li>WorkBuddy 能正确读取 QClaw 输出文件</li>
+            <li>数据清洗后格式符合预期</li>
+            <li>最终报告文件生成成功</li>
+            <li>全流程可重复执行，结果一致</li>
+            <li>文件保存路径符合团队约定</li>
+            <li>接口契约文档已更新（如有变更）</li>
+            <li>已进行至少一次端到端演示</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>11 / 14</p>
+  </div>
+</body>
+</html>

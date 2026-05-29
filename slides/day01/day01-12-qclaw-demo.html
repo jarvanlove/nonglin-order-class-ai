@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 1 · QClaw 功能演示</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 10pt 20pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 6pt;
+    margin-bottom: 4pt;
+  }
+  .kicker .bar {
+    width: 14pt; height: 2.5pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 10pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 20pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 6pt;
+  }
+  .demo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6pt;
+    height: calc(100% - 44pt);
+  }
+  .demo-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 5pt;
+    padding: 6pt 8pt;
+    display: flex;
+    flex-direction: column;
+  }
+  .demo-card h3 {
+    font-size: 12pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .chat-bubble {
+    background: rgba(8,78,143,0.06);
+    border-radius: 6pt;
+    padding: 4pt 6pt;
+    margin-bottom: 2pt;
+  }
+  .chat-bubble.user {
+    background: rgba(8,78,143,0.08);
+    border-left: 2.5pt solid #084E8F;
+  }
+  .chat-bubble.ai {
+    background: rgba(117,189,66,0.06);
+    border-left: 2.5pt solid #75BD42;
+  }
+  .chat-bubble .label {
+    font-size: 8.5pt;
+    font-weight: 700;
+    margin-bottom: 1pt;
+  }
+  .chat-bubble.user .label { color: #084E8F; }
+  .chat-bubble.ai .label { color: #75BD42; }
+  .chat-bubble p {
+    font-size: 9pt;
+    color: #333333;
+    line-height: 1.4;
+  }
+  .output-preview {
+    background: #f8f9fa;
+    border: 1pt solid #e2e8f0;
+    border-radius: 3pt;
+    padding: 3pt 5pt;
+    margin-top: 2pt;
+  }
+  .output-preview p {
+    font-size: 8.5pt;
+    color: #666666;
+    line-height: 1.35;
+  }
+  .tip-box {
+    background: rgba(238,130,47,0.06);
+    border: 1pt solid rgba(238,130,47,0.15);
+    border-radius: 3pt;
+    padding: 3pt 5pt;
+    margin-top: auto;
+  }
+  .tip-box p {
+    font-size: 8.5pt;
+    color: #EE822F;
+    line-height: 1.35;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+  /* Entrance animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12pt); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-12pt); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(12pt); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .kicker {
+    opacity: 0;
+    animation: fadeInLeft 0.4s ease-out forwards;
+  }
+  .page-title {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.1s forwards;
+  }
+  .demo-grid {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.2s forwards;
+  }
+  .demo-card:nth-child(1) {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.3s forwards;
+  }
+  .demo-card:nth-child(2) {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.4s forwards;
+  }
+  .demo-card:nth-child(3) {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.5s forwards;
+  }
+  .demo-card:nth-child(4) {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.6s forwards;
+  }
+</style>
+<meta name="notes" content="QClaw演示：现场打开QClaw操作，建议用稻瘟病或黄龙病案例实时演示。">
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 1 · 功能演示</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>实战演示</p>
+    </div>
+    <h1 class="page-title">QClaw 功能演示：对话框里的 AI 助手</h1>
+    <div class="demo-grid">
+      <div class="demo-card">
+        <h3>场景一：信息搜集</h3>
+        <div class="chat-bubble user">
+          <p class="label">你</p>
+          <p>搜集近 3 年 AI 在农作物病害识别方面的应用案例，重点覆盖水稻稻瘟病、柑橘黄龙病、苹果腐烂病，按技术类型分类，整理成表格</p>
+        </div>
+        <div class="chat-bubble ai">
+          <p class="label">QClaw</p>
+          <p>正在为您搜集相关资料...</p>
+        </div>
+        <div class="output-preview">
+          <p><strong>输出示例：</strong></p>
+          <p>| 年份 | 技术类型 | 病害名称 | 识别准确率 | 代表研究 |</p>
+          <p>| 2024 | 深度学习 | 水稻稻瘟病 | 96.3% | 基于 CNN 的叶片病斑检测 |</p>
+          <p>| 2025 | 计算机视觉 | 柑橘黄龙病 | 94.7% | YOLOv8 改进模型早期筛查 |</p>
+          <p>| 2025 | 迁移学习 | 苹果腐烂病 | 93.1% | 多光谱图像融合诊断 |</p>
+        </div>
+        <div class="tip-box">
+          <p><strong>提示：</strong>指令越具体，输出越精准。建议包含时间范围、分类维度、输出格式。</p>
+        </div>
+      </div>
+      <div class="demo-card">
+        <h3>场景二：资料整理</h3>
+        <div class="chat-bubble user">
+          <p class="label">你</p>
+          <p>把下面这段关于县域农技站水稻稻瘟病监测报告的文字整理成 5 个要点，每个要点不超过 20 字</p>
+        </div>
+        <div class="chat-bubble ai">
+          <p class="label">QClaw</p>
+          <p>已为您整理要点：</p>
+        </div>
+        <div class="output-preview">
+          <p><strong>输出示例：</strong></p>
+          <p>1. 县域农技站田间巡查全覆盖</p>
+          <p>2. 稻瘟病发病初期及时预警</p>
+          <p>3. 无人机航拍辅助病害监测</p>
+          <p>4. 推荐抗病品种与防治方案</p>
+          <p>5. 农户培训提升识别能力</p>
+        </div>
+        <div class="tip-box">
+          <p><strong>提示：</strong>明确输出格式（要点/表格/段落）和长度限制，结果更可控。</p>
+        </div>
+      </div>
+      <div class="demo-card">
+        <h3>场景三：内容生成</h3>
+        <div class="chat-bubble user">
+          <p class="label">你</p>
+          <p>帮我写一段 200 字的农技推广文案，面向柑橘种植户，主题是"柑橘黄龙病早期识别与防控要点"</p>
+        </div>
+        <div class="chat-bubble ai">
+          <p class="label">QClaw</p>
+          <p>已生成推广文案，您可以直接使用或要求修改...</p>
+        </div>
+        <div class="tip-box">
+          <p><strong>提示：</strong>提供受众、主题、字数、风格等上下文，生成内容更贴合需求。</p>
+        </div>
+      </div>
+      <div class="demo-card">
+        <h3>场景四：多轮对话优化</h3>
+        <div class="chat-bubble user">
+          <p class="label">你（第 1 轮）</p>
+          <p>搜集柑橘黄龙病的防治方法</p>
+        </div>
+        <div class="chat-bubble user">
+          <p class="label">你（第 2 轮）</p>
+          <p>聚焦到"无病毒苗木繁育"和"木虱防治"两个方向，补充具体技术参数和操作步骤</p>
+        </div>
+        <div class="chat-bubble ai">
+          <p class="label">QClaw</p>
+          <p>在上一轮基础上进一步聚焦，补充技术参数和操作步骤...</p>
+        </div>
+        <div class="tip-box">
+          <p><strong>提示：</strong>QClaw 记住对话上下文，可以逐步细化需求，不用一次说完所有要求。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>12 / 18</p>
+  </div>
+</body>
+</html>

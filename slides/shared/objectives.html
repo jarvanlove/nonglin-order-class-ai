@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>母版 · 目标页</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="animations.css">
+<link rel="stylesheet" href="layout.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  .objectives-body {
+    background: var(--bg);
+  }
+
+  /* 顶部标题栏 - 目标页特有宽幅 */
+  .obj-header-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 180pt;
+    background: var(--bg-white);
+    border-bottom: 1pt solid var(--border);
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    padding: 30pt 48pt;
+  }
+
+  .obj-header-bar h2 {
+    font-size: var(--text-5xl);
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0;
+  }
+
+  .obj-header-bar .header-deco {
+    position: absolute;
+    right: 0; top: 0;
+    width: 300pt; height: 180pt;
+    object-fit: cover;
+    opacity: 0.9;
+  }
+
+  /* 内容区 */
+  .obj-content {
+    position: absolute;
+    top: 180pt;
+    bottom: var(--footer-h);
+    left: 0; right: 0;
+    padding: 20pt 32pt;
+    box-sizing: border-box;
+  }
+
+  .cards-row {
+    display: flex;
+    gap: 14pt;
+    height: 100%;
+  }
+
+  .obj-card {
+    flex: 1;
+    background: var(--bg-white);
+    border: 1pt solid var(--border);
+    border-radius: 6pt;
+    padding: 14pt;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1pt 4pt rgba(0,0,0,0.04);
+  }
+
+  .obj-card .card-icon {
+    width: 36pt; height: 36pt;
+    border-radius: 8pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10pt;
+  }
+
+  .obj-card .card-icon p {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--bg-white);
+    margin: 0;
+  }
+
+  .obj-card:nth-child(1) .card-icon { background: var(--primary); }
+  .obj-card:nth-child(2) .card-icon { background: var(--accent); }
+  .obj-card:nth-child(3) .card-icon { background: var(--success); }
+
+  .obj-card h3 {
+    font-size: var(--text-2xl);
+    color: var(--secondary);
+    font-weight: 700;
+    margin-bottom: 10pt;
+  }
+
+  .obj-card ul {
+    list-style: none;
+    flex: 1;
+    padding: 0;
+    margin: 0;
+  }
+
+  .obj-card li {
+    font-size: var(--text-base);
+    color: var(--light-ink);
+    line-height: 1.7;
+    padding-left: 14pt;
+    position: relative;
+    margin-bottom: 6pt;
+  }
+
+  .obj-card li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 8pt;
+    width: 5pt; height: 5pt;
+    border-radius: 50%;
+    background: var(--primary);
+  }
+
+  .obj-card:nth-child(2) li::before { background: var(--accent); }
+  .obj-card:nth-child(3) li::before { background: var(--success); }
+
+  .obj-card .highlight-box {
+    background: rgba(8,78,143,0.04);
+    border-left: 2pt solid var(--primary);
+    padding: 8pt 10pt;
+    border-radius: 0 4pt 4pt 0;
+    margin-top: auto;
+  }
+
+  .obj-card:nth-child(2) .highlight-box { border-left-color: var(--accent); background: rgba(238,130,47,0.04); }
+  .obj-card:nth-child(3) .highlight-box { border-left-color: var(--success); background: rgba(117,189,66,0.04); }
+
+  .obj-card .highlight-box p {
+    font-size: var(--text-xs);
+    color: var(--muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* 页脚 */
+  .obj-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: var(--footer-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32pt;
+    background: var(--bg-white);
+    border-top: 1pt solid var(--border);
+    z-index: 10;
+  }
+
+  .obj-footer p {
+    font-size: var(--text-2xs);
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* 动画 */
+  .obj-header-bar {
+    opacity: 0;
+    animation: fadeInDown 0.5s ease-out forwards;
+  }
+  .obj-header-bar h2 {
+    opacity: 0;
+    animation: fadeInLeft 0.5s ease-out 0.1s forwards;
+  }
+  .obj-card:nth-child(1) {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.2s forwards;
+  }
+  .obj-card:nth-child(2) {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.3s forwards;
+  }
+  .obj-card:nth-child(3) {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.4s forwards;
+  }
+</style>
+</head>
+<body class="objectives-body">
+
+  <!-- 顶部标题栏 -->
+  <div class="obj-header-bar">
+    <h2>目标</h2>
+    <img class="header-deco" src="media/image3.jpeg" alt="装饰">
+  </div>
+
+  <!-- 内容区 -->
+  <div class="obj-content">
+    <div class="cards-row">
+      <div class="obj-card">
+        <div class="card-icon"><p>知</p></div>
+        <h3>知识目标</h3>
+        <ul>
+          <li>知识目标示例 1</li>
+          <li>知识目标示例 2</li>
+          <li>知识目标示例 3</li>
+        </ul>
+        <div class="highlight-box">
+          <p>核心认知要点总结</p>
+        </div>
+      </div>
+      <div class="obj-card">
+        <div class="card-icon"><p>技</p></div>
+        <h3>技能目标</h3>
+        <ul>
+          <li>技能目标示例 1</li>
+          <li>技能目标示例 2</li>
+          <li>技能目标示例 3</li>
+        </ul>
+        <div class="highlight-box">
+          <p>实战产出要点总结</p>
+        </div>
+      </div>
+      <div class="obj-card">
+        <div class="card-icon"><p>养</p></div>
+        <h3>素养目标</h3>
+        <ul>
+          <li>素养目标示例 1</li>
+          <li>素养目标示例 2</li>
+          <li>素养目标示例 3</li>
+        </ul>
+        <div class="highlight-box">
+          <p>思维转变要点总结</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 页脚 -->
+  <div class="obj-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>2 / XX</p>
+  </div>
+
+</body>
+</html>

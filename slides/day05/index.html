@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 05 · Agentic Engineering 综合收口</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100vw;height:100vh;overflow:hidden;background:#1a1a1a;font-family:"Microsoft YaHei","PingFang SC",sans-serif}.deck-container{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center}.slide-wrapper{transform-origin:center center;transition:transform .2s ease}.slide{width:960pt;height:540pt;position:relative;display:none;overflow:hidden;background:#f8fbff;box-shadow:0 8pt 32pt rgba(0,0,0,.3)}.slide.active{display:block}.top-bar{position:absolute;left:0;right:0;top:0;height:4pt;background:#084e8f}.slide-header{position:absolute;left:0;right:0;top:4pt;height:36pt;display:flex;align-items:center;justify-content:space-between;padding:0 28pt;background:#fff;border-bottom:1pt solid #e2e8f0}.slide-header img{height:22pt}.page-meta{font-size:10pt;color:#666}.slide-footer{position:absolute;left:0;right:0;bottom:0;height:24pt;display:flex;align-items:center;justify-content:space-between;padding:0 28pt;background:#fff;border-top:1pt solid #e2e8f0}.slide-footer p{font-size:9.5pt;color:#666;margin:0}.content{position:absolute;left:0;right:0;top:40pt;bottom:24pt;padding:15pt 28pt;overflow:hidden}.kicker{display:flex;align-items:center;gap:8pt;margin-bottom:7pt}.kicker span{width:18pt;height:3pt;background:#ee822f;border-radius:2pt}.kicker p{font-size:10.5pt;color:#ee822f;font-weight:700;letter-spacing:.06em;margin:0}.page-title{font-size:24pt;line-height:1.16;color:#084e8f;margin:0 0 12pt 0}.lead{font-size:12pt!important;color:#084e8f!important;font-weight:700}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16pt;height:calc(100% - 68pt)}.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:12pt;height:calc(100% - 68pt)}.card{background:#fff;border:1pt solid #e2e8f0;border-radius:6pt;padding:11pt 13pt;margin-bottom:9pt}.card h3{font-size:13pt;color:#084e8f;margin:0 0 7pt 0}.card p,.card li{font-size:10.5pt;line-height:1.5;color:#333}.card ul,.card ol{padding-left:16pt;margin:0}.card li{margin-bottom:4pt}.card.accent{border-left:4pt solid #ee822f}.card.success{border-left:4pt solid #75bd42}.card.primary{border-left:4pt solid #084e8f}.prompt-box{background:#fff;border-left:4pt solid #084e8f;border-top:1pt solid #e2e8f0;border-right:1pt solid #e2e8f0;border-bottom:1pt solid #e2e8f0;border-radius:0 6pt 6pt 0;padding:10pt 12pt;margin-bottom:8pt}.prompt-label{font-size:11pt!important;color:#ee822f!important;font-weight:700;margin:0 0 4pt 0}.prompt-box p{font-size:11.5pt;line-height:1.5;color:#333;margin:0}.timeline{display:flex;flex-direction:column;gap:7pt}.time-row{display:grid;grid-template-columns:92pt 1fr;gap:8pt;align-items:start;background:#f8fbff;border:1pt solid #e2e8f0;border-radius:5pt;padding:7pt 9pt}.time-row b{font-size:11pt;color:#084e8f}.time-row span{font-size:11pt;color:#333;line-height:1.35}.step-list{display:flex;flex-direction:column;gap:8pt;height:100%}.step-card{background:#fff;border:1pt solid #e2e8f0;border-radius:6pt;padding:10pt 12pt;display:grid;grid-template-columns:26pt 1fr;gap:10pt;align-items:start}.step-num{width:24pt;height:24pt;border-radius:50%;background:#084e8f;color:#fff;font-size:12pt;font-weight:700;display:flex;align-items:center;justify-content:center}.step-card h4{font-size:12pt;color:#084e8f;margin:0 0 4pt}.step-card p{font-size:10pt;color:#333;line-height:1.45;margin:0}.note-box{border-radius:6pt;padding:12pt 14pt}.note-box h3{font-size:13pt;margin:0 0 6pt}.note-box p{font-size:11pt;line-height:1.55;margin:0}.note-box.primary{background:#084e8f;color:#fff}.note-box.primary h3,.note-box.primary p{color:#fff}.note-box.accent{background:rgba(238,130,47,.08);border:1pt solid rgba(238,130,47,.25)}.note-box.accent h3{color:#ee822f}.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16pt;height:calc(100% - 68pt)}.compare-col{background:#fff;border:1pt solid #e2e8f0;border-radius:6pt;padding:13pt 15pt}.compare-col h3{font-size:14pt;margin:0 0 10pt}.compare-col.bad{border-top:4pt solid #92181a}.compare-col.bad h3{color:#92181a}.compare-col.good{border-top:4pt solid #75bd42}.compare-col.good h3{color:#75bd42}.compare-col li{font-size:11pt;line-height:1.55;margin-bottom:6pt}.rubric-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8pt;height:calc(100% - 68pt)}.rubric-item{background:#fff;border:1pt solid #e2e8f0;border-radius:6pt;padding:10pt}.rubric-item b{display:inline-block;color:#ee822f;font-size:18pt;margin-bottom:5pt}.rubric-item h3{font-size:12pt;color:#084e8f;margin:0 0 5pt}.rubric-item p{font-size:9.5pt;line-height:1.45;color:#333;margin:0}.pyramid{height:calc(100% - 68pt);display:flex;flex-direction:column-reverse;align-items:center;justify-content:center;gap:7pt}.pyramid-layer{border-radius:6pt;padding:9pt 16pt;text-align:center;border:1pt solid #e2e8f0;background:#fff}.pyramid-layer h4{font-size:13pt;margin:0 0 3pt}.pyramid-layer p{font-size:10.5pt;margin:0;color:#333}.layer-1{width:90%;border-color:#92181a}.layer-1 h4{color:#92181a}.layer-2{width:75%;border-color:#75bd42}.layer-2 h4{color:#75bd42}.layer-3{width:60%;border-color:#084e8f}.layer-3 h4{color:#084e8f}.layer-4{width:45%;border-color:#ee822f}.layer-4 h4{color:#ee822f}.image-slide{height:calc(100% - 68pt);display:grid;grid-template-rows:minmax(0,1fr) auto;gap:8pt}.image-slide img{width:100%;height:100%;object-fit:contain;background:#fff;border:1pt solid #e2e8f0;border-radius:8pt}.image-slide .caption{font-size:11pt;color:#666;text-align:center}.cover{background:#f8fbff}.cover-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.cover-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(248,251,255,.96) 0%,rgba(248,251,255,.9) 42%,rgba(248,251,255,.22) 100%)}.cover-top-bar{position:absolute;left:0;right:0;top:0;height:6pt;background:#084e8f;z-index:3}.cover-logo{position:absolute;left:32pt;top:20pt;display:flex;align-items:center;gap:10pt;z-index:4}.cover-logo img{height:28pt}.cover-logo p{font-size:12pt;color:#084e8f;font-weight:700}.cover-tag{position:absolute;right:32pt;top:22pt;background:rgba(8,78,143,.08);color:#084e8f;border-radius:999pt;padding:5pt 12pt;font-size:10pt;z-index:4}.cover-hero{position:absolute;left:48pt;top:96pt;width:560pt;z-index:4}.day-label{font-size:12pt;color:#ee822f;font-weight:700;letter-spacing:.08em}.cover h1{font-size:42pt;line-height:1.12;color:#084e8f;margin:12pt 0}.subtitle{font-size:17pt;line-height:1.45;color:#333}.tag-row{display:flex;flex-wrap:wrap;gap:8pt;margin-top:20pt}.tag-row span{background:#fff;border:1pt solid #e2e8f0;border-radius:999pt;padding:5pt 12pt;font-size:11pt;color:#084e8f}.cover-footer{z-index:4}.content-enter>*{opacity:0;transform:translateY(10pt);animation:in .45s ease forwards}.content-enter>*:nth-child(2){animation-delay:.06s}.content-enter>*:nth-child(3){animation-delay:.12s}.content-enter>*:nth-child(4){animation-delay:.18s}@keyframes in{to{opacity:1;transform:none}}@media print{.slide{display:block!important;page-break-after:always;box-shadow:none}}
+
+
+.runbook{display:grid;grid-template-columns:1.12fr .88fr;gap:12pt;height:calc(100% - 64pt)}.runbook-main{display:grid;grid-template-rows:1fr 1.35fr 1.2fr;gap:7pt;min-height:0}.runbook-main .card{margin:0;padding:8pt 10pt;overflow:hidden}.runbook-main .card h3{font-size:11.5pt;margin-bottom:4pt}.runbook-main .card li{font-size:9.4pt;line-height:1.33;margin-bottom:2pt}.runbook-side{display:grid;grid-template-rows:auto auto 1fr;gap:8pt;min-height:0}.prompt-script{background:#fff;border-left:4pt solid #084e8f;border-top:1pt solid #e2e8f0;border-right:1pt solid #e2e8f0;border-bottom:1pt solid #e2e8f0;border-radius:0 6pt 6pt 0;padding:9pt 11pt}.prompt-script h3,.trouble-box h3,.check-strip h3{font-size:11.5pt;color:#084e8f;margin:0 0 5pt}.prompt-script p{font-size:9.7pt;line-height:1.42;color:#333;margin:0}.trouble-box{background:#fff;border:1pt solid #e2e8f0;border-radius:6pt;padding:9pt 10pt;overflow:hidden}.check-strip{background:#073f73;border-radius:6pt;padding:10pt 11pt;color:#fff}.check-strip h3{color:#fff}.check-strip div{display:grid;grid-template-columns:1fr 1fr;gap:6pt}.check-strip span{font-size:9.2pt;background:rgba(255,255,255,.12);border:1pt solid rgba(255,255,255,.18);border-radius:4pt;padding:5pt 6pt}.compact-table{width:100%;border-collapse:collapse}.compact-table th{background:#084e8f;color:#fff;font-size:9pt;text-align:left;padding:5pt 6pt}.compact-table td{font-size:8.7pt;line-height:1.33;color:#333;padding:5pt 6pt;border:1pt solid #e2e8f0;vertical-align:top}.content>.compact-table{height:calc(100% - 64pt);background:#fff;border:1pt solid #dbe7f1}.content>.compact-table th{font-size:10pt;padding:7pt 8pt}.content>.compact-table td{font-size:9.5pt;line-height:1.42;padding:8pt 9pt;vertical-align:middle}.classroom-grid{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:9pt;height:calc(100% - 64pt)}.classroom-grid .card{margin:0;padding:9pt 10pt}.classroom-grid .card:last-child{grid-column:2/4}.classroom-grid .card h3{font-size:11.5pt}.classroom-grid .card li{font-size:9.5pt;line-height:1.38;margin-bottom:2pt}.troubleshooting-full{height:calc(100% - 64pt);background:#fff;border:1pt solid #e2e8f0;border-radius:6pt;padding:10pt}.troubleshooting-full .compact-table th{font-size:10pt}.troubleshooting-full .compact-table td{font-size:9.4pt;line-height:1.42}.board-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9pt;height:calc(100% - 64pt)}.board-grid .card{margin:0;padding:9pt 10pt}.board-grid .card h3{font-size:11.5pt}.board-grid .card li{font-size:9.4pt;line-height:1.34}.agentic-map{display:grid;grid-template-columns:.9fr 1.1fr;gap:12pt;height:calc(100% - 64pt)}.agentic-left{display:grid;grid-template-rows:1fr 1fr 1fr;gap:9pt}.agentic-left .card{margin:0;padding:9pt 10pt}.agentic-left .card h3{font-size:11.5pt}.agentic-left .card li{font-size:9pt;line-height:1.32;margin-bottom:2pt}.agentic-flow{background:#fff;border:1pt solid #dbe7f1;border-radius:8pt;padding:13pt;display:grid;grid-template-rows:1fr auto 1fr auto 1fr auto 1fr 1.4fr;gap:7pt;min-height:0}.flow-node{border-radius:8pt;border:1pt solid #dbe7f1;padding:9pt 12pt;display:flex;align-items:center;justify-content:space-between;gap:10pt}.flow-node b{font-size:14pt;color:#084e8f}.flow-node span{font-size:10pt;color:#334155;text-align:right}.flow-node.planner{border-left:5pt solid #084e8f}.flow-node.builder{border-left:5pt solid #ee822f}.flow-node.tester{border-left:5pt solid #75bd42}.flow-node.speaker{border-left:5pt solid #30c0b4}.flow-arrow{text-align:center;color:#ee822f;font-size:16pt;font-weight:800;line-height:1}.agentic-evidence{display:grid;grid-template-columns:1fr 1fr;gap:9pt;min-height:0}.agentic-evidence .card{margin:0;padding:9pt 10pt}.agentic-evidence .card h3{font-size:11.2pt}.agentic-evidence .card li{font-size:8.6pt;line-height:1.26;margin-bottom:1pt}.evolution-grid{display:grid;grid-template-columns:1.42fr .58fr;gap:10pt;height:calc(100% - 64pt)}.evolution-main{display:grid;grid-template-rows:auto 1fr;gap:9pt;min-height:0}.evolution-table{background:#fff;border:1pt solid #e2e8f0;border-radius:6pt;overflow:hidden}.evolution-table .compact-table th{font-size:8.2pt}.evolution-table .compact-table td{font-size:7.7pt;line-height:1.22;padding:3.8pt 5pt}.evolution-bottom{display:grid;grid-template-columns:1fr 1fr;gap:9pt;min-height:0}.evolution-bottom .card{margin:0;padding:9pt 10pt}.evolution-bottom .card h3{font-size:11.3pt}.evolution-bottom .card li{font-size:8.9pt;line-height:1.32;margin-bottom:2pt}.evolution-side{display:grid;grid-template-rows:1fr 1fr 1fr;gap:8pt}.evolution-side .card{margin:0;padding:8pt 9pt}.evolution-side .card h3{font-size:11.2pt}.evolution-side .card li{font-size:8.8pt;line-height:1.32;margin-bottom:2pt}.evolution-explain{display:grid;grid-template-columns:.82fr 1.18fr;gap:12pt;height:calc(100% - 64pt)}.evolution-steps{display:grid;grid-template-rows:repeat(5,1fr);gap:6pt;min-height:0}.evolution-steps .card{margin:0;padding:7pt 8pt}.evolution-steps .card h3{font-size:10.8pt;margin-bottom:3pt}.evolution-steps .card li{font-size:8.15pt;line-height:1.22;margin-bottom:1pt}.evolution-image-wrap{display:grid;grid-template-rows:minmax(0,1fr) auto;gap:6pt;background:#fff;border:1pt solid #dbe7f1;border-radius:8pt;padding:8pt;min-height:0}.evolution-image-wrap img{width:100%;height:100%;object-fit:contain;border-radius:5pt;cursor:zoom-in}.zoom-hint{font-size:9pt;color:#5b6b7a;text-align:center}.image-zoom-overlay{position:fixed;inset:0;background:rgba(6,18,30,.94);z-index:9999;overflow:auto;padding:30px;cursor:grab}.image-zoom-overlay.dragging{cursor:grabbing}.image-zoom-stage{min-width:100%;min-height:100%;display:flex;align-items:center;justify-content:center}.image-zoom-overlay img{max-width:none;max-height:none;width:auto;height:auto;transform-origin:center center;image-rendering:auto;box-shadow:0 20px 70px rgba(0,0,0,.45);cursor:zoom-in}.timeline-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8pt;height:calc(100% - 64pt)}.timeline-grid .card{margin:0;padding:9pt 9pt}.timeline-grid .card h3{font-size:17pt;margin-bottom:6pt}.timeline-grid .card li{font-size:8.7pt;line-height:1.34;margin-bottom:3pt}.video-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1.12fr .88fr;gap:10pt;height:calc(100% - 64pt)}.video-grid .card{margin:0;padding:10pt 12pt;overflow:hidden}.video-grid .card:nth-child(n+3){padding:9pt 10pt}.video-grid .card:nth-child(3){grid-column:1/2}.video-grid .card:nth-child(4){grid-column:2/3}.video-grid .card:nth-child(5){grid-column:1/3}.video-grid .card h3{font-size:12pt}.video-grid .card li{font-size:9.2pt;line-height:1.34;margin-bottom:2pt}.term-video-grid{display:grid;grid-template-columns:1.18fr .82fr;gap:12pt;height:calc(100% - 64pt)}.video-panel{background:#071522;border-radius:8pt;padding:8pt;box-shadow:0 10pt 24pt rgba(7,21,34,.18)}.video-panel video{width:100%;height:100%;object-fit:contain;border-radius:5pt;background:#000}.term-video-side{display:grid;grid-template-rows:1fr 1fr 1fr;gap:8pt}.term-video-side .card{margin:0;padding:9pt 10pt}.term-video-side .card h3{font-size:11.5pt}.term-video-side .card li{font-size:9.1pt;line-height:1.34;margin-bottom:2pt}.term-board{height:calc(100% - 64pt);display:grid;grid-template-rows:auto 1fr;gap:8pt}.term-table-wrap{background:#fff;border:1pt solid #e2e8f0;border-radius:6pt;overflow:hidden}.term-board .compact-table th{font-size:7.8pt;padding:3.8pt 5pt}.term-board .compact-table td{font-size:7.05pt;line-height:1.15;padding:3pt 5pt}.term-bottom{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8pt;min-height:0}.term-bottom .card{margin:0;padding:8pt 9pt}.term-bottom .card h3{font-size:11pt}.term-bottom .card li{font-size:8.7pt;line-height:1.28;margin-bottom:1.5pt}.source-link{font-size:13pt!important;font-weight:800;margin:0 0 10pt}.source-link a{color:#084e8f;text-decoration:none;border-bottom:1.5pt solid #ee822f}.cover-course-meta{display:flex;align-items:center;gap:18pt;color:#334155}.cover-course-meta span{font-size:10.5pt;color:#334155}.cover-course-meta b{display:inline-block;margin-right:4pt;color:#084e8f;font-weight:800}.content{padding:12pt 26pt}.page-title{font-size:21pt;margin-bottom:9pt}.kicker{margin-bottom:5pt}.card p,.card li{font-size:10pt}.image-slide{height:calc(100% - 64pt)}.content-enter>*{opacity:1!important;transform:none!important;animation:none!important}.slide{background:linear-gradient(135deg,#f6f9fc 0%,#eef5fb 100%)}.slide-header{box-shadow:0 1pt 0 rgba(8,78,143,.08)}.card,.prompt-script,.trouble-box,.compare-col,.rubric-item,.check-strip{box-shadow:0 8pt 22pt rgba(8,78,143,.055)}.page-title{letter-spacing:0}.kicker p{color:#d96f19}.compact-table th{background:#073f73}.compact-table tr:nth-child(even) td{background:#f8fbff}
+</style>
+</head>
+<body>
+<div class="deck-container"><div class="slide-wrapper" id="slideWrapper">
+
+<section class="slide cover active" id="slide-1">
+  <div class="cover-top-bar"></div>
+  <img class="cover-image" src="../assets/case-learning-hero.png" alt="">
+  <div class="cover-shade"></div>
+  <div class="cover-logo">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p>AI 工具实战训练营</p>
+  </div>
+  <div class="cover-tag">5 天案例课 · 第 5 天</div>
+  <div class="cover-hero">
+    <p class="day-label">DAY 05</p>
+    <h1>Agentic Engineering 综合收口</h1>
+    <p class="subtitle">用 AI 协作完成项目、沉淀知识、包装求职表达</p>
+    <div class="tag-row"><span>综合项目</span><span>LLM-Wiki</span><span>就业锦囊</span></div>
+  </div>
+  <div class="slide-footer cover-footer">
+    
+    <div class="cover-course-meta">
+      <span><b>主题：</b>AI实战训练营</span>
+      <span><b>讲师：</b>吴家文</span>
+      <span><b>时间：</b>2026年6月</span>
+    </div>
+    <p>1 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-2">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 时间表</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>时间表</p></div>
+    <h1 class="page-title">今天怎么上：四段课都要有产出</h1>
+    <div class="two-col"><div>
+      <div class="card primary">
+        <h3>今日四段课</h3>
+        <div><div class="timeline"><div class="time-row"><b>08:30-09:50</b><span>理论：从 Vibe Coding 到 Agentic Engineering，目标、角色、工具、验收</span></div><div class="time-row"><b>10:05-11:25</b><span>案例 10：小组综合项目规划，AI 学习/求职/活动助手三选一</span></div><div class="time-row"><b>13:00-14:20</b><span>项目冲刺 + LLM-Wiki，资料、页面、测试、知识卡并行</span></div><div class="time-row"><b>14:35-15:55</b><span>路演、简历项目经历、就业锦囊和课程复盘</span></div></div></div>
+      </div></div><div>
+      <div class="card success">
+        <h3>今日产出</h3>
+        <div><ul><li>Agentic 工作流图</li><li>综合项目 Demo</li><li>LLM-Wiki 知识卡</li><li>简历项目经历</li></ul></div>
+      </div></div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>2 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-3">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · Agentic Engineering</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>Agentic Engineering</p></div>
+    <h1 class="page-title">Day 5 项目作战图：不是重复演进史，而是进入项目执行</h1>
+    
+    <div class="agentic-map">
+      <div class="agentic-left">
+        
+      <div class="card primary">
+        <h3>今天的核心变化</h3>
+        <div><ul><li>Day 3 看演进：理解 Vibe Coding 为什么出现</li><li>Day 5 做项目：把 AI 当协作团队来组织</li><li>从单次提示词，升级为目标、角色、工具、验收</li><li>从效果好不好看，升级为能否交付、能否复盘</li></ul></div>
+      </div>
+        
+      <div class="card accent">
+        <h3>项目指挥官要做什么</h3>
+        <div><ul><li>定目标：只做 1 个用户、1 条主流程</li><li>拆任务：谁负责内容、页面、测试、路演</li><li>控边界：不做登录、后端、真实 API</li><li>收证据：工作流、版本、Bug、截图、知识卡</li><li>做决策：AI 给方案，人判断取舍</li></ul></div>
+      </div>
+        
+      <div class="card success">
+        <h3>课堂判断</h3>
+        <div><ul><li>能不能说清用户和场景</li><li>能不能把任务交给不同 AI 工具</li><li>能不能测试主流程是否能跑</li><li>能不能记录 Bug 和修复过程</li><li>能不能讲清个人贡献</li></ul></div>
+      </div>
+      </div>
+      <div class="agentic-flow">
+        <div class="flow-node planner"><b>Planner</b><span>需求卡 / 主流程 / 验收标准</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node builder"><b>Builder</b><span>页面 / 文档 / PPT / 版本截图</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node tester"><b>Tester</b><span>测试清单 / Bug 记录 / 复测结论</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node speaker"><b>Speaker</b><span>路演稿 / 简历项目 / 问答准备</span></div>
+        <div class="agentic-evidence">
+          
+      <div class="card primary">
+        <h3>必须留下的证据</h3>
+        <div><ul><li>需求卡：为什么做这个</li><li>工作流图：每一步谁负责</li><li>测试清单：怎么证明能跑</li><li>Bug 记录：怎么证明迭代过</li><li>LLM-Wiki：怎么沉淀复用</li></ul></div>
+      </div>
+          
+      <div class="card accent">
+        <h3>讲师过渡话术</h3>
+        <div><ul><li>这不是再看一遍演进图</li><li>从这一页开始，每个小组就是一个 AI 项目团队</li><li>AI 可以干活，但项目经理必须是人</li><li>今天看的是交付证据，不是口头说会用 AI</li></ul></div>
+      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>3 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-4">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 理论导入</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>理论导入</p></div>
+    <h1 class="page-title">Agentic Engineering 的五个控制点</h1>
+    <table class="compact-table"><thead><tr><th>控制点</th><th>解释</th><th>课堂例子</th></tr></thead><tbody><tr><td>Goal</td><td>目标清楚</td><td>做一个能演示的 AI 求职助手，不做完整平台</td></tr><tr><td>Context</td><td>上下文足够</td><td>岗位资料、学生经历、页面需求、限制条件</td></tr><tr><td>Role</td><td>角色分工</td><td>Planner、Builder、Tester、Speaker</td></tr><tr><td>Trace</td><td>过程留痕</td><td>提示词、版本、Bug、截图、修改原因</td></tr><tr><td>Eval</td><td>验收标准</td><td>能打开、主流程能跑、内容有依据、能讲清楚</td></tr></tbody></table>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>4 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-5">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 理论 + 实操</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>理论 + 实操</p></div>
+    <h1 class="page-title">课堂示例：为什么综合项目不能只靠一句提示词</h1>
+    
+    <div class="classroom-grid">
+      
+      <div class="card primary">
+        <h3>必讲理论</h3>
+        <div><ul><li>综合项目包含资料、内容、页面、测试、展示</li><li>一个 AI 回答无法同时保证所有环节正确</li><li>Agentic 的价值是分工、交接和验收</li><li>人的角色是项目负责人，不是旁观者</li></ul></div>
+      </div>
+      
+      <div class="card accent">
+        <h3>教师现场演示</h3>
+        <div><ul><li>把“做一个求职助手”拆成 5 步</li><li>演示 Builder/Tester/Reviewer 三个角色</li><li>展示每一步的输入输出</li></ul></div>
+      </div>
+      
+      <div class="card success">
+        <h3>学生互动</h3>
+        <div><ul><li>小组给自己的项目分配角色</li><li>写出每个角色的交付物</li></ul></div>
+      </div>
+      
+      <div class="card primary">
+        <h3>课堂产出</h3>
+        <div><ul><li>Agentic 工作流图</li></ul></div>
+      </div>
+      
+      <div class="card success">
+        <h3>讲师判断标准</h3>
+        <div><ul><li>能不能复述方法</li><li>能不能独立改提示词</li><li>能不能指出 AI 输出的问题</li><li>能不能把结果变成自己的作品</li></ul></div>
+      </div>
+    </div>
+    
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>5 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-6">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 案例 10 操作手册</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>案例 10 操作手册</p></div>
+    <h1 class="page-title">综合项目规划：课堂怎么带着做</h1>
+    
+    <div class="runbook">
+      <div class="runbook-main">
+        
+      <div class="card primary">
+        <h3>工具与课前准备</h3>
+        <div><ul><li>使用工具：QClaw + WorkBuddy + Trae + 文档 AI</li><li>准备项目模板</li><li>三选一：AI 求职助手、学习资料整理助手、校园活动助手</li><li>统一不做登录、后端、真实 API</li></ul></div>
+      </div>
+        
+      <div class="card accent">
+        <h3>教师演示步骤</h3>
+        <div><ol><li>选题并砍范围</li><li>用 QClaw 搜集资料</li><li>用 WorkBuddy 整理字段</li><li>用 Trae 生成 Demo</li><li>设置 Tester 找 Bug</li></ol></div>
+      </div>
+        
+      <div class="card success">
+        <h3>学生跟做步骤</h3>
+        <div><ol><li>选题</li><li>分角色</li><li>搜集资料</li><li>生成 Demo</li><li>测试并记录</li></ol></div>
+      </div>
+      </div>
+      <div class="runbook-side">
+        <div class="prompt-script">
+          <h3>可直接投屏的提示词</h3>
+          <p>我们要在 1 天内完成【项目】MVP。请输出工作流表：步骤、负责角色、使用工具、输入、输出、验收标准、风险。限制：不做后端、不接真实 API、必须能课堂演示。</p>
+        </div>
+        <div class="trouble-box">
+          <h3>常见问题与处理</h3>
+          <table class="compact-table"><thead><tr><th>问题</th><th>处理办法</th></tr></thead><tbody><tr><td>项目过大</td><td>砍到单页 MVP</td></tr><tr><td>角色重叠</td><td>明确 Planner/Builder/Tester/Speaker</td></tr><tr><td>没有验收</td><td>每一步写可检查标准</td></tr></tbody></table>
+        </div>
+        <div class="check-strip">
+          <h3>课堂检查点</h3>
+          <div><span>能复述任务</span><span>能独立操作</span><span>能发现问题</span><span>能提交产出</span></div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>6 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-7">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 项目推进</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>项目推进</p></div>
+    <h1 class="page-title">小组角色</h1>
+    <div class="board-grid">
+      <div class="card primary">
+        <h3>Planner</h3>
+        <div><ul><li>定义目标</li><li>拆步骤</li><li>控范围</li></ul></div>
+      </div>
+      <div class="card accent">
+        <h3>Builder</h3>
+        <div><ul><li>生成页面</li><li>整合内容</li><li>保存版本</li></ul></div>
+      </div>
+      <div class="card success">
+        <h3>Tester</h3>
+        <div><ul><li>写测试</li><li>找 Bug</li><li>复测</li></ul></div>
+      </div>
+      <div class="card primary">
+        <h3>Speaker</h3>
+        <div><ul><li>写路演</li><li>讲价值</li><li>答问题</li></ul></div>
+      </div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>7 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-8">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 学生实操</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>学生实操</p></div>
+    <h1 class="page-title">项目规划实操</h1>
+    <div class="two-col"><div>
+      <div class="card primary">
+        <h3>学生实操任务</h3>
+        <div><ul><li>确定项目</li><li>写目标和受众</li><li>拆 5 步</li><li>分配 4 个角色</li><li>写验收标准</li></ul></div>
+      </div></div><div>
+      <div class="card success">
+        <h3>完成标准</h3>
+        <div><ul><li>范围可完成</li><li>角色不重叠</li><li>每步有输出</li><li>风险明确</li></ul></div>
+      </div>
+      <div class="card accent">
+        <h3>提交物</h3>
+        <div><p>Agentic 工作流图</p></div>
+      </div></div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>8 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-9">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 翻车点处理</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>翻车点处理</p></div>
+    <h1 class="page-title">项目规划翻车点</h1>
+    
+    <div class="troubleshooting-full">
+      <table class="compact-table"><thead><tr><th>课堂现象</th><th>原因判断</th><th>讲师处理话术/动作</th></tr></thead><tbody><tr><td>想做万能平台</td><td>范围幻想</td><td>限定 1 个用户、1 个场景、1 条主流程</td></tr><tr><td>没有数据</td><td>内容空洞</td><td>先用 QClaw 搜集或用课堂模拟数据</td></tr><tr><td>没人负责测试</td><td>测试被低估</td><td>强制每组设置 Tester</td></tr></tbody></table>
+    </div>
+    
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>9 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-10">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 案例 11 操作手册</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>案例 11 操作手册</p></div>
+    <h1 class="page-title">综合项目冲刺：课堂怎么带着做</h1>
+    
+    <div class="runbook">
+      <div class="runbook-main">
+        
+      <div class="card primary">
+        <h3>工具与课前准备</h3>
+        <div><ul><li>使用工具：全工具协同</li><li>准备项目目录</li><li>准备提示词记录表</li><li>准备演示评分表</li></ul></div>
+      </div>
+        
+      <div class="card accent">
+        <h3>教师演示步骤</h3>
+        <div><ol><li>示范目录结构</li><li>资料线和 Demo 线并行</li><li>每 30 分钟检查一次产出</li><li>把问题写入风险表</li><li>准备备用截图</li></ol></div>
+      </div>
+        
+      <div class="card success">
+        <h3>学生跟做步骤</h3>
+        <div><ol><li>按角色并行</li><li>每 30 分钟交中间产物</li><li>合并到 Demo</li><li>测试主流程</li></ol></div>
+      </div>
+      </div>
+      <div class="runbook-side">
+        <div class="prompt-script">
+          <h3>可直接投屏的提示词</h3>
+          <p>请根据资料和工作流，生成项目 Demo 的页面结构和核心交互。先保证主流程能演示，再考虑视觉优化。输出后请同时给测试清单。</p>
+        </div>
+        <div class="trouble-box">
+          <h3>常见问题与处理</h3>
+          <table class="compact-table"><thead><tr><th>问题</th><th>处理办法</th></tr></thead><tbody><tr><td>每个人都生成一版</td><td>指定 Builder 合并</td></tr><tr><td>内容没来源</td><td>资料线必须保留来源</td></tr><tr><td>Demo 演示不通</td><td>只保留一条主流程</td></tr></tbody></table>
+        </div>
+        <div class="check-strip">
+          <h3>课堂检查点</h3>
+          <div><span>能复述任务</span><span>能独立操作</span><span>能发现问题</span><span>能提交产出</span></div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>10 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-11">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 项目推进</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>项目推进</p></div>
+    <h1 class="page-title">四线并行工作台</h1>
+    <div class="board-grid">
+      <div class="card primary">
+        <h3>资料线</h3>
+        <div><ul><li>搜集</li><li>来源</li><li>筛选</li><li>摘要</li></ul></div>
+      </div>
+      <div class="card accent">
+        <h3>Demo线</h3>
+        <div><ul><li>结构</li><li>代码</li><li>交互</li><li>版本</li></ul></div>
+      </div>
+      <div class="card success">
+        <h3>测试线</h3>
+        <div><ul><li>用例</li><li>Bug</li><li>复测</li><li>备用</li></ul></div>
+      </div>
+      <div class="card primary">
+        <h3>展示线</h3>
+        <div><ul><li>PPT</li><li>脚本</li><li>分工</li><li>问答</li></ul></div>
+      </div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>11 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-12">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 学生实操</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>学生实操</p></div>
+    <h1 class="page-title">冲刺 I：先跑通</h1>
+    <div class="two-col"><div>
+      <div class="card primary">
+        <h3>学生实操任务</h3>
+        <div><ul><li>资料线完成 5 条材料</li><li>Demo 线生成页面</li><li>测试线跑 5 条用例</li><li>展示线写 5 页结构</li></ul></div>
+      </div></div><div>
+      <div class="card success">
+        <h3>完成标准</h3>
+        <div><ul><li>页面能打开</li><li>内容不空</li><li>主按钮可用</li><li>有 Bug 清单</li></ul></div>
+      </div>
+      <div class="card accent">
+        <h3>提交物</h3>
+        <div><p>Demo 初版 + 测试清单</p></div>
+      </div></div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>12 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-13">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · LLM-Wiki 知识管理</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>LLM-Wiki 知识管理</p></div>
+    <h1 class="page-title">把课程成果沉淀成以后能复用的知识卡</h1>
+    <table class="compact-table"><thead><tr><th>问题</th><th>普通文件夹</th><th>LLM-Wiki 思路</th></tr></thead><tbody><tr><td>资料散</td><td>文件到处放</td><td>按主题和项目组织知识</td></tr><tr><td>经验丢</td><td>做完就忘</td><td>把提示词、Bug、验收标准写成卡片</td></tr><tr><td>复用难</td><td>下次重新问</td><td>把可复用流程沉淀为模板</td></tr><tr><td>判断弱</td><td>只保存结果</td><td>同时保存为什么这样改</td></tr></tbody></table>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>13 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-14">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 案例 12 操作手册</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>案例 12 操作手册</p></div>
+    <h1 class="page-title">LLM-Wiki 个人知识卡：课堂怎么带着做</h1>
+    
+    <div class="runbook">
+      <div class="runbook-main">
+        
+      <div class="card primary">
+        <h3>工具与课前准备</h3>
+        <div><ul><li>使用工具：本地 LLM-WIKI / Markdown / 文档 AI</li><li>准备知识卡模板</li><li>字段：主题、问题、做法、证据、下次复用</li><li>要求每人沉淀 1 张卡</li></ul></div>
+      </div>
+        
+      <div class="card accent">
+        <h3>教师演示步骤</h3>
+        <div><ol><li>展示 LLM-Wiki 的用途</li><li>把一个 Bug 修复记录变成知识卡</li><li>把一个提示词原则变成知识卡</li><li>说明链接关系</li></ol></div>
+      </div>
+        
+      <div class="card success">
+        <h3>学生跟做步骤</h3>
+        <div><ol><li>选择一个今天的问题</li><li>写知识卡</li><li>链接到项目</li><li>写下次复用场景</li></ol></div>
+      </div>
+      </div>
+      <div class="runbook-side">
+        <div class="prompt-script">
+          <h3>可直接投屏的提示词</h3>
+          <p>请把下面项目经历整理成一张知识卡：主题、遇到的问题、我怎么判断、AI 帮了什么、人做了什么决定、下次如何复用。</p>
+        </div>
+        <div class="trouble-box">
+          <h3>常见问题与处理</h3>
+          <table class="compact-table"><thead><tr><th>问题</th><th>处理办法</th></tr></thead><tbody><tr><td>写成日记</td><td>改成问题-做法-复用</td></tr><tr><td>只写结果</td><td>补过程和证据</td></tr><tr><td>没有链接</td><td>链接到项目、Bug 或提示词原则</td></tr></tbody></table>
+        </div>
+        <div class="check-strip">
+          <h3>课堂检查点</h3>
+          <div><span>能复述任务</span><span>能独立操作</span><span>能发现问题</span><span>能提交产出</span></div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>14 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-15">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 学生实操</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>学生实操</p></div>
+    <h1 class="page-title">学生实操：写一张 LLM-Wiki 知识卡</h1>
+    <div class="two-col"><div>
+      <div class="card primary">
+        <h3>学生实操任务</h3>
+        <div><ul><li>选择项目中的一个问题</li><li>写主题和问题</li><li>写 AI 帮了什么</li><li>写人做了什么决定</li><li>写下次如何复用</li></ul></div>
+      </div></div><div>
+      <div class="card success">
+        <h3>完成标准</h3>
+        <div><ul><li>不是流水账</li><li>有判断过程</li><li>有复用场景</li><li>能链接到项目</li></ul></div>
+      </div>
+      <div class="card accent">
+        <h3>提交物</h3>
+        <div><p>个人知识卡</p></div>
+      </div></div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>15 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-16">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 路演结构</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>路演结构</p></div>
+    <h1 class="page-title">5 页足够讲清一个学生项目</h1>
+    <table class="compact-table"><thead><tr><th>页</th><th>内容</th><th>一句话目标</th></tr></thead><tbody><tr><td>1</td><td>问题和用户</td><td>让评委知道为什么做</td></tr><tr><td>2</td><td>AI 工作流</td><td>说明怎么用 AI 协作</td></tr><tr><td>3</td><td>Demo 展示</td><td>证明能跑</td></tr><tr><td>4</td><td>测试和迭代</td><td>证明不是一次生成</td></tr><tr><td>5</td><td>分工和反思</td><td>证明每个人有收获</td></tr></tbody></table>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>16 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-17">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 学生实操</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>学生实操</p></div>
+    <h1 class="page-title">冲刺 II：路演和备用方案</h1>
+    <div class="two-col"><div>
+      <div class="card primary">
+        <h3>学生实操任务</h3>
+        <div><ul><li>修最严重的 2 个 Bug</li><li>补充说明文档</li><li>生成路演稿</li><li>准备备用截图</li><li>每人写贡献</li></ul></div>
+      </div></div><div>
+      <div class="card success">
+        <h3>完成标准</h3>
+        <div><ul><li>主流程稳定</li><li>路演不超时</li><li>每人有贡献</li><li>有备用方案</li></ul></div>
+      </div>
+      <div class="card accent">
+        <h3>提交物</h3>
+        <div><p>Demo v2 + 路演初稿</p></div>
+      </div></div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>17 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-18">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 简历项目经历</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>简历项目经历</p></div>
+    <h1 class="page-title">把课程成果写成就业材料，但不能造假</h1>
+    <table class="compact-table"><thead><tr><th>维度</th><th>不要这样写</th><th>建议写法</th></tr></thead><tbody><tr><td>项目背景</td><td>参加了 AI 课程</td><td>面向校园活动报名场景，完成 AI 辅助活动页 Demo</td></tr><tr><td>工具</td><td>用了很多 AI</td><td>使用文档 AI 整理需求，Trae 生成页面，人工完成测试和迭代</td></tr><tr><td>贡献</td><td>我参与开发</td><td>负责需求拆解、Bug 复现、页面测试和路演讲解</td></tr><tr><td>结果</td><td>效果很好</td><td>交付单文件 HTML Demo、测试清单和 5 页路演稿</td></tr></tbody></table>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>18 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-19">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 学生实操</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>学生实操</p></div>
+    <h1 class="page-title">学生实操：个人简历项目经历</h1>
+    <div class="two-col"><div>
+      <div class="card primary">
+        <h3>学生实操任务</h3>
+        <div><ul><li>选择自己真实负责的部分</li><li>写项目背景</li><li>写工具和方法</li><li>写个人贡献</li><li>删掉夸大词</li></ul></div>
+      </div></div><div>
+      <div class="card success">
+        <h3>完成标准</h3>
+        <div><ul><li>不造假</li><li>能说清自己做了什么</li><li>有作品和证据</li><li>适合面试复述</li></ul></div>
+      </div>
+      <div class="card accent">
+        <h3>提交物</h3>
+        <div><p>简历项目经历 + 1 分钟介绍</p></div>
+      </div></div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>19 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-20">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 课堂执行</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>课堂执行</p></div>
+    <h1 class="page-title">正式路演</h1>
+    
+    <div class="classroom-grid">
+      
+      <div class="card primary">
+        <h3>时间分配</h3>
+        <div><ul><li>每组 3 分钟展示</li><li>1 分钟问答</li><li>评委按标准打分</li><li>每组记录 2 条改进建议</li></ul></div>
+      </div>
+      
+      <div class="card accent">
+        <h3>讲师动作</h3>
+        <div><ul><li>严格计时</li><li>优先看 Demo 和证据</li><li>不只评价好不好看</li></ul></div>
+      </div>
+      
+      <div class="card success">
+        <h3>学生动作</h3>
+        <div><ul><li>展示 Demo</li><li>说明 AI 工作流</li><li>回答问题</li></ul></div>
+      </div>
+      
+      <div class="card primary">
+        <h3>产出物</h3>
+        <div><ul><li>最终 Demo + PPT</li></ul></div>
+      </div>
+      
+      <div class="card success">
+        <h3>现场检查</h3>
+        <div><ul><li>能运行</li><li>能讲清</li><li>有证据</li></ul></div>
+      </div>
+    </div>
+    
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>20 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-21">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 最终验收</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>最终验收</p></div>
+    <h1 class="page-title">Day 5 下课前必须留下这些资产</h1>
+    <table class="compact-table"><thead><tr><th>类别</th><th>必须提交</th><th>合格标准</th><th>以后怎么用</th></tr></thead><tbody><tr><td>作品</td><td>可运行 Demo</td><td>能打开，主流程能跑，核心按钮有反馈</td><td>作品集、路演、面试展示</td></tr><tr><td>作品</td><td>截图/录屏备用</td><td>现场断网或打不开时仍能展示</td><td>答辩备用材料</td></tr><tr><td>展示</td><td>5 页 PPT</td><td>问题、工作流、Demo、测试、分工都讲清</td><td>项目路演模板</td></tr><tr><td>工程证据</td><td>Agentic 工作流图</td><td>每一步有角色、工具、输入、输出、验收</td><td>证明不是一次性生成</td></tr><tr><td>工程证据</td><td>测试清单 + Bug 记录</td><td>至少 5 条测试，至少 2 个修复记录</td><td>证明会测试和迭代</td></tr><tr><td>知识沉淀</td><td>LLM-Wiki 知识卡</td><td>写清问题、判断、AI 帮助、人类决策、复用场景</td><td>以后学习和复盘</td></tr><tr><td>就业</td><td>简历项目经历</td><td>不造假，写清工具、贡献、结果和证据</td><td>简历和面试</td></tr><tr><td>就业</td><td>1 分钟项目介绍</td><td>能说清我负责什么、解决什么、学到什么</td><td>面试自我表达</td></tr></tbody></table>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>21 / 22</p>
+  </div>
+</section>
+<section class="slide " id="slide-22">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 05 · 日终复盘</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>日终复盘</p></div>
+    <h1 class="page-title">Day 5 总结</h1>
+    <div class="two-col"><div>
+      <div class="card success">
+        <h3>今天学会了什么</h3>
+        <div><ul><li>完成综合项目 Demo 和路演</li><li>理解 Agentic Engineering 的协作方式</li><li>沉淀 LLM-Wiki 知识卡</li><li>把项目转成简历和面试表达</li></ul></div>
+      </div></div><div>
+      <div class="card accent">
+        <h3>下一步</h3>
+        <div><p>课程结束后继续做三件事：持续学习、动手实践、提升审美和业务判断。</p></div>
+      </div></div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>22 / 22</p>
+  </div>
+</section>
+</div></div>
+<script>
+function resizeSlides(){
+  const wrapper=document.getElementById('slideWrapper');
+  const scale=Math.min(window.innerWidth/(960*1.333),window.innerHeight/(540*1.333));
+  wrapper.style.transform='scale('+scale+')';
+}
+window.addEventListener('resize',resizeSlides);resizeSlides();
+let currentSlide=1;const totalSlides=22;
+function showSlide(n){document.querySelectorAll('.slide').forEach(s=>s.classList.remove('active'));const el=document.getElementById('slide-'+n);if(el)el.classList.add('active');}
+function nextSlide(){if(currentSlide<totalSlides){currentSlide++;showSlide(currentSlide);}}
+function prevSlide(){if(currentSlide>1){currentSlide--;showSlide(currentSlide);}}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')nextSlide();if(e.key==='ArrowLeft')prevSlide();});
+let zoomScale=1,zoomDragging=false,zoomStartX=0,zoomStartY=0,zoomScrollX=0,zoomScrollY=0;
+function closeImageZoom(){const overlay=document.querySelector('.image-zoom-overlay');if(overlay)overlay.remove();}
+function setZoomScale(scale){const img=document.querySelector('.image-zoom-overlay img');if(!img)return;zoomScale=Math.max(.5,Math.min(5,scale));img.style.transform='scale('+zoomScale+')';}
+function openImageZoom(img){closeImageZoom();zoomScale=1;const overlay=document.createElement('div');overlay.className='image-zoom-overlay';const stage=document.createElement('div');stage.className='image-zoom-stage';const clone=document.createElement('img');clone.src=img.currentSrc||img.src;clone.alt=img.alt||'';stage.appendChild(clone);overlay.appendChild(stage);overlay.addEventListener('wheel',e=>{e.preventDefault();setZoomScale(zoomScale+(e.deltaY<0?.2:-.2));},{passive:false});overlay.addEventListener('mousedown',e=>{zoomDragging=true;overlay.classList.add('dragging');zoomStartX=e.clientX;zoomStartY=e.clientY;zoomScrollX=overlay.scrollLeft;zoomScrollY=overlay.scrollTop;});window.addEventListener('mousemove',e=>{if(!zoomDragging)return;overlay.scrollLeft=zoomScrollX-(e.clientX-zoomStartX);overlay.scrollTop=zoomScrollY-(e.clientY-zoomStartY);});window.addEventListener('mouseup',()=>{zoomDragging=false;overlay.classList.remove('dragging');});clone.addEventListener('click',e=>{e.stopPropagation();setZoomScale(zoomScale>=2?1:zoomScale+1);});overlay.addEventListener('dblclick',e=>{e.stopPropagation();closeImageZoom();});document.body.appendChild(overlay);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeImageZoom();});
+document.addEventListener('click',e=>{const zoomImg=e.target.closest('[data-zoomable="true"]');if(zoomImg){e.stopPropagation();openImageZoom(zoomImg);return;}if(e.target.closest('.image-zoom-overlay'))return;const active=document.querySelector('.slide.active');if(!active)return;const r=active.getBoundingClientRect();const x=e.clientX-r.left;if(x>r.width*.7)nextSlide();else if(x<r.width*.3)prevSlide();});
+</script>
+</body>
+</html>

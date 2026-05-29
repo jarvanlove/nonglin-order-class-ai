@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 01 · AI 使用底层能力</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100vw;height:100vh;overflow:hidden;background:#1a1a1a;font-family:"Microsoft YaHei","PingFang SC",sans-serif}.deck-container{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center}.slide-wrapper{transform-origin:center center;transition:transform .2s ease}.slide{width:960pt;height:540pt;position:relative;display:none;overflow:hidden;background:#f8fbff;box-shadow:0 8pt 32pt rgba(0,0,0,.3)}.slide.active{display:block}.top-bar{position:absolute;left:0;right:0;top:0;height:4pt;background:#084e8f}.slide-header{position:absolute;left:0;right:0;top:4pt;height:36pt;display:flex;align-items:center;justify-content:space-between;padding:0 28pt;background:#fff;border-bottom:1pt solid #e2e8f0}.slide-header img{height:22pt}.page-meta{font-size:10pt;color:#666}.slide-footer{position:absolute;left:0;right:0;bottom:0;height:24pt;display:flex;align-items:center;justify-content:space-between;padding:0 28pt;background:#fff;border-top:1pt solid #e2e8f0}.slide-footer p{font-size:9.5pt;color:#666;margin:0}.content{position:absolute;left:0;right:0;top:40pt;bottom:24pt;padding:15pt 28pt;overflow:hidden}.kicker{display:flex;align-items:center;gap:8pt;margin-bottom:7pt}.kicker span{width:18pt;height:3pt;background:#ee822f;border-radius:2pt}.kicker p{font-size:10.5pt;color:#ee822f;font-weight:700;letter-spacing:.06em;margin:0}.page-title{font-size:24pt;line-height:1.16;color:#084e8f;margin:0 0 12pt 0}.lead{font-size:12pt!important;color:#084e8f!important;font-weight:700}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16pt;height:calc(100% - 68pt)}.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:12pt;height:calc(100% - 68pt)}.card{background:#fff;border:1pt solid #e2e8f0;border-radius:6pt;padding:11pt 13pt;margin-bottom:9pt}.card h3{font-size:13pt;color:#084e8f;margin:0 0 7pt 0}.card p,.card li{font-size:10.5pt;line-height:1.5;color:#333}.card ul,.card ol{padding-left:16pt;margin:0}.card li{margin-bottom:4pt}.card.accent{border-left:4pt solid #ee822f}.card.success{border-left:4pt solid #75bd42}.card.primary{border-left:4pt solid #084e8f}.prompt-box{background:#fff;border-left:4pt solid #084e8f;border-top:1pt solid #e2e8f0;border-right:1pt solid #e2e8f0;border-bottom:1pt solid #e2e8f0;border-radius:0 6pt 6pt 0;padding:10pt 12pt;margin-bottom:8pt}.prompt-label{font-size:11pt!important;color:#ee822f!important;font-weight:700;margin:0 0 4pt 0}.prompt-box p{font-size:11.5pt;line-height:1.5;color:#333;margin:0}.timeline{display:flex;flex-direction:column;gap:7pt}.time-row{display:grid;grid-template-columns:92pt 1fr;gap:8pt;align-items:start;background:#f8fbff;border:1pt solid #e2e8f0;border-radius:5pt;padding:7pt 9pt}.time-row b{font-size:11pt;color:#084e8f}.time-row span{font-size:11pt;color:#333;line-height:1.35}.step-list{display:flex;flex-direction:column;gap:8pt;height:100%}.step-card{background:#fff;border:1pt solid #e2e8f0;border-radius:6pt;padding:10pt 12pt;display:grid;grid-template-columns:26pt 1fr;gap:10pt;align-items:start}.step-num{width:24pt;height:24pt;border-radius:50%;background:#084e8f;color:#fff;font-size:12pt;font-weight:700;display:flex;align-items:center;justify-content:center}.step-card h4{font-size:12pt;color:#084e8f;margin:0 0 4pt}.step-card p{font-size:10pt;color:#333;line-height:1.45;margin:0}.note-box{border-radius:6pt;padding:12pt 14pt}.note-box h3{font-size:13pt;margin:0 0 6pt}.note-box p{font-size:11pt;line-height:1.55;margin:0}.note-box.primary{background:#084e8f;color:#fff}.note-box.primary h3,.note-box.primary p{color:#fff}.note-box.accent{background:rgba(238,130,47,.08);border:1pt solid rgba(238,130,47,.25)}.note-box.accent h3{color:#ee822f}.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16pt;height:calc(100% - 68pt)}.compare-col{background:#fff;border:1pt solid #e2e8f0;border-radius:6pt;padding:13pt 15pt}.compare-col h3{font-size:14pt;margin:0 0 10pt}.compare-col.bad{border-top:4pt solid #92181a}.compare-col.bad h3{color:#92181a}.compare-col.good{border-top:4pt solid #75bd42}.compare-col.good h3{color:#75bd42}.compare-col li{font-size:11pt;line-height:1.55;margin-bottom:6pt}.rubric-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8pt;height:calc(100% - 68pt)}.rubric-item{background:#fff;border:1pt solid #e2e8f0;border-radius:6pt;padding:10pt}.rubric-item b{display:inline-block;color:#ee822f;font-size:18pt;margin-bottom:5pt}.rubric-item h3{font-size:12pt;color:#084e8f;margin:0 0 5pt}.rubric-item p{font-size:9.5pt;line-height:1.45;color:#333;margin:0}.pyramid{height:calc(100% - 68pt);display:flex;flex-direction:column-reverse;align-items:center;justify-content:center;gap:7pt}.pyramid-layer{border-radius:6pt;padding:9pt 16pt;text-align:center;border:1pt solid #e2e8f0;background:#fff}.pyramid-layer h4{font-size:13pt;margin:0 0 3pt}.pyramid-layer p{font-size:10.5pt;margin:0;color:#333}.layer-1{width:90%;border-color:#92181a}.layer-1 h4{color:#92181a}.layer-2{width:75%;border-color:#75bd42}.layer-2 h4{color:#75bd42}.layer-3{width:60%;border-color:#084e8f}.layer-3 h4{color:#084e8f}.layer-4{width:45%;border-color:#ee822f}.layer-4 h4{color:#ee822f}.image-slide{height:calc(100% - 68pt);display:grid;grid-template-rows:minmax(0,1fr) auto;gap:8pt}.image-slide img{width:100%;height:100%;object-fit:contain;background:#fff;border:1pt solid #e2e8f0;border-radius:8pt}.image-slide .caption{font-size:11pt;color:#666;text-align:center}.cover{background:#f8fbff}.cover-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.cover-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(248,251,255,.96) 0%,rgba(248,251,255,.9) 42%,rgba(248,251,255,.22) 100%)}.cover-top-bar{position:absolute;left:0;right:0;top:0;height:6pt;background:#084e8f;z-index:3}.cover-logo{position:absolute;left:32pt;top:20pt;display:flex;align-items:center;gap:10pt;z-index:4}.cover-logo img{height:28pt}.cover-logo p{font-size:12pt;color:#084e8f;font-weight:700}.cover-tag{position:absolute;right:32pt;top:22pt;background:rgba(8,78,143,.08);color:#084e8f;border-radius:999pt;padding:5pt 12pt;font-size:10pt;z-index:4}.cover-hero{position:absolute;left:48pt;top:96pt;width:560pt;z-index:4}.day-label{font-size:12pt;color:#ee822f;font-weight:700;letter-spacing:.08em}.cover h1{font-size:42pt;line-height:1.12;color:#084e8f;margin:12pt 0}.subtitle{font-size:17pt;line-height:1.45;color:#333}.tag-row{display:flex;flex-wrap:wrap;gap:8pt;margin-top:20pt}.tag-row span{background:#fff;border:1pt solid #e2e8f0;border-radius:999pt;padding:5pt 12pt;font-size:11pt;color:#084e8f}.cover-footer{z-index:4}.content-enter>*{opacity:0;transform:translateY(10pt);animation:in .45s ease forwards}.content-enter>*:nth-child(2){animation-delay:.06s}.content-enter>*:nth-child(3){animation-delay:.12s}.content-enter>*:nth-child(4){animation-delay:.18s}@keyframes in{to{opacity:1;transform:none}}@media print{.slide{display:block!important;page-break-after:always;box-shadow:none}}
+
+
+.runbook{display:grid;grid-template-columns:1.12fr .88fr;gap:12pt;height:calc(100% - 64pt)}.runbook-main{display:grid;grid-template-rows:1fr 1.35fr 1.2fr;gap:7pt;min-height:0}.runbook-main .card{margin:0;padding:8pt 10pt;overflow:hidden}.runbook-main .card h3{font-size:11.5pt;margin-bottom:4pt}.runbook-main .card li{font-size:9.4pt;line-height:1.33;margin-bottom:2pt}.runbook-side{display:grid;grid-template-rows:auto auto 1fr;gap:8pt;min-height:0}.prompt-script{background:#fff;border-left:4pt solid #084e8f;border-top:1pt solid #e2e8f0;border-right:1pt solid #e2e8f0;border-bottom:1pt solid #e2e8f0;border-radius:0 6pt 6pt 0;padding:9pt 11pt}.prompt-script h3,.trouble-box h3,.check-strip h3{font-size:11.5pt;color:#084e8f;margin:0 0 5pt}.prompt-script p{font-size:9.7pt;line-height:1.42;color:#333;margin:0}.trouble-box{background:#fff;border:1pt solid #e2e8f0;border-radius:6pt;padding:9pt 10pt;overflow:hidden}.check-strip{background:#073f73;border-radius:6pt;padding:10pt 11pt;color:#fff}.check-strip h3{color:#fff}.check-strip div{display:grid;grid-template-columns:1fr 1fr;gap:6pt}.check-strip span{font-size:9.2pt;background:rgba(255,255,255,.12);border:1pt solid rgba(255,255,255,.18);border-radius:4pt;padding:5pt 6pt}.compact-table{width:100%;border-collapse:collapse}.compact-table th{background:#084e8f;color:#fff;font-size:9pt;text-align:left;padding:5pt 6pt}.compact-table td{font-size:8.7pt;line-height:1.33;color:#333;padding:5pt 6pt;border:1pt solid #e2e8f0;vertical-align:top}.content>.compact-table{height:calc(100% - 64pt);background:#fff;border:1pt solid #dbe7f1}.content>.compact-table th{font-size:10pt;padding:7pt 8pt}.content>.compact-table td{font-size:9.5pt;line-height:1.42;padding:8pt 9pt;vertical-align:middle}.classroom-grid{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:9pt;height:calc(100% - 64pt)}.classroom-grid .card{margin:0;padding:9pt 10pt}.classroom-grid .card:last-child{grid-column:2/4}.classroom-grid .card h3{font-size:11.5pt}.classroom-grid .card li{font-size:9.5pt;line-height:1.38;margin-bottom:2pt}.troubleshooting-full{height:calc(100% - 64pt);background:#fff;border:1pt solid #e2e8f0;border-radius:6pt;padding:10pt}.troubleshooting-full .compact-table th{font-size:10pt}.troubleshooting-full .compact-table td{font-size:9.4pt;line-height:1.42}.board-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9pt;height:calc(100% - 64pt)}.board-grid .card{margin:0;padding:9pt 10pt}.board-grid .card h3{font-size:11.5pt}.board-grid .card li{font-size:9.4pt;line-height:1.34}.agentic-map{display:grid;grid-template-columns:.9fr 1.1fr;gap:12pt;height:calc(100% - 64pt)}.agentic-left{display:grid;grid-template-rows:1fr 1fr 1fr;gap:9pt}.agentic-left .card{margin:0;padding:9pt 10pt}.agentic-left .card h3{font-size:11.5pt}.agentic-left .card li{font-size:9pt;line-height:1.32;margin-bottom:2pt}.agentic-flow{background:#fff;border:1pt solid #dbe7f1;border-radius:8pt;padding:13pt;display:grid;grid-template-rows:1fr auto 1fr auto 1fr auto 1fr 1.4fr;gap:7pt;min-height:0}.flow-node{border-radius:8pt;border:1pt solid #dbe7f1;padding:9pt 12pt;display:flex;align-items:center;justify-content:space-between;gap:10pt}.flow-node b{font-size:14pt;color:#084e8f}.flow-node span{font-size:10pt;color:#334155;text-align:right}.flow-node.planner{border-left:5pt solid #084e8f}.flow-node.builder{border-left:5pt solid #ee822f}.flow-node.tester{border-left:5pt solid #75bd42}.flow-node.speaker{border-left:5pt solid #30c0b4}.flow-arrow{text-align:center;color:#ee822f;font-size:16pt;font-weight:800;line-height:1}.agentic-evidence{display:grid;grid-template-columns:1fr 1fr;gap:9pt;min-height:0}.agentic-evidence .card{margin:0;padding:9pt 10pt}.agentic-evidence .card h3{font-size:11.2pt}.agentic-evidence .card li{font-size:8.6pt;line-height:1.26;margin-bottom:1pt}.evolution-grid{display:grid;grid-template-columns:1.42fr .58fr;gap:10pt;height:calc(100% - 64pt)}.evolution-main{display:grid;grid-template-rows:auto 1fr;gap:9pt;min-height:0}.evolution-table{background:#fff;border:1pt solid #e2e8f0;border-radius:6pt;overflow:hidden}.evolution-table .compact-table th{font-size:8.2pt}.evolution-table .compact-table td{font-size:7.7pt;line-height:1.22;padding:3.8pt 5pt}.evolution-bottom{display:grid;grid-template-columns:1fr 1fr;gap:9pt;min-height:0}.evolution-bottom .card{margin:0;padding:9pt 10pt}.evolution-bottom .card h3{font-size:11.3pt}.evolution-bottom .card li{font-size:8.9pt;line-height:1.32;margin-bottom:2pt}.evolution-side{display:grid;grid-template-rows:1fr 1fr 1fr;gap:8pt}.evolution-side .card{margin:0;padding:8pt 9pt}.evolution-side .card h3{font-size:11.2pt}.evolution-side .card li{font-size:8.8pt;line-height:1.32;margin-bottom:2pt}.evolution-explain{display:grid;grid-template-columns:.82fr 1.18fr;gap:12pt;height:calc(100% - 64pt)}.evolution-steps{display:grid;grid-template-rows:repeat(5,1fr);gap:6pt;min-height:0}.evolution-steps .card{margin:0;padding:7pt 8pt}.evolution-steps .card h3{font-size:10.8pt;margin-bottom:3pt}.evolution-steps .card li{font-size:8.15pt;line-height:1.22;margin-bottom:1pt}.evolution-image-wrap{display:grid;grid-template-rows:minmax(0,1fr) auto;gap:6pt;background:#fff;border:1pt solid #dbe7f1;border-radius:8pt;padding:8pt;min-height:0}.evolution-image-wrap img{width:100%;height:100%;object-fit:contain;border-radius:5pt;cursor:zoom-in}.zoom-hint{font-size:9pt;color:#5b6b7a;text-align:center}.image-zoom-overlay{position:fixed;inset:0;background:rgba(6,18,30,.94);z-index:9999;overflow:auto;padding:30px;cursor:grab}.image-zoom-overlay.dragging{cursor:grabbing}.image-zoom-stage{min-width:100%;min-height:100%;display:flex;align-items:center;justify-content:center}.image-zoom-overlay img{max-width:none;max-height:none;width:auto;height:auto;transform-origin:center center;image-rendering:auto;box-shadow:0 20px 70px rgba(0,0,0,.45);cursor:zoom-in}.timeline-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8pt;height:calc(100% - 64pt)}.timeline-grid .card{margin:0;padding:9pt 9pt}.timeline-grid .card h3{font-size:17pt;margin-bottom:6pt}.timeline-grid .card li{font-size:8.7pt;line-height:1.34;margin-bottom:3pt}.video-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1.12fr .88fr;gap:10pt;height:calc(100% - 64pt)}.video-grid .card{margin:0;padding:10pt 12pt;overflow:hidden}.video-grid .card:nth-child(n+3){padding:9pt 10pt}.video-grid .card:nth-child(3){grid-column:1/2}.video-grid .card:nth-child(4){grid-column:2/3}.video-grid .card:nth-child(5){grid-column:1/3}.video-grid .card h3{font-size:12pt}.video-grid .card li{font-size:9.2pt;line-height:1.34;margin-bottom:2pt}.term-video-grid{display:grid;grid-template-columns:1.18fr .82fr;gap:12pt;height:calc(100% - 64pt)}.video-panel{background:#071522;border-radius:8pt;padding:8pt;box-shadow:0 10pt 24pt rgba(7,21,34,.18)}.video-panel video{width:100%;height:100%;object-fit:contain;border-radius:5pt;background:#000}.term-video-side{display:grid;grid-template-rows:1fr 1fr 1fr;gap:8pt}.term-video-side .card{margin:0;padding:9pt 10pt}.term-video-side .card h3{font-size:11.5pt}.term-video-side .card li{font-size:9.1pt;line-height:1.34;margin-bottom:2pt}.term-board{height:calc(100% - 64pt);display:grid;grid-template-rows:auto 1fr;gap:8pt}.term-table-wrap{background:#fff;border:1pt solid #e2e8f0;border-radius:6pt;overflow:hidden}.term-board .compact-table th{font-size:7.8pt;padding:3.8pt 5pt}.term-board .compact-table td{font-size:7.05pt;line-height:1.15;padding:3pt 5pt}.term-bottom{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8pt;min-height:0}.term-bottom .card{margin:0;padding:8pt 9pt}.term-bottom .card h3{font-size:11pt}.term-bottom .card li{font-size:8.7pt;line-height:1.28;margin-bottom:1.5pt}.source-link{font-size:13pt!important;font-weight:800;margin:0 0 10pt}.source-link a{color:#084e8f;text-decoration:none;border-bottom:1.5pt solid #ee822f}.cover-course-meta{display:flex;align-items:center;gap:18pt;color:#334155}.cover-course-meta span{font-size:10.5pt;color:#334155}.cover-course-meta b{display:inline-block;margin-right:4pt;color:#084e8f;font-weight:800}.content{padding:12pt 26pt}.page-title{font-size:21pt;margin-bottom:9pt}.kicker{margin-bottom:5pt}.card p,.card li{font-size:10pt}.image-slide{height:calc(100% - 64pt)}.content-enter>*{opacity:1!important;transform:none!important;animation:none!important}.slide{background:linear-gradient(135deg,#f6f9fc 0%,#eef5fb 100%)}.slide-header{box-shadow:0 1pt 0 rgba(8,78,143,.08)}.card,.prompt-script,.trouble-box,.compare-col,.rubric-item,.check-strip{box-shadow:0 8pt 22pt rgba(8,78,143,.055)}.page-title{letter-spacing:0}.kicker p{color:#d96f19}.compact-table th{background:#073f73}.compact-table tr:nth-child(even) td{background:#f8fbff}
+</style>
+</head>
+<body>
+<div class="deck-container"><div class="slide-wrapper" id="slideWrapper">
+
+<section class="slide cover active" id="slide-1">
+  <div class="cover-top-bar"></div>
+  <img class="cover-image" src="../assets/case-learning-hero.png" alt="">
+  <div class="cover-shade"></div>
+  <div class="cover-logo">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p>AI 工具实战训练营</p>
+  </div>
+  <div class="cover-tag">5 天案例课 · 第 1 天</div>
+  <div class="cover-hero">
+    <p class="day-label">DAY 01</p>
+    <h1>AI 使用底层能力</h1>
+    <p class="subtitle">先学会判断、提问和验证，再进入工具实战</p>
+    <div class="tag-row"><span>提示词结构</span><span>事实核查</span><span>学习助手</span></div>
+  </div>
+  <div class="slide-footer cover-footer">
+    
+    <div class="cover-course-meta">
+      <span><b>主题：</b>AI实战训练营</span>
+      <span><b>讲师：</b>吴家文</span>
+      <span><b>时间：</b>2026年6月</span>
+    </div>
+    <p>1 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-2">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · AI 圈变化</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>AI 圈变化</p></div>
+    <h1 class="page-title">2022-2026：AI 从聊天窗口变成工作流伙伴</h1>
+    
+        <div class="evolution-grid">
+          <div class="evolution-main">
+            <div class="evolution-table">
+              <table class="compact-table"><thead><tr><th>年份</th><th>代表变化</th><th>高频名词</th><th>给学生的课堂解释</th></tr></thead><tbody><tr><td>2022</td><td>ChatGPT 出圈，自然语言交互进入大众视野</td><td>ChatGPT / AIGC / Prompt</td><td>不用写代码，也能让机器帮我生成内容</td></tr><tr><td>2023</td><td>模型能力增强，开始连接外部工具</td><td>GPT-4 / Claude / Function Calling / Plugin</td><td>AI 不只回答，还能按格式发出工具调用指令</td></tr><tr><td>2024</td><td>多模态爆发，文字、图片、语音、视频、代码打通</td><td>GPT-4o / Claude 3 / Sora / Multimodal</td><td>一个任务里可以同时处理资料、图片、声音和页面</td></tr><tr><td>2025</td><td>AI IDE 和 Agent 工作流升温</td><td>Vibe Coding / MCP / RAG / Agent / Context Engineering</td><td>从背提示词变成拆任务、给上下文、验收结果</td></tr><tr><td>2026</td><td>AI 成为学习、办公、设计、开发和求职的工具层</td><td>Skill / Memory / Hooks / Subagents / Guardrails</td><td>人的价值转向目标、审美、业务理解、风险判断</td></tr></tbody></table>
+            </div>
+            <div class="evolution-bottom">
+              
+      <div class="card primary">
+        <h3>讲师串讲脚本</h3>
+        <div><ul><li>2022 是入口：AI 开始能听懂普通话式需求</li><li>2023 是连接：模型开始能叫工具干活</li><li>2024 是多模态：资料不再只有文字</li><li>2025-2026 是工作流：能不能交付作品才是重点</li></ul></div>
+      </div>
+              
+      <div class="card accent">
+        <h3>现场互动问题</h3>
+        <div><ul><li>哪个名词你听过但说不清？</li><li>哪个变化最影响学习和求职？</li><li>如果新名词一直出现，你用什么方法判断它有没有用？</li></ul></div>
+      </div>
+            </div>
+          </div>
+          <div class="evolution-side">
+            
+      <div class="card primary">
+        <h3>三条主线</h3>
+        <div><ul><li>交互变化：命令行和按钮 → 自然语言</li><li>能力变化：写文字 → 多模态生成与工具调用</li><li>工作方式变化：单次问答 → 可检查的工作流</li></ul></div>
+      </div>
+            
+      <div class="card accent">
+        <h3>教师讲法</h3>
+        <div><ul><li>不用把历史讲成编年史</li><li>每一年只讲一个变化和一个课堂影响</li><li>最后落到今天的原则：AI 给方案，人做决定</li></ul></div>
+      </div>
+            
+      <div class="card success">
+        <h3>学生要记住</h3>
+        <div><ul><li>新名词会不断出现</li><li>先问本质：输入是什么、处理什么、输出什么</li><li>再问价值：它能不能帮我完成作品</li></ul></div>
+      </div>
+          </div>
+        </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>2 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-3">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 视频导入</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>视频导入</p></div>
+    <h1 class="page-title">用 5 分钟建立共同语境：什么是 AI</h1>
+    
+        <div class="video-grid">
+          
+      <div class="card primary">
+        <h3>课堂播放</h3>
+        <div><p class="source-link"><a href="https://www.bilibili.com/video/BV1Qz421X7AG" target="_blank">用5分钟讲明白什么是AI</a></p><ul><li>播放前先说明：这不是休息，是建立共同语言</li><li>只看 3-5 分钟，抓住 AI 能做什么、不能替人做什么</li><li>播放后马上提问，不让视频变成“看过就算”</li></ul></div>
+      </div>
+          
+      <div class="card accent">
+        <h3>看完马上问</h3>
+        <div><ul><li>视频里 AI 完成的是哪类任务：识别、生成、决策，还是执行？</li><li>哪一步仍然必须由人来判断？</li><li>如果今天让 AI 帮你学习，你会先让它问你什么？</li><li>把答案写到个人能力目标卡上</li></ul></div>
+      </div>
+          
+      <div class="card success">
+        <h3>教师话术</h3>
+        <div><ul><li>今天不要求大家背定义</li><li>我们只抓一个判断：AI 可以生成方案，但人负责目标和取舍</li><li>后面所有工具练习都按这个标准验收</li></ul></div>
+      </div>
+          
+      <div class="card primary">
+        <h3>学生记录</h3>
+        <div><ul><li>写下一个你想让 AI 帮你完成的任务</li><li>写下一个你不放心交给 AI 的环节</li><li>写下今天最想解决的安装或使用问题</li></ul></div>
+      </div>
+          
+      <div class="card accent">
+        <h3>自然过渡</h3>
+        <div><ul><li>从视频进入时间表</li><li>先完成环境</li><li>再做学习计划和事实核查</li></ul></div>
+      </div>
+        </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>3 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-4">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 时间表</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>时间表</p></div>
+    <h1 class="page-title">今天怎么上：四段课都要有产出</h1>
+    <div class="two-col"><div>
+      <div class="card primary">
+        <h3>今日四段课</h3>
+        <div><div class="timeline"><div class="time-row"><b>08:30-09:50</b><span>AI 时代能力导入 + 电脑配置检查 + Git / Node.js 安装</span></div><div class="time-row"><b>10:05-11:25</b><span>Python / Claude Code CLI 安装 + 第一次命令行体验</span></div><div class="time-row"><b>13:00-14:20</b><span>AI 使用原则：让 AI 提问、给方案，人做决定</span></div><div class="time-row"><b>14:35-15:55</b><span>事实核查 + 今日环境验收 + 学习计划提交</span></div></div></div>
+      </div></div><div>
+      <div class="card success">
+        <h3>今日产出</h3>
+        <div><ul><li>环境检查表</li><li>Git/Node/Python/Claude Code 安装验证</li><li>第一次 CLI 对话记录</li><li>个人学习计划</li></ul></div>
+      </div></div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>4 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-5">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 理论 + 实操</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>理论 + 实操</p></div>
+    <h1 class="page-title">先讲清楚：AI 时代人要提升什么能力</h1>
+    
+    <div class="classroom-grid">
+      
+      <div class="card primary">
+        <h3>必讲理论</h3>
+        <div><ul><li>持续学习：工具一直变，学习方法不能断</li><li>动手实践：只听懂没用，要做出东西</li><li>想象力：会让 AI 发散方案，但不被方案牵着走</li><li>设计美感：让别人愿意看、看得懂、记得住</li><li>业务理解与决策：AI 给建议，人判断取舍</li></ul></div>
+      </div>
+      
+      <div class="card accent">
+        <h3>教师现场演示</h3>
+        <div><ul><li>展示一个任务：从“我想学 AI”到“5 天内做出作品”</li><li>让 AI 先问问题，再给 3 个方案</li><li>老师现场选择一个方案并说明理由</li></ul></div>
+      </div>
+      
+      <div class="card success">
+        <h3>学生互动</h3>
+        <div><ul><li>学生写下自己最想提升的一个能力</li><li>同桌互问：这个能力能不能通过作品证明</li></ul></div>
+      </div>
+      
+      <div class="card primary">
+        <h3>课堂产出</h3>
+        <div><ul><li>个人能力目标卡</li></ul></div>
+      </div>
+      
+      <div class="card success">
+        <h3>讲师判断标准</h3>
+        <div><ul><li>能不能复述方法</li><li>能不能独立改提示词</li><li>能不能指出 AI 输出的问题</li><li>能不能把结果变成自己的作品</li></ul></div>
+      </div>
+    </div>
+    
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>5 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-6">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 环境准备</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>环境准备</p></div>
+    <h1 class="page-title">安装前先检查电脑是否能上课</h1>
+    <div class="two-col"><div>
+      <div class="card primary">
+        <h3>建议配置</h3>
+        <div><ul><li>Windows 10/11 64 位或 macOS 10.15+</li><li>内存 8GB 以上更稳，最低 4GB 可尝试</li><li>剩余磁盘空间 10GB 以上</li><li>网络可访问工具官网和 npm</li><li>拥有本机管理员权限或能安装软件</li></ul></div>
+      </div></div><div>
+      <div class="card accent">
+        <h3>为什么要先检查</h3>
+        <div><ul><li>Claude Code 官方要求 4GB+ 内存、x64 或 ARM64 处理器</li><li>命令行工具依赖系统 PATH</li><li>安装失败大多不是 AI 问题，而是系统、权限、网络问题</li><li>学生先学会自查，后面排错会轻松很多</li></ul></div>
+      </div></div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>6 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-7">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · Windows 检查命令</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>Windows 检查命令</p></div>
+    <h1 class="page-title">先知道自己的电脑情况，再安装</h1>
+    <table class="compact-table"><thead><tr><th>检查项</th><th>PowerShell 命令</th><th>看什么</th></tr></thead><tbody><tr><td>系统版本</td><td>Get-ComputerInfo | Select-Object OsName,OsVersion,OsArchitecture</td><td>Windows 10/11，64 位</td></tr><tr><td>内存</td><td>Get-CimInstance Win32_ComputerSystem | Select-Object TotalPhysicalMemory</td><td>建议 8GB+</td></tr><tr><td>磁盘</td><td>Get-PSDrive C</td><td>Free 大于 10GB</td></tr><tr><td>包管理器</td><td>winget --version</td><td>能输出版本号</td></tr><tr><td>网络</td><td>ping nodejs.org</td><td>能解析并返回响应</td></tr></tbody></table>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>7 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-8">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · macOS 检查命令</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>macOS 检查命令</p></div>
+    <h1 class="page-title">Mac 同学先确认系统、芯片和工具链</h1>
+    <table class="compact-table"><thead><tr><th>检查项</th><th>Terminal 命令</th><th>看什么</th></tr></thead><tbody><tr><td>系统版本</td><td>sw_vers</td><td>macOS 10.15+</td></tr><tr><td>芯片架构</td><td>uname -m</td><td>arm64 或 x86_64</td></tr><tr><td>内存</td><td>sysctl hw.memsize</td><td>建议 8GB+</td></tr><tr><td>命令行工具</td><td>xcode-select -p</td><td>能输出路径；没有就装 CLT</td></tr><tr><td>Homebrew</td><td>brew --version</td><td>能输出版本号；没有则先装 Homebrew</td></tr></tbody></table>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>8 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-9">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 安装 Git</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>安装 Git</p></div>
+    <h1 class="page-title">Git 是项目版本管理工具，也让很多 CLI 工具工作更稳定</h1>
+    <div class="three-col">
+      <div class="card primary">
+        <h3>Windows PowerShell</h3>
+        <div><ul><li>winget install --id Git.Git -e --source winget</li><li>关闭并重新打开 PowerShell</li><li>git --version</li></ul></div>
+      </div>
+      <div class="card accent">
+        <h3>macOS Terminal</h3>
+        <div><ul><li>xcode-select --install</li><li>或：brew install git</li><li>git --version</li></ul></div>
+      </div>
+      <div class="card success">
+        <h3>验收/注意</h3>
+        <div><ul><li>能看到 git version 才算完成</li><li>Windows 安装后必须重开终端</li><li>Git Bash 可作为备用终端</li><li>失败时改用 git-scm.com 安装包</li></ul></div>
+      </div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>9 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-10">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 安装 Node.js</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>安装 Node.js</p></div>
+    <h1 class="page-title">Node.js 提供 npm，后续网页工具和自动化练习会用到</h1>
+    <div class="three-col">
+      <div class="card primary">
+        <h3>Windows PowerShell</h3>
+        <div><ul><li>winget install --id OpenJS.NodeJS.LTS -e --source winget</li><li>关闭并重新打开 PowerShell</li><li>node -v</li><li>npm -v</li></ul></div>
+      </div>
+      <div class="card accent">
+        <h3>macOS Terminal</h3>
+        <div><ul><li>brew install node</li><li>node -v</li><li>npm -v</li><li>确认 Node.js 版本 &gt;= 18</li></ul></div>
+      </div>
+      <div class="card success">
+        <h3>验收/注意</h3>
+        <div><ul><li>课堂统一使用 LTS 版本</li><li>Node &gt;= 18 便于兼容前端工具</li><li>npm 不通时先换网络</li><li>失败时用 nodejs.org 安装包</li></ul></div>
+      </div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>10 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-11">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 安装 Python</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>安装 Python</p></div>
+    <h1 class="page-title">Python 用于课堂脚本、数据处理和后续自动化练习</h1>
+    <div class="three-col">
+      <div class="card primary">
+        <h3>Windows PowerShell</h3>
+        <div><ul><li>winget install --id Python.Python.3.12 -e --source winget</li><li>关闭并重新打开 PowerShell</li><li>python --version</li><li>py --version</li></ul></div>
+      </div>
+      <div class="card accent">
+        <h3>macOS Terminal</h3>
+        <div><ul><li>brew install python</li><li>python3 --version</li><li>pip3 --version</li></ul></div>
+      </div>
+      <div class="card success">
+        <h3>验收/注意</h3>
+        <div><ul><li>Windows 可用 py 启动器兜底</li><li>Mac 常用 python3 而不是 python</li><li>pip 用于后续安装数据工具</li><li>不要混装太多 Python 版本</li></ul></div>
+      </div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>11 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-12">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 安装 Claude Code CLI</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>安装 Claude Code CLI</p></div>
+    <h1 class="page-title">Claude Code 是命令行 AI 编程/项目协作工具</h1>
+    <div class="three-col">
+      <div class="card primary">
+        <h3>Windows PowerShell</h3>
+        <div><ul><li>irm https://claude.ai/install.ps1 | iex</li><li>或：winget install Anthropic.ClaudeCode</li><li>claude --version</li><li>claude doctor</li></ul></div>
+      </div>
+      <div class="card accent">
+        <h3>macOS Terminal</h3>
+        <div><ul><li>curl -fsSL https://claude.ai/install.sh | bash</li><li>或：brew install --cask claude-code</li><li>claude --version</li><li>claude doctor</li></ul></div>
+      </div>
+      <div class="card success">
+        <h3>验收/注意</h3>
+        <div><ul><li>Windows 推荐先装 Git for Windows</li><li>Claude Code 需要可用账号登录</li><li>只在课堂练习文件夹里运行</li><li>不要让 AI 随意改系统文件</li></ul></div>
+      </div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>12 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-13">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 翻车点处理</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>翻车点处理</p></div>
+    <h1 class="page-title">安装常见问题：先排环境，不要怪 AI</h1>
+    
+    <div class="troubleshooting-full">
+      <table class="compact-table"><thead><tr><th>课堂现象</th><th>原因判断</th><th>讲师处理话术/动作</th></tr></thead><tbody><tr><td>winget 不存在</td><td>Windows 应用安装程序过旧</td><td>更新 App Installer，或改用官网安装包</td></tr><tr><td>brew 不存在</td><td>Mac 未安装 Homebrew</td><td>先安装 Homebrew，或使用官网安装包</td></tr><tr><td>Claude 安装后打不开</td><td>PATH 未刷新或安装未完成</td><td>关闭终端重开；再执行 claude --version</td></tr><tr><td>命令安装后找不到</td><td>PATH 未刷新</td><td>关闭终端重新打开，再执行 version 命令</td></tr><tr><td>网络超时</td><td>npm 源或校园网限制</td><td>换网络或让助教统一准备离线方案</td></tr></tbody></table>
+    </div>
+    
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>13 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-14">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 今日环境验收</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>今日环境验收</p></div>
+    <h1 class="page-title">四个工具都要能输出版本号</h1>
+    <table class="compact-table"><thead><tr><th>工具</th><th>验收命令</th><th>通过标准</th></tr></thead><tbody><tr><td>Git</td><td>git --version</td><td>输出 git 版本</td></tr><tr><td>Node.js</td><td>node -v</td><td>版本 &gt;= 18</td></tr><tr><td>npm</td><td>npm -v</td><td>输出 npm 版本</td></tr><tr><td>Python</td><td>python --version 或 python3 --version</td><td>输出 Python 3.x</td></tr><tr><td>Claude Code</td><td>claude --version / claude doctor</td><td>能启动并完成检查；认证问题可课后处理</td></tr></tbody></table>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>14 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-15">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 理论 + 实操</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>理论 + 实操</p></div>
+    <h1 class="page-title">提示词只讲一句话</h1>
+    
+    <div class="classroom-grid">
+      
+      <div class="card primary">
+        <h3>必讲理论</h3>
+        <div><ul><li>不要背模板</li><li>不要追求花哨提示词</li><li>先让 AI 问问题，再让 AI 给方案</li><li>人负责目标、取舍和最终决定</li></ul></div>
+      </div>
+      
+      <div class="card accent">
+        <h3>教师现场演示</h3>
+        <div><ul><li>老师输入：我想做一个 AI 学习计划，先别回答，请先问我 3 个关键问题，再给我 3 个方案</li><li>老师选择一个方案，说明为什么</li></ul></div>
+      </div>
+      
+      <div class="card success">
+        <h3>学生互动</h3>
+        <div><ul><li>学生用自己的学习目标试一次</li><li>只保留自己真正愿意执行的方案</li></ul></div>
+      </div>
+      
+      <div class="card primary">
+        <h3>课堂产出</h3>
+        <div><ul><li>个人学习计划 v1</li></ul></div>
+      </div>
+      
+      <div class="card success">
+        <h3>讲师判断标准</h3>
+        <div><ul><li>能不能复述方法</li><li>能不能独立改提示词</li><li>能不能指出 AI 输出的问题</li><li>能不能把结果变成自己的作品</li></ul></div>
+      </div>
+    </div>
+    
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>15 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-16">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 第一次 Claude Code 体验</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>第一次 Claude Code 体验</p></div>
+    <h1 class="page-title">不是为了学代码，而是理解“AI 项目助手”怎么协作</h1>
+    <div class="two-col"><div>
+      <div class="card primary">
+        <h3>教师演示</h3>
+        <div><ul><li>新建一个空文件夹</li><li>在终端进入文件夹</li><li>输入 claude</li><li>让 Claude 先问项目目标</li><li>让它生成 README 草稿</li></ul></div>
+      </div></div><div>
+      <div class="card success">
+        <h3>学生跟做</h3>
+        <div><ul><li>创建 ai-first-day 文件夹</li><li>启动 claude</li><li>让它问 3 个问题</li><li>生成一份学习计划 README</li><li>不要让它随便改系统文件</li></ul></div>
+      </div></div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>16 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-17">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 翻车点处理</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>翻车点处理</p></div>
+    <h1 class="page-title">Claude Code 使用安全</h1>
+    
+    <div class="troubleshooting-full">
+      <table class="compact-table"><thead><tr><th>课堂现象</th><th>原因判断</th><th>讲师处理话术/动作</th></tr></thead><tbody><tr><td>AI 想修改很多文件</td><td>任务范围没说清</td><td>要求只在当前练习文件夹内操作</td></tr><tr><td>AI 让你运行看不懂的命令</td><td>风险未知</td><td>先问：这个命令做什么？会修改哪里？</td></tr><tr><td>登录或认证失败</td><td>账号/网络问题</td><td>先完成环境验收，认证问题课后由助教处理</td></tr></tbody></table>
+    </div>
+    
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>17 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-18">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 案例 1 操作手册</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>案例 1 操作手册</p></div>
+    <h1 class="page-title">AI 学习路线设计：课堂怎么带着做</h1>
+    
+    <div class="runbook">
+      <div class="runbook-main">
+        
+      <div class="card primary">
+        <h3>工具与课前准备</h3>
+        <div><ul><li>使用工具：任意对话 AI / Claude Code CLI</li><li>准备自己的学习目标</li><li>准备每天可用时间</li><li>准备一个 ai-learning-plan.md</li></ul></div>
+      </div>
+        
+      <div class="card accent">
+        <h3>教师演示步骤</h3>
+        <div><ol><li>让 AI 先问 3 个问题</li><li>让 AI 给 3 个方案</li><li>老师选择一个方案</li><li>让 AI 生成 5 天计划</li><li>老师删掉不现实任务</li></ol></div>
+      </div>
+        
+      <div class="card success">
+        <h3>学生跟做步骤</h3>
+        <div><ol><li>写自己的目标</li><li>回答 AI 的问题</li><li>选择一个方案</li><li>生成计划</li><li>删掉 1 个不现实任务</li></ol></div>
+      </div>
+      </div>
+      <div class="runbook-side">
+        <div class="prompt-script">
+          <h3>可直接投屏的提示词</h3>
+          <p>我想学习【主题】。先不要直接给计划，请先问我 3 个关键问题，再给我 3 个方案，并说明优缺点。最终由我选择方案。</p>
+        </div>
+        <div class="trouble-box">
+          <h3>常见问题与处理</h3>
+          <table class="compact-table"><thead><tr><th>问题</th><th>处理办法</th></tr></thead><tbody><tr><td>AI 直接给计划</td><td>补一句：先问问题，不要直接回答</td></tr><tr><td>方案太满</td><td>限制每天时间和产出</td></tr><tr><td>学生照单全收</td><td>要求删掉 1 项并说明理由</td></tr></tbody></table>
+        </div>
+        <div class="check-strip">
+          <h3>课堂检查点</h3>
+          <div><span>能复述任务</span><span>能独立操作</span><span>能发现问题</span><span>能提交产出</span></div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>18 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-19">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 理论 + 实操</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>理论 + 实操</p></div>
+    <h1 class="page-title">事实核查：AI 会错，人要负责</h1>
+    
+    <div class="classroom-grid">
+      
+      <div class="card primary">
+        <h3>必讲理论</h3>
+        <div><ul><li>AI 会生成看似合理的错误</li><li>重要信息必须核查来源</li><li>事实、观点、推测要分开</li><li>决策不能外包给 AI</li></ul></div>
+      </div>
+      
+      <div class="card accent">
+        <h3>教师现场演示</h3>
+        <div><ul><li>老师让 AI 回答一个热点问题</li><li>要求 AI 标出事实/观点/推测</li><li>点开来源验证其中一条</li></ul></div>
+      </div>
+      
+      <div class="card success">
+        <h3>学生互动</h3>
+        <div><ul><li>学生选择一个问题做核查</li><li>标出一条不确定信息</li></ul></div>
+      </div>
+      
+      <div class="card primary">
+        <h3>课堂产出</h3>
+        <div><ul><li>事实核查卡</li></ul></div>
+      </div>
+      
+      <div class="card success">
+        <h3>讲师判断标准</h3>
+        <div><ul><li>能不能复述方法</li><li>能不能独立改提示词</li><li>能不能指出 AI 输出的问题</li><li>能不能把结果变成自己的作品</li></ul></div>
+      </div>
+    </div>
+    
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>19 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-20">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 学生实操</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>学生实操</p></div>
+    <h1 class="page-title">学生实操：事实核查卡</h1>
+    <div class="two-col"><div>
+      <div class="card primary">
+        <h3>学生实操任务</h3>
+        <div><ul><li>选择一个热点问题</li><li>让 AI 给 3 个观点</li><li>要求每个观点给依据</li><li>标出不确定项</li><li>写出自己的判断</li></ul></div>
+      </div></div><div>
+      <div class="card success">
+        <h3>完成标准</h3>
+        <div><ul><li>有来源</li><li>有不确定项</li><li>不是复制 AI 原文</li><li>最终判断是学生自己写的</li></ul></div>
+      </div>
+      <div class="card accent">
+        <h3>提交物</h3>
+        <div><p>事实核查卡</p></div>
+      </div></div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>20 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-21">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · AI 名词视频</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>AI 名词视频</p></div>
+    <h1 class="page-title">先看话术，再拆本质</h1>
+    
+        <div class="term-video-grid">
+          <div class="video-panel">
+            <video src="../assets/ai-terms.mp4" controls preload="metadata"></video>
+          </div>
+          <div class="term-video-side">
+            
+      <div class="card primary">
+        <h3>看视频前先提醒</h3>
+        <div><ul><li>不要被新名词吓住</li><li>不要把营销话术当技术革命</li><li>听到一个名词，先问：它到底输入什么、处理什么、输出什么</li></ul></div>
+      </div>
+            
+      <div class="card accent">
+        <h3>看视频时记录</h3>
+        <div><ul><li>圈出你第一次听到的 3 个名词</li><li>写下它被包装成了什么</li><li>写下它真实像哪个你已经知道的东西</li></ul></div>
+      </div>
+            
+      <div class="card success">
+        <h3>看完马上拆</h3>
+        <div><ul><li>Skill 像插件/API 封装</li><li>MCP 像统一接口标准</li><li>RAG 像开卷考试</li><li>Agent 很多时候是调度程序 + LLM</li></ul></div>
+      </div>
+          </div>
+        </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>21 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-22">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · AI 热词拆解地图</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>AI 热词拆解地图</p></div>
+    <h1 class="page-title">名字可以很新，本质要讲清楚</h1>
+    
+        <div class="term-board">
+          <div class="term-table-wrap">
+            <table class="compact-table"><thead><tr><th>热词</th><th>真实技术内核</th><th>容易被包装成</th><th>课堂判断</th></tr></thead><tbody><tr><td>LLM</td><td>大规模预训练语言模型</td><td>万能大脑</td><td>能生成语言，但会错，要核查</td></tr><tr><td>Prompt</td><td>给模型的文本指令和上下文</td><td>神奇咒语</td><td>不用背模板，让 AI 先问问题</td></tr><tr><td>Function Calling</td><td>让模型按 JSON 等格式发出调用指令</td><td>模型会操作软件</td><td>真正执行的是外部工具/API</td></tr><tr><td>Tool Use</td><td>模型选择并调用搜索、文件、代码等工具</td><td>全自动助手</td><td>要检查工具输入和输出</td></tr><tr><td>Skill</td><td>封装好的可复用能力或操作步骤</td><td>全新智能模块</td><td>本质像插件、脚本、API 包装</td></tr><tr><td>MCP</td><td>模型与外部工具/资源的统一连接协议</td><td>革命性生态</td><td>更像 USB-C：统一接口，降低适配成本</td></tr><tr><td>RAG</td><td>先检索资料，再把资料交给模型生成</td><td>消灭幻觉</td><td>资料不准，回答仍然不准</td></tr><tr><td>Memory</td><td>保存偏好、历史、项目约定等上下文</td><td>AI 记住一切</td><td>记忆要可查看、可删除、可纠错</td></tr><tr><td>Hooks</td><td>在特定动作前后自动触发脚本或检查</td><td>自动化智能</td><td>本质是事件触发器</td></tr><tr><td>Task / Subagents</td><td>把任务拆给专门角色或子流程处理</td><td>多智能体军团</td><td>关键是分工、交接和验收</td></tr><tr><td>AI Agent</td><td>目标拆解 + 工具调用 + 状态记录 + 循环执行</td><td>自主智能体</td><td>多数仍要人设范围、看中间结果</td></tr><tr><td>Vibe Coding</td><td>用自然语言描述产品感觉和功能，AI 生成代码</td><td>不会代码也能做产品</td><td>人必须会描述需求、测试和改错</td></tr><tr><td>Vibe Design</td><td>用自然语言描述风格、版式、情绪和视觉目标</td><td>不会设计也能变好看</td><td>人要有审美判断和修改意见</td></tr><tr><td>Agentic Engineering</td><td>把需求、上下文、工具、检查、迭代组织成工程流程</td><td>AI 自动工程师</td><td>本质是可控流程：目标、边界、证据、复盘</td></tr></tbody></table>
+          </div>
+          <div class="term-bottom">
+            
+      <div class="card primary">
+        <h3>课堂拆词三步法</h3>
+        <div><ul><li>第一问：输入是什么？</li><li>第二问：中间处理了什么？</li><li>第三问：输出由谁验收？</li></ul></div>
+      </div>
+            
+      <div class="card accent">
+        <h3>学生练习</h3>
+        <div><ul><li>任选 1 个热词</li><li>用自己的话说出它像什么</li><li>指出它不能替人做的部分</li></ul></div>
+      </div>
+            
+      <div class="card success">
+        <h3>正确答案示例</h3>
+        <div><ul><li>MCP 像统一接口，不是万能智能</li><li>RAG 像开卷考试，不保证资料正确</li><li>Agent 像调度流程，不等于完全自主</li></ul></div>
+      </div>
+          </div>
+        </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>22 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-23">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · Day 1 标准答案</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>Day 1 标准答案</p></div>
+    <h1 class="page-title">今天不是唯一答案，而是检查标准</h1>
+    <div class="three-col">
+      <div class="card success">
+        <h3>环境</h3>
+        <div><ul><li>4 个工具有版本号</li><li>Claude doctor 能运行</li><li>知道如何重新打开终端刷新 PATH</li></ul></div>
+      </div>
+      <div class="card success">
+        <h3>学习计划</h3>
+        <div><ul><li>AI 先问问题</li><li>给 3 个方案</li><li>学生自己选择</li><li>每天有产出</li></ul></div>
+      </div>
+      <div class="card success">
+        <h3>事实核查</h3>
+        <div><ul><li>来源可打开</li><li>事实/观点分开</li><li>有个人判断</li></ul></div>
+      </div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>23 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-24">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 讲师备课页</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>讲师备课页</p></div>
+    <h1 class="page-title">Day 1 上课前准备</h1>
+    <div class="two-col"><div>
+      <div class="card primary">
+        <h3>材料</h3>
+        <div><ul><li>Git/Node/Python/Claude 官方安装页备用链接</li><li>Windows/macOS 分组名单</li><li>环境检查表</li><li>短视频链接</li><li>学习计划模板</li></ul></div>
+      </div></div><div>
+      <div class="card accent">
+        <h3>风险预案</h3>
+        <div><ul><li>校园网限制 npm：准备热点或备用网络</li><li>无管理员权限：准备便携安装方案</li><li>老电脑慢：允许两人一组完成 CLI 部分</li></ul></div>
+      </div></div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>24 / 25</p>
+  </div>
+</section>
+<section class="slide " id="slide-25">
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo-v2.svg" alt="Logo">
+    <p class="page-meta">Day 01 · 日终复盘</p>
+  </div>
+  <div class="content content-enter">
+    <div class="kicker"><span></span><p>日终复盘</p></div>
+    <h1 class="page-title">Day 1 总结</h1>
+    <div class="two-col"><div>
+      <div class="card success">
+        <h3>今天学会了什么</h3>
+        <div><ul><li>知道 2022-2026 AI 圈主要变化和高频名词</li><li>能拆开常见 AI 热词的真实技术内核</li><li>完成基础环境检查与安装</li><li>理解 AI 使用原则：AI 提问和给方案，人做决定</li><li>完成个人学习计划和事实核查卡</li></ul></div>
+      </div></div><div>
+      <div class="card accent">
+        <h3>下一步</h3>
+        <div><p>Day 2 进入 AI 办公：会议纪要、任务调度、数据洞察和汇报文档。</p></div>
+      </div></div></div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 工具实战训练营</p>
+    <p>25 / 25</p>
+  </div>
+</section>
+</div></div>
+<script>
+function resizeSlides(){
+  const wrapper=document.getElementById('slideWrapper');
+  const scale=Math.min(window.innerWidth/(960*1.333),window.innerHeight/(540*1.333));
+  wrapper.style.transform='scale('+scale+')';
+}
+window.addEventListener('resize',resizeSlides);resizeSlides();
+let currentSlide=1;const totalSlides=25;
+function showSlide(n){document.querySelectorAll('.slide').forEach(s=>s.classList.remove('active'));const el=document.getElementById('slide-'+n);if(el)el.classList.add('active');}
+function nextSlide(){if(currentSlide<totalSlides){currentSlide++;showSlide(currentSlide);}}
+function prevSlide(){if(currentSlide>1){currentSlide--;showSlide(currentSlide);}}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')nextSlide();if(e.key==='ArrowLeft')prevSlide();});
+let zoomScale=1,zoomDragging=false,zoomStartX=0,zoomStartY=0,zoomScrollX=0,zoomScrollY=0;
+function closeImageZoom(){const overlay=document.querySelector('.image-zoom-overlay');if(overlay)overlay.remove();}
+function setZoomScale(scale){const img=document.querySelector('.image-zoom-overlay img');if(!img)return;zoomScale=Math.max(.5,Math.min(5,scale));img.style.transform='scale('+zoomScale+')';}
+function openImageZoom(img){closeImageZoom();zoomScale=1;const overlay=document.createElement('div');overlay.className='image-zoom-overlay';const stage=document.createElement('div');stage.className='image-zoom-stage';const clone=document.createElement('img');clone.src=img.currentSrc||img.src;clone.alt=img.alt||'';stage.appendChild(clone);overlay.appendChild(stage);overlay.addEventListener('wheel',e=>{e.preventDefault();setZoomScale(zoomScale+(e.deltaY<0?.2:-.2));},{passive:false});overlay.addEventListener('mousedown',e=>{zoomDragging=true;overlay.classList.add('dragging');zoomStartX=e.clientX;zoomStartY=e.clientY;zoomScrollX=overlay.scrollLeft;zoomScrollY=overlay.scrollTop;});window.addEventListener('mousemove',e=>{if(!zoomDragging)return;overlay.scrollLeft=zoomScrollX-(e.clientX-zoomStartX);overlay.scrollTop=zoomScrollY-(e.clientY-zoomStartY);});window.addEventListener('mouseup',()=>{zoomDragging=false;overlay.classList.remove('dragging');});clone.addEventListener('click',e=>{e.stopPropagation();setZoomScale(zoomScale>=2?1:zoomScale+1);});overlay.addEventListener('dblclick',e=>{e.stopPropagation();closeImageZoom();});document.body.appendChild(overlay);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeImageZoom();});
+document.addEventListener('click',e=>{const zoomImg=e.target.closest('[data-zoomable="true"]');if(zoomImg){e.stopPropagation();openImageZoom(zoomImg);return;}if(e.target.closest('.image-zoom-overlay'))return;const active=document.querySelector('.slide.active');if(!active)return;const r=active.getBoundingClientRect();const x=e.clientX-r.left;if(x>r.width*.7)nextSlide();else if(x<r.width*.3)prevSlide();});
+</script>
+</body>
+</html>

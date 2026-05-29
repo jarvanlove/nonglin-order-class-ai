@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 6 · 知识管理实操</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 34pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 34pt; bottom: 24pt; left: 0; right: 0;
+    padding: 8pt 20pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 12pt;
+  }
+  .steps-wrap {
+    display: flex;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .step-card {
+    flex: 1;
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 8pt;
+    position: relative;
+  }
+  .step-card .step-num {
+    width: 24pt; height: 24pt;
+    background: #084E8F;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 6pt;
+  }
+  .step-card .step-num p {
+    font-size: 11pt;
+    color: #ffffff;
+    font-weight: 700;
+  }
+  .step-card h4 {
+    font-size: 11pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .step-card ul {
+    list-style: none;
+  }
+  .step-card li {
+    font-size: 9pt;
+    color: #333333;
+    line-height: 1.5;
+    padding-left: 10pt;
+    position: relative;
+    margin-bottom: 2pt;
+  }
+  .step-card li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 6pt;
+    width: 4pt; height: 4pt;
+    border-radius: 50%;
+    background: #084E8F;
+  }
+  .structure-box {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 8pt;
+    padding: 10pt 14pt;
+  }
+  .structure-box h3 {
+    font-size: 12pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .folder-tree {
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-size: 9pt;
+    line-height: 1.5;
+    color: #333333;
+  }
+  .folder-tree .root { color: #084E8F; font-weight: 700; }
+  .folder-tree .folder { color: #EE822F; }
+  .folder-tree .file { color: #666666; }
+  .folder-tree .indent { margin-left: 12pt; }
+  .folder-tree .indent2 { margin-left: 24pt; }
+  .tip-box {
+    background: rgba(117,189,66,0.08);
+    border-left: 3pt solid #75BD42;
+    padding: 6pt 10pt;
+    border-radius: 0 4pt 4pt 0;
+    margin-top: 6pt;
+  }
+  .tip-box p {
+    font-size: 9pt;
+    color: #333333;
+    line-height: 1.4;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 24pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 6 · 知识管理</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>实操演练</p>
+    </div>
+    <h1 class="page-title">用 LLM-Wiki 整理你的 6 天学习成果</h1>
+
+    <div class="steps-wrap">
+      <div class="step-card">
+        <div class="step-num"><p>1</p></div>
+        <h4>收集：全部丢进收件箱</h4>
+        <ul>
+          <li>把 6 天的课程笔记、截图、资料全部汇总</li>
+          <li>不要分类，先全部放进一个"收件箱"文件夹</li>
+          <li>包括：PPT 截图、QClaw 对话记录、项目文档</li>
+        </ul>
+      </div>
+      <div class="step-card">
+        <div class="step-num"><p>2</p></div>
+        <h4>提炼：从项目层到个人层</h4>
+        <ul>
+          <li>回顾项目中的踩坑记录，提炼通用方法</li>
+          <li>把"这次怎么解决的"变成"以后遇到类似情况怎么做"</li>
+          <li>记录每个工具的最佳使用场景</li>
+        </ul>
+      </div>
+      <div class="step-card">
+        <div class="step-num"><p>3</p></div>
+        <h4>结构化：建立个人知识库</h4>
+        <ul>
+          <li>按工具/主题/场景组织，而非按时间</li>
+          <li>用自然语言命名，不用复杂编码</li>
+          <li>每个知识点附上"什么时候用得上"的说明</li>
+        </ul>
+      </div>
+      <div class="step-card">
+        <div class="step-num"><p>4</p></div>
+        <h4>输出：教是最好的学</h4>
+        <ul>
+          <li>把知识整理成可以分享给他人的形式</li>
+          <li>写一篇博客、做一页速查表、录一个演示视频</li>
+          <li>输出倒逼输入，检验自己是否真正理解</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="structure-box">
+      <h3>推荐个人知识库结构示例</h3>
+      <div class="folder-tree">
+        <p class="root">📁 AI 工具实训笔记/</p>
+        <p class="indent folder">📁 01_工具速查/</p>
+        <p class="indent2 file">  ├─ QClaw_常用指令.md</p>
+        <p class="indent2 file">  ├─ WorkBuddy_Excel技巧.md</p>
+        <p class="indent2 file">  └─ Trae_Builder模式.md</p>
+        <p class="indent folder">📁 02_项目经验/</p>
+        <p class="indent2 file">  ├─ 踩坑记录.md</p>
+        <p class="indent2 file">  └─ 联调注意事项.md</p>
+        <p class="indent folder">📁 03_方法提炼/</p>
+        <p class="indent2 file">  ├─ 如何用AI搜集资料.md</p>
+        <p class="indent2 file">  └─ 跨工具协作流程.md</p>
+        <p class="indent folder">📁 04_输出作品/</p>
+        <p class="indent2 file">  ├─ 路演PPT/</p>
+        <p class="indent2 file">  └─ 项目Demo/</p>
+      </div>
+      <div class="tip-box">
+        <p><strong>工具无关：</strong>这套结构不需要 Obsidian、Notion 等复杂工具。微信备忘录 + 文件夹 + 云盘，一样可以实现 LLM-Wiki 的核心思想。</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>14 / 22</p>
+  </div>
+</body>
+</html>

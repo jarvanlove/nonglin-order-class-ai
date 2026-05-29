@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 2 日终总结与预告</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 16pt 28pt;
+  }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 12pt;
+  }
+
+  .summary-container {
+    display: flex;
+    gap: 14pt;
+    height: calc(100% - 56pt);
+  }
+
+  .summary-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+
+  .review-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+    flex: 1;
+  }
+  .review-card h3 {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 10pt;
+  }
+  .review-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .review-item .review-dot {
+    width: 8pt; height: 8pt;
+    border-radius: 50%;
+    background: #084E8F;
+    margin-top: 5pt;
+    flex-shrink: 0;
+  }
+  .review-item:nth-child(3) .review-dot { background: #EE822F; }
+  .review-item:nth-child(4) .review-dot { background: #75BD42; }
+  .review-item:nth-child(5) .review-dot { background: #92181A; }
+  .review-item .review-body h4 {
+    font-size: 12pt;
+    color: #333333;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .review-item .review-body p {
+    font-size: 10pt;
+    color: #666666;
+    line-height: 1.5;
+  }
+
+  .summary-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+
+  .preview-card {
+    background: #084E8F;
+    border-radius: 6pt;
+    padding: 14pt;
+    color: #ffffff;
+  }
+  .preview-card h3 {
+    font-size: 16pt;
+    font-weight: 700;
+    margin-bottom: 10pt;
+  }
+  .preview-card .preview-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .preview-card .preview-item .pre-dot {
+    width: 8pt; height: 8pt;
+    border-radius: 50%;
+    background: #EE822F;
+    margin-top: 5pt;
+    flex-shrink: 0;
+  }
+  .preview-card .preview-item .pre-body h4 {
+    font-size: 12pt;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .preview-card .preview-item .pre-body p {
+    font-size: 10pt;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.5;
+  }
+
+  .homework-box {
+    background: rgba(238,130,47,0.06);
+    border-left: 3pt solid #EE822F;
+    border-radius: 0 6pt 6pt 0;
+    padding: 10pt 12pt;
+  }
+  .homework-box h4 {
+    font-size: 12pt;
+    color: #EE822F;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .homework-box p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.55;
+  }
+
+  .quote-box {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 12pt 14pt;
+    text-align: center;
+  }
+  .quote-box p {
+    font-size: 13pt;
+    color: #084E8F;
+    font-weight: 600;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+<meta name="notes" content="日终总结：快速回顾今日重点，预告明天内容，布置课后作业。">
+</head>
+<body>
+
+  <div class="top-bar"></div>
+
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 2 · 日终总结</p>
+  </div>
+
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>日终总结</p>
+    </div>
+    <h1 class="page-title">Day 2 回顾与 Day 3 预告</h1>
+
+    <div class="summary-container">
+      <div class="summary-left">
+        <div class="review-card">
+          <h3>Day 2 重点回顾</h3>
+          <div class="review-item">
+            <div class="review-dot"></div>
+            <div class="review-body">
+              <h4>OpenClaw 四层架构</h4>
+              <p>接入层、能力层（Skills）、核心层（LLM）、数据层——模块化设计让 Agent 像智能手机一样可扩展</p>
+            </div>
+          </div>
+          <div class="review-item">
+            <div class="review-dot"></div>
+            <div class="review-body">
+              <h4>Skills 机制</h4>
+              <p>OpenClaw 的"应用商店"，让 Agent 从"会聊天"变成"会做事"，社区已贡献数千个 Skills</p>
+            </div>
+          </div>
+          <div class="review-item">
+            <div class="review-dot"></div>
+            <div class="review-body">
+              <h4>Hermes 与 GEPA</h4>
+              <p>遗传-帕累托提示进化，让 Agent 像生物一样自我进化，越用越懂你</p>
+            </div>
+          </div>
+          <div class="review-item">
+            <div class="review-dot"></div>
+            <div class="review-body">
+              <h4>WorkBuddy 办公自动化</h4>
+              <p>Excel 清洗、报告生成、批量处理——用自然语言指令完成繁琐办公任务</p>
+            </div>
+          </div>
+          <div class="review-item">
+            <div class="review-dot"></div>
+            <div class="review-body">
+              <h4>工具选型逻辑</h4>
+              <p>OpenClaw 是"万能平台"，Hermes 是"自我学习助手"，WorkBuddy 是"桌面秘书"——不同场景选不同工具</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-right">
+        <div class="preview-card">
+          <h3>Day 3 预告：编程工具生态 + 项目启动</h3>
+          <div class="preview-item">
+            <div class="pre-dot"></div>
+            <div class="pre-body">
+              <h4>全球 AI IDE 全景</h4>
+              <p>了解 Cursor、Trae、Copilot 等 AI 编程工具，建立工具选型认知</p>
+            </div>
+          </div>
+          <div class="preview-item">
+            <div class="pre-dot"></div>
+            <div class="pre-body">
+              <h4>Trae Builder 模式</h4>
+              <p>不需要写代码，用自然语言描述需求，AI 自动生成完整项目</p>
+            </div>
+          </div>
+          <div class="preview-item">
+            <div class="pre-dot"></div>
+            <div class="pre-body">
+              <h4>项目启动会</h4>
+              <p>分组、选题、需求拆解、搭建项目骨架——6 天项目的正式开始</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="homework-box">
+          <h4>课后作业</h4>
+          <p>1. 回顾今天笔记，确保 WorkBuddy 安装正常<br>2. 预习 Trae 官网（trae.cn）了解 Builder 模式<br>3. 思考：你想在项目中解决什么农林领域的问题？</p>
+        </div>
+
+        <div class="quote-box">
+          <p>"工具会过时，但方法不会。今天学到的不是 WorkBuddy 怎么点，而是'如何让 AI 为你工作'的思维方式。"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>18 / 18</p>
+  </div>
+
+</body>
+</html>

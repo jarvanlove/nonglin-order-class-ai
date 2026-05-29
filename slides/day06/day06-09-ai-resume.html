@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 6 · 用 AI 优化简历实操</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 10pt 24pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 8pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 12pt;
+  }
+  .steps-wrap {
+    display: flex;
+    gap: 10pt;
+    margin-bottom: 10pt;
+  }
+  .step-card {
+    flex: 1;
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 8pt 8pt;
+    display: flex;
+    flex-direction: column;
+  }
+  .step-num {
+    width: 28pt; height: 28pt;
+    border-radius: 50%;
+    background: #084E8F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8pt;
+  }
+  .step-num p {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #ffffff;
+  }
+  .step-card:nth-child(2) .step-num { background: #EE822F; }
+  .step-card:nth-child(3) .step-num { background: #92181A; }
+  .step-card:nth-child(4) .step-num { background: #75BD42; }
+  .step-card h4 {
+    font-size: 12pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .step-card p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+    flex: 1;
+  }
+  .prompt-box {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 8pt 10pt;
+  }
+  .prompt-box h3 {
+    font-size: 13pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+  .prompt-example {
+    background: rgba(8,78,143,0.04);
+    border-radius: 4pt;
+    padding: 6pt 8pt;
+    margin-bottom: 5pt;
+  }
+  .prompt-example .prompt-label {
+    font-size: 9pt;
+    color: #666666;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .prompt-example p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.6;
+  }
+  .warn-box {
+    background: rgba(146,24,26,0.04);
+    border-left: 3pt solid #92181A;
+    border-radius: 0 4pt 4pt 0;
+    padding: 5pt 8pt;
+    margin-top: 5pt;
+  }
+  .warn-box p {
+    font-size: 10pt;
+    color: #92181A;
+    line-height: 1.5;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 6 · 就业锦囊</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>实操指南</p>
+    </div>
+    <h1 class="page-title">用 AI 优化简历：4 步实操流程</h1>
+
+    <div class="steps-wrap">
+      <div class="step-card">
+        <div class="step-num"><p>1</p></div>
+        <h4>把现有简历发给 AI</h4>
+        <p>将你的简历内容复制粘贴到 QClaw 或 WorkBuddy 的对话窗口。可以是完整简历，也可以是某个经历段落。</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num"><p>2</p></div>
+        <h4>提供目标岗位 JD</h4>
+        <p>把你想申请的岗位描述（Job Description）一起发给 AI。JD 是优化的"靶子"，没有靶子 AI 不知道往哪优化。</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num"><p>3</p></div>
+        <h4>AI 给出优化建议</h4>
+        <p>AI 会分析 JD 关键词、指出你简历中的薄弱点、给出改写建议。可能包括措辞优化、结构调整、关键词补充。</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num"><p>4</p></div>
+        <h4>人工审核调整</h4>
+        <p>AI 的建议不一定全对。你需要判断：建议是否真实反映了你的经历？是否有夸大？是否符合你的表达风格？</p>
+      </div>
+    </div>
+
+    <div class="prompt-box">
+      <h3>推荐提示词模板</h3>
+      <div class="prompt-example">
+        <p class="prompt-label">提示词示例 1：整体优化（农技推广员）</p>
+        <p>"请帮我优化以下简历，目标是申请农技推广员。岗位描述：负责农业新技术推广、农民培训、田间技术指导。请从关键词匹配、成果导向表达、结构优化三个角度给出建议，并直接输出优化后的版本。"</p>
+      </div>
+      <div class="prompt-example">
+        <p class="prompt-label">提示词示例 2：单条经历优化（农场技术员）</p>
+        <p>"请将以下经历改写成成果导向的表达，要求包含具体数字和可量化的成果。原句：参与果园管理。目标岗位是农场技术员，JD 要求熟悉果树栽培、病虫害防治和产量分析。"</p>
+      </div>
+      <div class="prompt-example">
+        <p class="prompt-label">提示词示例 3：农林类岗位 JD 匹配（林业调查员）</p>
+        <p>"我申请林业调查员，JD 关键词：森林资源调查、GIS、遥感、数据分析。请帮我检查简历中是否包含这些关键词，并建议如何补充林业项目经历。"</p>
+      </div>
+      <div class="prompt-example">
+        <p class="prompt-label">提示词示例 4：农产品电商运营</p>
+        <p>"目标岗位：农产品电商运营。请帮我把'帮家里卖水果'这段经历写得专业一些，突出运营数据（销售额、转化率、复购率）和使用的工具。"</p>
+      </div>
+      <div class="warn-box">
+        <p><strong>重要提醒：</strong>不要把包含个人隐私（身份证号、家庭住址、电话号码）的完整简历发给任何 AI 工具。建议先删除敏感信息，只保留经历和技能部分用于优化。</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>9 / 16</p>
+  </div>
+</body>
+</html>

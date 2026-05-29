@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Day 1 · QClaw 安装步骤</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 960pt; height: 540pt;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #F8FBFF;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4pt;
+    background: #084E8F;
+  }
+  .slide-header {
+    position: absolute;
+    top: 4pt; left: 0; right: 0;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-bottom: 1pt solid #e2e8f0;
+  }
+  .slide-header img {
+    height: 22pt;
+    width: auto;
+  }
+  .slide-header .page-meta {
+    font-size: 10pt;
+    color: #666666;
+  }
+  .content {
+    position: absolute;
+    top: 40pt; bottom: 28pt; left: 0; right: 0;
+    padding: 14pt 28pt;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 6pt;
+  }
+  .kicker .bar {
+    width: 18pt; height: 3pt;
+    background: #EE822F;
+    border-radius: 2pt;
+  }
+  .kicker p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .page-title {
+    font-size: 22pt;
+    font-weight: 700;
+    color: #084E8F;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+  }
+  .two-col {
+    display: flex;
+    gap: 16pt;
+    height: calc(100% - 60pt);
+  }
+  .col-left {
+    flex: 0.9;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .col-right {
+    flex: 1.1;
+    display: flex;
+    flex-direction: column;
+    gap: 8pt;
+  }
+  .step-card {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 8pt 12pt;
+    display: flex;
+    gap: 10pt;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 24pt; height: 24pt;
+    border-radius: 50%;
+    background: #084E8F;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12pt;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .step-content h4 {
+    font-size: 11pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .step-content p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+  .sys-req {
+    background: #ffffff;
+    border: 1pt solid #e2e8f0;
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+  }
+  .sys-req h3 {
+    font-size: 12pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+  .sys-req ul {
+    list-style: none;
+  }
+  .sys-req li {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.6;
+    padding-left: 12pt;
+    position: relative;
+  }
+  .sys-req li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #084E8F;
+  }
+  .download-box {
+    background: rgba(8,78,143,0.06);
+    border: 1pt solid rgba(8,78,143,0.15);
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+    text-align: center;
+  }
+  .download-box h3 {
+    font-size: 12pt;
+    color: #084E8F;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .download-box p {
+    font-size: 14pt;
+    color: #084E8F;
+    font-weight: 700;
+    font-family: monospace;
+  }
+  .test-box {
+    background: rgba(117,189,66,0.06);
+    border: 1pt solid rgba(117,189,66,0.2);
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+  }
+  .test-box h3 {
+    font-size: 12pt;
+    color: #75BD42;
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  .test-box p {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+  .time-box {
+    background: rgba(238,130,47,0.06);
+    border: 1pt solid rgba(238,130,47,0.15);
+    border-radius: 6pt;
+    padding: 8pt 12pt;
+    text-align: center;
+  }
+  .time-box p {
+    font-size: 11pt;
+    color: #EE822F;
+    font-weight: 700;
+  }
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28pt;
+    background: #ffffff;
+    border-top: 1pt solid #e2e8f0;
+  }
+  .slide-footer p {
+    font-size: 9pt;
+    color: #666666;
+  }
+
+/* ===== Unified Entrance Animation ===== */
+.content > *, .hero > * {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.content > *:nth-child(1), .hero > *:nth-child(1) { animation-delay: 0.04s; }
+.content > *:nth-child(2), .hero > *:nth-child(2) { animation-delay: 0.10s; }
+.content > *:nth-child(3), .hero > *:nth-child(3) { animation-delay: 0.16s; }
+.content > *:nth-child(4), .hero > *:nth-child(4) { animation-delay: 0.22s; }
+.content > *:nth-child(5), .hero > *:nth-child(5) { animation-delay: 0.28s; }
+.content > *:nth-child(6), .hero > *:nth-child(6) { animation-delay: 0.34s; }
+.content > *:nth-child(7), .hero > *:nth-child(7) { animation-delay: 0.40s; }
+.content > *:nth-child(8), .hero > *:nth-child(8) { animation-delay: 0.46s; }
+.content > *:nth-child(9), .hero > *:nth-child(9) { animation-delay: 0.52s; }
+.content > *:nth-child(10), .hero > *:nth-child(10) { animation-delay: 0.58s; }
+.content > *:nth-child(11), .hero > *:nth-child(11) { animation-delay: 0.64s; }
+.content > *:nth-child(12), .hero > *:nth-child(12) { animation-delay: 0.70s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+<meta name="notes" content="安装指导：让学生同步操作，助教巡视解决安装问题。">
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="slide-header">
+    <img src="../../materials/logo.svg" alt="公司 Logo">
+    <p class="page-meta">Day 1 · 动手安装</p>
+  </div>
+  <div class="content">
+    <div class="kicker">
+      <div class="bar"></div>
+      <p>实操指南</p>
+    </div>
+    <h1 class="page-title">QClaw 安装与配置</h1>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="sys-req">
+          <h3>系统要求</h3>
+          <ul>
+            <li>Windows 10+ 或 macOS 12+</li>
+            <li>内存：4GB 及以上（8GB 更佳）</li>
+            <li>磁盘空间：至少 2GB 可用</li>
+            <li>网络：校园网即可，无需 VPN</li>
+          </ul>
+        </div>
+        <div class="download-box">
+          <h3>下载地址</h3>
+          <p>qclaw.qq.com</p>
+        </div>
+        <div class="test-box">
+          <h3>安装后测试</h3>
+          <p>绑定成功后，在对话框输入"你好"，如果能收到回复，说明安装成功。</p>
+        </div>
+        <div class="time-box">
+          <p>预计安装时间：15-20 分钟</p>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>访问官网</h4>
+            <p>打开浏览器，访问 qclaw.qq.com</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>下载客户端</h4>
+            <p>点击"下载客户端"，选择对应系统版本（Windows 选 .exe，Mac 选 .dmg）</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>安装软件</h4>
+            <p>双击安装包，按提示完成安装（约 5-10 分钟）</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>微信绑定</h4>
+            <p>打开 QClaw，使用微信扫码完成绑定</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h4>功能测试</h4>
+            <p>在对话框输入"你好"测试是否能正常回复，再尝试一个简单的搜索指令</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <p>AI 智能体工具实训 · 农林高校 2026</p>
+    <p>11 / 18</p>
+  </div>
+</body>
+</html>

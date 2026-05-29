@@ -1,0 +1,12 @@
+Total characters: 17653
+
+Section breakdown:
+  AI 智能体工具实训 — 学员手册: 182 chars
+  写在最前面: 339 chars
+  第一章：课程总览: 1654 chars
+  第二章：工具准备指南（课前必须完成）: 2635 chars
+  第三章：第 1-6 天预习材料: 6057 chars
+  第四章：参考资料清单: 1839 chars
+  第五章：常见问题 FAQ（15 问）: 2423 chars
+  第六章：课后学习路径: 1873 chars
+  附录：快速查阅表: 610 chars
